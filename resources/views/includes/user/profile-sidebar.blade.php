@@ -12,7 +12,7 @@
 			<img src="{{ $user->profile_picture() }}" alt="{{ $user->name }}" class="img-responsive img-circle mb-30">
 		@endif
 
-		<h5 class=" text-center">{{ $user->name }}</h5>
+		<h5 class=" text-center" {!! $user->verified ? 'title = "Verified"' : '' !!}>{{ $user->name }} {!! $user->verified ? '<i class = "fa fa-check text-success" title = "Verified"></i>' : '' !!}</h5>
 		
 		<p class=" text-center">
 			<img src="{{ $user->badge() }}" alt="{{ $user->name }} Badge" class="size-30"> <br>

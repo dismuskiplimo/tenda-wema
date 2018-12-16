@@ -599,6 +599,22 @@ class AdminController extends Controller
     	]);
     }
 
+    public function verifyUser(Request $request, $id){
+    	$user = User::findOrFail($id);
+
+    	$admin = auth()->user();
+
+    	$user->verified = 1;
+    	$user->verified_at = $this->date;
+    	$user->verified_by = $admin->id;  	
+
+    	$user->update();
+
+    	session()->flash('success', 'User Verified');
+
+    	return redirect()->back();
+    }
+
     public function closeAccount(Request $request, $id){
     	$user = User::findOrFail($id);
 

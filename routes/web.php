@@ -152,6 +152,7 @@ Route::group(['prefix' => 'admin'], function(){
 	Route::get('/admins/{type}', 'AdminController@showAdmins')->name('admin.admins');
 	Route::get('/users/{id}/view', 'AdminController@showUser')->name('admin.user');
 	Route::post('/users/{id}/close', 'AdminController@closeAccount')->name('admin.user.close-account');
+	Route::post('/users/{id}/verify', 'AdminController@verifyUser')->name('admin.user.verify');
 
 	// Transactions
 	Route::get('/transactions/{type}', 'AdminController@showTransactions')->name('admin.transactions');

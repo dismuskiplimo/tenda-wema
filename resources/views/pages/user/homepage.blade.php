@@ -68,16 +68,7 @@
 							<div class="fbox-icon">
 								<a href="#"><i class="i-alt noborder icon-shop"></i></a>
 							</div>
-							<h3>Donate Items<span class="subtitle">Start your Own Shop today</span></h3>
-						</div>
-					</div>
-
-					<div class="col_one_fourth nobottommargin">
-						<div class="feature-box fbox-center fbox-light fbox-effect nobottomborder">
-							<div class="fbox-icon">
-								<a href="#"><i class="i-alt noborder icon-wallet"></i></a>
-							</div>
-							<h3>Report Good Deeds<span class="subtitle">Credit Cards &amp; PayPal Support</span></h3>
+							<h3>Donate Items<span class="subtitle">Donate items to the community</span></h3>
 						</div>
 					</div>
 
@@ -86,18 +77,29 @@
 							<div class="fbox-icon">
 								<a href="#"><i class="i-alt noborder icon-megaphone"></i></a>
 							</div>
-							<h3>Buy Donated Items<span class="subtitle">Realtime Email &amp; SMS Support</span></h3>
+							<h3>Report Good Deeds<span class="subtitle">Report good deeds you peformed</span></h3>
+						</div>
+					</div>
+
+					<div class="col_one_fourth nobottommargin">
+						<div class="feature-box fbox-center fbox-light fbox-effect nobottomborder">
+							<div class="fbox-icon">
+								<a href="#"><i class="i-alt noborder icon-wallet"></i></a>
+							</div>
+							<h3>Buy Donated Items<span class="subtitle">Purchase donated items from the community shop</span></h3>
 						</div>
 					</div>
 
 					<div class="col_one_fourth nobottommargin col_last">
 						<div class="feature-box fbox-center fbox-light fbox-effect nobottomborder">
 							<div class="fbox-icon">
-								<a href="#"><i class="i-alt noborder icon-fire"></i></a>
+								<a href="#"><i class="i-alt noborder icon-comment"></i></a>
 							</div>
-							<h3>Hot Offers Daily<span class="subtitle">Upto 50% Discounts</span></h3>
+							<h3>Discuss<span class="subtitle">Participate in the community discussions</span></h3>
 						</div>
 					</div>
+
+					
 
 					<div class="clear"></div><div class="line bottommargin-lg"></div>
 

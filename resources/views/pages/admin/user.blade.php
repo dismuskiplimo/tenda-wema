@@ -10,10 +10,22 @@
 
 	            @if(!$user->closed && !$me)
 		            <p class="text-right mb-0">
-		          		<a href="" data-toggle="modal" data-target="#close-account-{{ $user->id }}" class="btn btn-xs btn-danger"><i class="fa fa-times"></i> Close Account</a>
+		          		@if(!$user->verified)
+							<a href="" data-toggle="modal" data-target="#verify-user-{{ $user->id }}" class="btn btn-xs btn-success">
+			          			<i class="fa fa-certificate"></i> Verify User
+			          		</a>
+		          		@endif
+
+		          		<a href="" data-toggle="modal" data-target="#close-account-{{ $user->id }}" class="btn btn-xs btn-danger">
+		          			<i class="fa fa-times"></i> Close Account
+		          		</a>
 		            </p>
 
 		            @include('pages.admin.modals.close-account')
+
+		            @if(!$user->verified && !$me)
+						@include('pages.admin.modals.verify-user')
+	          		@endif
 	            @endif
 	            
 	        </div> 

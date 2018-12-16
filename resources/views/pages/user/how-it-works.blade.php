@@ -24,7 +24,7 @@
 
 				<h4>HOW THE COMMUNITY WORKS</h4>
 				<p>
-					<strong>{{ config('app.domain') }}</strong> encourages members to do good deeds earning Simba Coins that provide purchasing power and advancement through social levels within the Community. For example, Kellen joins the Community and is immediately awarded 50 Simba Coins and additional 30 Simba Coins for completing her profile. She then donates a laptop and a book to the Community earning 200 Simba Coins and 50 Simba Coins for each donation respectively bringing her total Simba Coins to 330. She later participates in a fund raising drive earning 30 Simba Coins, volunteers in a charity programme earning 30 Simba Coins and donates blood earning 50 Simba Coins. Now with a total of 440 Simba Coins, she purchases a handbag donated to the Community for 90 Simba Coins leaving her with a balance of 350 Simba Coins. Over time, Kellen continues to do good deeds earning additional Simba Coins and moving from one social level to the next with the ultimate goal of reaching the highest social level within the Community.
+					<strong>{{ config('app.domain') }}</strong> encourages members to do good deeds earning Simba Coins that provide purchasing power and advancement through social levels within the Community. For example, Kellen joins the Community and is immediately awarded 30 Simba Coins and additional 20 Simba Coins for completing her profile. She then donates a laptop and a book to the Community earning 200 Simba Coins bringing her total Simba Coins to 250. She later participates in a fund raising drive earning 100 Simba Coins, volunteers in a charity programme earning 100 Simba Coins and donates blood earning 100 Simba Coins. Now with a total of 550 Simba Coins, she purchases a handbag donated to the Community for 100 Simba Coins leaving her with a balance of 450 Simba Coins. Over time, Kellen continues to do good deeds earning additional Simba Coins and moving from one social level to the next with the ultimate goal of reaching the highest social level within the Community.
 				</p>
 
 				<h4>DONATING ITEMS TO THE COMMUNITY</h4>
@@ -135,6 +135,48 @@
 				<p>
 					A badge is displayed on every member’s profile indicating his or her social level. The social levels are Mwanzo, Uungano, Stahimili, Shupavu, Hodari, Shujaa and Bingwa. Badges reflect a member’s experience in the Community, as well as that member’s level of achievement and positive engagement within the Community. To advance to the next social level a member must accumulate a certain number of Simba Coins
 				</p>
+
+				<h4>Badges</h4>
+
+				<div class="row text-center">
+					<div class="col-sm-3">
+						<img src="{{ social_badge('MWANZO') }}" alt="" class="h-100 w-auto mb-20">
+						<p>Mwanzo Social Level</p>
+					</div>
+
+					<div class="col-sm-3">
+						<img src="{{ social_badge('UUNGANO') }}" alt="" class="h-100 w-auto mb-20">
+						<p>Uungano Social Level</p>
+					</div>
+
+					<div class="col-sm-3">
+						<img src="{{ social_badge('STAHIMILI') }}" alt="" class="h-100 w-auto mb-20">
+						<p>Stahimili Social Level</p>
+					</div>
+
+					<div class="col-sm-3">
+						<img src="{{ social_badge('SHUPAVU') }}" alt="" class="h-100 w-auto mb-20">
+						<p>Shupavu Social Level</p>
+					</div>
+				</div>
+
+				<div class="row text-center">
+
+					<div class="col-sm-3">
+						<img src="{{ social_badge('HODARI') }}" alt="" class="h-100 w-auto mb-20">
+						<p>Hodari Social Level</p>
+					</div>
+
+					<div class="col-sm-3">
+						<img src="{{ social_badge('SHUJAA') }}" alt="" class="h-100 w-auto mb-20">
+						<p>Shujaa Social Level</p>
+					</div>
+
+					<div class="col-sm-3">
+						<img src="{{ social_badge('BINGWA') }}" alt="" class="h-100 w-auto mb-20">
+						<p>Bingwa Social Level</p>
+					</div>
+				</div>
 
 				<h4>CHARGES</h4>
 				<p>

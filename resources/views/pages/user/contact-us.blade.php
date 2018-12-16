@@ -76,7 +76,7 @@
 
 						<p>
 							<strong><i class="fa fa-envelope"></i> Postal Address:</strong> <br>
-							tendawema.com <br>
+							{{ config('app.domain') }} <br>
 							P. O. Box 24721-00100 <br> 
 							Nairobi, Kenya
 

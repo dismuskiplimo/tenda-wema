@@ -26,7 +26,7 @@
 
 								<div style="background: url('images/world-map.png') no-repeat center center; background-size: 100%;">
 									<address>
-										<strong>tendawema.com</strong><br>
+										<strong>{{ config('app.domain') }}</strong><br>
 										P.o Box 24721-00100<br>
 										Nairobi, Kenya<br>
 									</address>
@@ -145,7 +145,7 @@
 				<div class="container clearfix">
 
 					<div class="col_half">
-						Copyrights &copy; {{ date('Y') }} All Rights Reserved by tendawema.com<br>
+						Copyrights &copy; {{ date('Y') }} All Rights Reserved by {{ config('app.domain') }}<br>
 						<div class="copyright-links"><a href="{{ route('terms-and-conditions') }}">Terms and Condiions</a> / <a href="{{ route('privacy-policy') }}">Privacy Policy</a></div>
 					</div>
 
