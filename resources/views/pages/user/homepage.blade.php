@@ -7,22 +7,33 @@
 
 				<div class="swiper-container swiper-parent">
 					<div class="swiper-wrapper">
+						<div class="swiper-slide dark" style="background-image: url('{{ custom_asset('images/slider/swiper/4.jpg') }}');">
+							<div class="container clearfix">
+								<div class="slider-caption slider-caption-center">
+									<h2 data-caption-animate="fadeInUp">{{ config('app.name') }}</h2>
+									<p data-caption-animate="fadeInUp" data-caption-delay="200">The Simba Coin Community of good deeds.</p>
+								</div>
+							</div>
+						</div>
+
 						<div class="swiper-slide dark" style="background-image: url('{{ custom_asset('images/slider/swiper/1.jpg') }}');">
 							<div class="container clearfix">
 								<div class="slider-caption slider-caption-center">
 									<h2 data-caption-animate="fadeInUp">{{ config('app.name') }}</h2>
-									<p data-caption-animate="fadeInUp" data-caption-delay="200">Create just what you need for your Perfect Website. Choose from a wide range of Elements &amp; simply put them on our Canvas.</p>
+									<p data-caption-animate="fadeInUp" data-caption-delay="200">Where you can donate items to the community.</p>
 								</div>
 							</div>
 						</div>
+
+
 
 						
 
 						<div class="swiper-slide dark" style="background-image: url('{{ custom_asset('images/slider/swiper/3.jpg') }}'); background-position: center top;">
 							<div class="container clearfix">
-								<div class="slider-caption">
-									<h2 data-caption-animate="fadeInUp">Great Performance</h2>
-									<p data-caption-animate="fadeInUp" data-caption-delay="200">You'll be surprised to see the Final Results of your Creation &amp; would crave for more.</p>
+								<div class="slider-caption  slider-caption-center">
+									<h2 data-caption-animate="fadeInUp">{{ config('app.name') }}</h2>
+									<p data-caption-animate="fadeInUp" data-caption-delay="200">Where you report the good deeds you have done that have had a positive impact to the community.</p>
 								</div>
 							</div>
 						</div>
@@ -57,7 +68,7 @@
 							<div class="fbox-icon">
 								<a href="#"><i class="i-alt noborder icon-shop"></i></a>
 							</div>
-							<h3>e-Commerce Solutions<span class="subtitle">Start your Own Shop today</span></h3>
+							<h3>Donate Items<span class="subtitle">Start your Own Shop today</span></h3>
 						</div>
 					</div>
 
@@ -66,7 +77,7 @@
 							<div class="fbox-icon">
 								<a href="#"><i class="i-alt noborder icon-wallet"></i></a>
 							</div>
-							<h3>Easy Payment Options<span class="subtitle">Credit Cards &amp; PayPal Support</span></h3>
+							<h3>Report Good Deeds<span class="subtitle">Credit Cards &amp; PayPal Support</span></h3>
 						</div>
 					</div>
 
@@ -75,7 +86,7 @@
 							<div class="fbox-icon">
 								<a href="#"><i class="i-alt noborder icon-megaphone"></i></a>
 							</div>
-							<h3>Instant Notifications<span class="subtitle">Realtime Email &amp; SMS Support</span></h3>
+							<h3>Buy Donated Items<span class="subtitle">Realtime Email &amp; SMS Support</span></h3>
 						</div>
 					</div>
 
@@ -419,6 +430,7 @@
 									</div>
 								</div>
 							</li>
+							
 							<li>
 								<div class="testimonial">
 									<div class="testi-image">
@@ -433,6 +445,7 @@
 									</div>
 								</div>
 							</li>
+							
 							<li>
 								<div class="testimonial">
 									<div class="testi-image">
@@ -447,48 +460,9 @@
 									</div>
 								</div>
 							</li>
-							<li>
-								<div class="testimonial">
-									<div class="testi-image">
-										<a href="#"><img src="images/testimonials/3.jpg" alt="Customer Testimonails"></a>
-									</div>
-									<div class="testi-content">
-										<p>Similique fugit repellendus expedita excepturi iure perferendis provident quia eaque. Repellendus, vero numquam?</p>
-										<div class="testi-meta">
-											Steve Jobs
-											<span>Apple Inc.</span>
-										</div>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="testimonial">
-									<div class="testi-image">
-										<a href="#"><img src="images/testimonials/4.jpg" alt="Customer Testimonails"></a>
-									</div>
-									<div class="testi-content">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus, perspiciatis illum totam dolore deleniti labore.</p>
-										<div class="testi-meta">
-											Jamie Morrison
-											<span>Adobe Inc.</span>
-										</div>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="testimonial">
-									<div class="testi-image">
-										<a href="#"><img src="images/testimonials/8.jpg" alt="Customer Testimonails"></a>
-									</div>
-									<div class="testi-content">
-										<p>Porro dolorem saepe reiciendis nihil minus neque. Ducimus rem necessitatibus repellat laborum nemo quod.</p>
-										<div class="testi-meta">
-											Cyan Ta'eed
-											<span>Tutsplus</span>
-										</div>
-									</div>
-								</div>
-							</li>
+							
+							
+
 						</ul>
 
 					</div>
@@ -499,24 +473,20 @@
 
 					<div id="oc-clients" class="owl-carousel owl-carousel-full image-carousel carousel-widget" data-margin="30" data-loop="true" data-nav="false" data-autoplay="5000" data-pagi="false" data-items-xxs="2" data-items-xs="3" data-items-sm="4" data-items-md="5" data-items-lg="6" style="padding: 20px 0;">
 
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/1.png" alt="Clients"></a></div>
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/2.png" alt="Clients"></a></div>
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/3.png" alt="Clients"></a></div>
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/4.png" alt="Clients"></a></div>
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/5.png" alt="Clients"></a></div>
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/6.png" alt="Clients"></a></div>
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/7.png" alt="Clients"></a></div>
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/8.png" alt="Clients"></a></div>
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/9.png" alt="Clients"></a></div>
-						<div class="oc-item"><a href="http://logofury.com/"><img src="images/clients/10.png" alt="Clients"></a></div>
+						<div class="oc-item">
+							<a href="#">
+								<img src="{{ custom_asset('images/tenda-wema/1.png') }}" alt="Partners"></a>
+							</div>
+						
+						
 
 					</div>
 
 				</div>
 
-				<a class="button button-full center tright footer-stick">
+				<a class="button button-full center tright footer-stick" href="{{ route('how-it-works') }}">
 					<div class="container clearfix">
-						Canvas comes with Unlimited Customizations &amp; Options. <strong>Check Out</strong> <i class="icon-caret-right" style="top:4px;"></i>
+						See How {{ config('app.name') }} <strong>Works</strong> <i class="icon-caret-right" style="top:4px;"></i>
 					</div>
 				</a>
 

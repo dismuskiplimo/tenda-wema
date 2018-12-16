@@ -18,8 +18,10 @@ Route::get('/donate-item', 'FrontController@showDonateItemPage')->name('donate-i
 Route::post('/donate-item', 'UserController@postDonateItem');
 
 Route::get('/contact-us', 'FrontController@showContactUsPage')->name('contact-us');
+Route::post('/contact-us', 'FrontController@postContactUs');
 
 Route::get('/about-us', 'FrontController@showAboutUsPage')->name('about-us');
+Route::get('/how-it-works', 'FrontController@showHowItWorksPage')->name('how-it-works');
 
 Route::get('/privacy-policy', 'FrontController@showPrivacyPolicyPage')->name('privacy-policy');
 

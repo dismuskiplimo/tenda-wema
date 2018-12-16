@@ -6,6 +6,9 @@ ul{
 	list-style: none;
 }
 
+.text-justify{
+  text-align: justify;
+}
 
 .xy-100p{
   width: 100%;
@@ -85,6 +88,10 @@ ul{
 
 .h-auto{
   height: auto;
+}
+
+.border-right{
+  border-right: 1px solid #ccc;
 }
 
 .text-center{
@@ -217,8 +224,40 @@ Margin top helpers
 	margin-top: 0px;
 }
 
+.mt-1{
+  margin-top: 1px;
+}
+
+.mt-2{
+  margin-top: 2px;
+}
+
+.mt-3{
+  margin-top: 3px;
+}
+
+.mt-4{
+  margin-top: 4px;
+}
+
 .mt-5{
 	margin-top: 5px;
+}
+
+.mt-6{
+  margin-top: 6px;
+}
+
+.mt-7{
+  margin-top: 7px;
+}
+
+.mt-8{
+  margin-top: 8px;
+}
+
+.mt-9{
+  margin-top: 9px;
 }
 
 .mt-10{

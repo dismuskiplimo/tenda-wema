@@ -21,8 +21,8 @@
 
 					@if(auth()->check())
 						<div id="top-account" class="dropdown">
-							<a href="#" class="btn btn-default dropdown-toggle mtn-7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<img src="{{ auth()->user()->profile_picture() }}" alt="" class="img-circle size-35 mr-10">
+							<a href="#" class="btn btn-default dropdown-toggle mtn-3 mbn-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<img src="{{ auth()->user()->profile_picture() }}" alt="" class="img-circle size-25 mr-10">
 								 <span class="mt-8">
 								 	<small>{{ auth()->user()->fname }} </small>
 
@@ -104,14 +104,14 @@
 
 								<li>
 									<a href="{{ route('user.messages') }}" class="user-messages" title="messages">
-										<i class="fa fa-envelope h-15"></i>
+										<i class="fa fa-envelope h-15 mt-7"></i>
 										<small class="badge mtn-20 mrn-10">{{ auth()->user()->message_notifications()->where('read',0)->count() ? : '' }}</small>
 									</a>
 								</li>
 
 								<li>
 									<a href="{{ route('user.notifications') }}" class="user-notifications" title="notifications">
-										<i class="fa fa-globe"></i>
+										<i class="fa fa-globe h-15 mt-7"></i>
 										<small class="badge mtn-20 mrn-10">{{ auth()->user()->notifications()->where('read',0)->count() ? : '' }}</small>
 									</a>
 								</li>

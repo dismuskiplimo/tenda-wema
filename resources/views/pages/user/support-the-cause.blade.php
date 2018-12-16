@@ -95,7 +95,7 @@
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label for="">Email Address</label>
-								<input type="email" name="lname" class="form-control" placeholder="Email Address" required="">
+								<input type="email" name="email" class="form-control" placeholder="Email Address" required="">
 							</div>
 						</div>
 					</div>
@@ -164,7 +164,7 @@
 						</p>
 
 						<p>
-							To explore a corporate partnership, please contact us.
+							To explore a corporate partnership, please <a href="{{ route('contact-us') }}">contact us</a>.
 						</p>
 
 					</div>

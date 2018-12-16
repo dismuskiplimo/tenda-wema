@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{DonatedItem, User, Category, GoodDeed, Country};
+use App\{DonatedItem, User, Category, GoodDeed, Country, Donation, ContactUs};
 
 class FrontController extends Controller
 {
@@ -62,6 +62,40 @@ class FrontController extends Controller
         ]);
     }
 
+    public function showHowItWorksPage(){
+        
+        return view('pages.user.how-it-works',[
+            'title'     => 'How It Works',
+            'nav'       => 'how-it-works',
+        ]);
+    }
+
+    public function postContactUs(Request $request){
+        $this->validate($request,[
+            'name'          => 'required|max:255',
+            'email'         => 'required|max:255|email',
+            'subject'       => 'required|max:255',
+            'message'       => 'max:800',
+            
+        ]);
+
+        $contact_us             = new ContactUs;
+        $contact_us->name       = $request->name;
+        $contact_us->email      = $request->email;
+        $contact_us->phone      = $request->phone;
+        $contact_us->subject    = $request->subject;
+        $contact_us->message    = $request->message;
+        $contact_us->save();
+
+        session()->flash('success', 'Message Sent, tendawema.com will reply in due time');
+
+        if($this->settings->mail_enabled->value){
+            
+        }
+
+        return redirect()->back();
+    }
+
     public function showAboutUsPage(){
         
         return view('pages.user.about-us',[
@@ -80,8 +114,32 @@ class FrontController extends Controller
 
     public function postSupportCause(Request $request){
         $this->validate($request,[
-
+            'fname'         => 'required|max:255',
+            'lname'         => 'required|max:255',
+            'country'       => 'required|max:255',
+            'organization'  => 'max:255',
+            'phone'         => 'required|max:255',
+            'email'         => 'required|max:255|email',
+            'donating_as'   => 'required|max:255',
+            'method'        => 'required|max:255',
         ]);
+
+        $donation                   = new Donation;
+        $donation->fname            = $request->fname;
+        $donation->lname            = $request->lname;
+        $donation->country          = $request->country;
+        $donation->organization     = $request->organization;
+        $donation->phone            = $request->phone;
+        $donation->email            = $request->email;
+        $donation->donating_as      = $request->donating_as;
+        $donation->method           = $request->method;
+        $donation->save();
+
+        session()->flash('success', 'Request received, please wait for follow up from tendawema.com');
+
+        if($this->settings->mail_enabled->value){
+
+        }
 
         return redirect()->back();
     }

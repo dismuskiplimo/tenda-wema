@@ -13,11 +13,13 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Temda Wema'),
 
     'https' => env('HTTPS', false),
     
     'public_path' => env('PUBLIC_PATH', 'public_html'),
+
+    'domain' => env('APP_DOMAIN', 'tendawema.com'),
 
     /*
     |--------------------------------------------------------------------------

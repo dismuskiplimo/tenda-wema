@@ -15,7 +15,10 @@
 							<div class="widget clearfix">
 
 								<div class="text-center">
-									<img src="{{ custom_asset('images/simba-head.png') }}" alt="" class="footer-logo">
+									<a href="{{ route('homepage') }}">
+										<img src="{{ custom_asset('images/og-logo.png') }}" alt="" class="footer-logo">	
+									</a>
+									
 								</div>
 								
 
