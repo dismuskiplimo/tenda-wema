@@ -14,21 +14,24 @@
               <h4>Please Choose Your Preferred Payment Method</h4>
             </div>
 
-            <div class="col-sm-6 text-center">
+            @if($settings->mpesa_enabled->value)
+              <div class="col-sm-6 text-center">
               
-                <a href="" data-toggle="modal" data-target="#purchase-coins-mpesa" class="purchase-coins">
-                  <img src="{{ custom_asset('images/payments/mpesa.png') }}" alt="" title="Mpesa" class="h-100">
-                </a>  
-              
-            </div>
-
-            <div class="col-sm-6  text-center">
-              
-                <a href="" data-toggle="modal" data-target="#purchase-coins-paypal" class="purchase-coins">
-                  <img src="{{ custom_asset('images/payments/paypal.png') }}" alt="" title="Paypal" class="h-100">
-                </a>  
-              
-            </div>
+                  <a href="" data-toggle="modal" data-target="#purchase-coins-mpesa" class="purchase-coins">
+                    <img src="{{ custom_asset('images/payments/mpesa.png') }}" alt="" title="Mpesa" class="h-100">
+                  </a>  
+                
+              </div>
+            @endif
+            
+            @if($settings->paypal_enabled->value)
+              <div class="col-sm-6  text-center">
+                  <a href="" data-toggle="modal" data-target="#purchase-coins-paypal" class="purchase-coins">
+                    <img src="{{ custom_asset('images/payments/paypal.png') }}" alt="" title="Paypal" class="h-100">
+                  </a>  
+                
+              </div>
+            @endif
 
           </div>
           

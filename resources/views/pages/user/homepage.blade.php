@@ -104,37 +104,29 @@
 					<div class="clear"></div><div class="line bottommargin-lg"></div>
 
 					<div class="col_two_fifth nobottommargin">
-						<a href="http://vimeo.com/101373765" data-lightbox="iframe">
-							<img src="images/others/1.jpg" alt="Image">
-							<span class="i-overlay"><img src="images/icons/play.png" alt="Play"></span>
-						</a>
+						<img src="{{ custom_asset('images/tenda-wema/6.jpg') }}" class="img-responsive" alt="">
+
+						
 					</div>
 
 					<div class="col_three_fifth nobottommargin col_last">
 
 						<div class="heading-block">
-							<h2>Globally Preferred Ecommerce Platform</h2>
+							<h2>Why {{ config('app.name') }} was formed? </h2>
 						</div>
 
-						<p>Worldwide John Lennon, mobilize humanitarian; emergency response donors; cause human experience effect. Volunteer Action Against Hunger Aga Khan safeguards women's.</p>
+						
 
-						<div class="col_half nobottommargin">
+						<div class="nobottommargin">
 							<ul class="iconlist iconlist-color nobottommargin">
-								<li><i class="icon-caret-right"></i> Responsive Ready Layout</li>
-								<li><i class="icon-caret-right"></i> Retina Display Supported</li>
-								<li><i class="icon-caret-right"></i> Powerful &amp; Optimized Code</li>
-								<li><i class="icon-caret-right"></i> 380+ Templates Included</li>
+								<li><i class="icon-caret-right"></i> To give users a chance to donate their less frequently used items</li>
+								<li><i class="icon-caret-right"></i> To give users ability to accedd donated items</li>
+								<li><i class="icon-caret-right"></i> To give users the ability to state the good deeds they have done that have positively impacted the society</li>
+								<li><i class="icon-caret-right"></i> To provide a platform where well wishers can communicate</li>
 							</ul>
 						</div>
 
-						<div class="col_half nobottommargin col_last">
-							<ul class="iconlist iconlist-color nobottommargin">
-								<li><i class="icon-caret-right"></i> 12+ Headers &amp; Menu Designs</li>
-								<li><i class="icon-caret-right"></i> Premium Sliders Included</li>
-								<li><i class="icon-caret-right"></i> Light &amp; Dark Colors</li>
-								<li><i class="icon-caret-right"></i> e-Commerce Design Included</li>
-							</ul>
-						</div>
+						
 
 					</div>
 
@@ -146,8 +138,8 @@
 					<div class="container clearfix">
 
 						<div class="heading-block center">
-							<h2>Features that you are gonna Love</h2>
-							<span>Canvas comes with 100+ Feature oriented Shortcodes that are easy to use too.</span>
+							<h2>{{ config('app.name') }} Features</h2>
+							<span>{{ config('app.name') }} comes with a variety of features that you will love.</span>
 						</div>
 
 						<div class="clear bottommargin-sm"></div>
@@ -155,30 +147,30 @@
 						<div class="col_one_third">
 							<div class="feature-box fbox-small fbox-plain" data-animate="fadeIn">
 								<div class="fbox-icon">
-									<a href="#"><i class="icon-phone2"></i></a>
+									<a href="#"><i class="icon-phone"></i></a>
 								</div>
-								<h3>Responsive Layout</h3>
-								<p>Powerful Layout with Responsive functionality that can be adapted to any screen size.</p>
+								<h3>Donate items to the community</h3>
+								<p>{{ config('app.name') }} allows you to donate items to the community.</p>
 							</div>
 						</div>
 
 						<div class="col_one_third">
 							<div class="feature-box fbox-small fbox-plain" data-animate="fadeIn" data-delay="200">
 								<div class="fbox-icon">
-									<a href="#"><i class="icon-eye"></i></a>
+									<a href="#"><i class="icon-cart"></i></a>
 								</div>
-								<h3>Retina Ready Graphics</h3>
-								<p>Looks beautiful &amp; ultra-sharp on Retina Displays with Retina Icons, Fonts &amp; Images.</p>
+								<h3>Purchase items from the community</h3>
+								<p>{{ config('app.name') }} allows you to purchase items donated to the community using Simba Coins.</p>
 							</div>
 						</div>
 
 						<div class="col_one_third col_last">
 							<div class="feature-box fbox-small fbox-plain" data-animate="fadeIn" data-delay="400">
 								<div class="fbox-icon">
-									<a href="#"><i class="icon-star2"></i></a>
+									<a href="#"><i class="icon-comment"></i></a>
 								</div>
-								<h3>Powerful Performance</h3>
-								<p>Optimized code that are completely customizable and deliver unmatched fast performance.</p>
+								<h3>Community discussion</h3>
+								<p>Members can participate in discussions and also post upcoming events.</p>
 							</div>
 						</div>
 
@@ -187,71 +179,41 @@
 						<div class="col_one_third">
 							<div class="feature-box fbox-small fbox-plain" data-animate="fadeIn" data-delay="600">
 								<div class="fbox-icon">
-									<a href="#"><i class="icon-video"></i></a>
+									<a href="#"><i class="icon-user"></i></a>
 								</div>
-								<h3>HTML5 Video</h3>
-								<p>Canvas provides support for Native HTML5 Videos that can be added to a Full Width Background.</p>
+								<h3>Social Levels</h3>
+								<p>{{ config('app.name') }} uses social levels to showcase the position of a member in the society through the good deeds done.</p>
 							</div>
 						</div>
 
 						<div class="col_one_third">
 							<div class="feature-box fbox-small fbox-plain" data-animate="fadeIn" data-delay="800">
 								<div class="fbox-icon">
-									<a href="#"><i class="icon-params"></i></a>
+									<a href="#"><i class="icon-money"></i></a>
 								</div>
-								<h3>Parallax Support</h3>
-								<p>Display your Content attractively using Parallax Sections that have unlimited customizable areas.</p>
+								<h3>MPESA Support</h3>
+								<p>{{ config('app.name') }} allows purchase of Simba Coins throug MPESA in case you have insufficient funds to purchase an item.</p>
 							</div>
 						</div>
 
 						<div class="col_one_third col_last">
 							<div class="feature-box fbox-small fbox-plain" data-animate="fadeIn" data-delay="1000">
 								<div class="fbox-icon">
-									<a href="#"><i class="icon-fire"></i></a>
+									<a href="#"><i class="icon-email"></i></a>
 								</div>
-								<h3>Endless Possibilities</h3>
-								<p>Complete control on each &amp; every element that provides endless customization possibilities.</p>
+								<h3>Email Notifications</h3>
+								<p>{{ config('app.name') }} uses email notifications to alert you whenever changes are made.</p>
 							</div>
 						</div>
 
-						<div class="clear"></div>
-
-						<div class="col_one_third nobottommargin">
-							<div class="feature-box fbox-small fbox-plain" data-animate="fadeIn" data-delay="1200">
-								<div class="fbox-icon">
-									<a href="#"><i class="icon-bulb"></i></a>
-								</div>
-								<h3>Light &amp; Dark Color Schemes</h3>
-								<p>Change your Website's Primary Scheme instantly by simply adding the dark class to the body.</p>
-							</div>
-						</div>
-
-						<div class="col_one_third nobottommargin">
-							<div class="feature-box fbox-small fbox-plain" data-animate="fadeIn" data-delay="1400">
-								<div class="fbox-icon">
-									<a href="#"><i class="icon-heart2"></i></a>
-								</div>
-								<h3>Boxed &amp; Wide Layouts</h3>
-								<p>Stretch your Website to the Full Width or make it boxed to surprise your visitors.</p>
-							</div>
-						</div>
-
-						<div class="col_one_third nobottommargin col_last">
-							<div class="feature-box fbox-small fbox-plain" data-animate="fadeIn" data-delay="1600">
-								<div class="fbox-icon">
-									<a href="#"><i class="icon-note"></i></a>
-								</div>
-								<h3>Extensive Documentation</h3>
-								<p>We have covered each &amp; everything in our Documentation including Videos &amp; Screenshots.</p>
-							</div>
-						</div>
+						
 
 						<div class="clear"></div>
 
 					</div>
 				</div>
 
-				<div class="container clearfix">
+				{{-- <div class="container clearfix">
 
 					<div class="heading-block center">
 						<h3>Some of our <span>Featured</span> Works</h3>
@@ -469,7 +431,7 @@
 
 					</div>
 
-				</div>
+				</div> --}}
 
 				<div class="container clearfix">
 

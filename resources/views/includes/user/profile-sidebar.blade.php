@@ -1,5 +1,6 @@
 <div class="card">
 	<div class="card-body">
+
 		@if(auth()->check() && auth()->user()->id == $user->id)
 			<img src="{{ $user->profile_picture() }}" alt="" class="img-responsive mb-30 profile-picture img-circle" title="Click to update">
 
@@ -13,19 +14,64 @@
 		@endif
 
 		<h5 class=" text-center" {!! $user->verified ? 'title = "Verified"' : '' !!}>{{ $user->name }} {!! $user->verified ? '<i class = "fa fa-check text-success" title = "Verified"></i>' : '' !!}</h5>
+
+		@php
+			$user->check_profile();
+
+			$stars = $user->reviews ? ($user->rating / $user->reviews) : 0;
+
+			$stars = $stars == 5 ? 5 : floor($stars);
+			
+			$profile = $user->profile;
+
+			$profile_elements = 8;
+			$profile_sum = $profile->about_me + $profile->memberships + $profile->education + $profile->work_experience + $profile->skills + $profile->awards + $profile->hobbies + $profile->achievements;
+
+			$profile_percent = ($profile_sum / $profile_elements) * 100;
+
+			$profile_percent = floor($profile_percent);
+		@endphp
+
+		<p class="text-center">
+			@if($stars)
+				
+					@for($i = 0; $i < $stars; $i++)
+						<i class="fa fa-star text-warning"></i>
+					@endfor
+				
+			@else
+				<i>User not reviewed yet</i>
+			@endif
+		</p>
 		
 		<p class=" text-center">
 			<img src="{{ $user->badge() }}" alt="{{ $user->name }} Badge" class="size-30"> <br>
 			{{ $user->social_status() }}
 		</p>
 
+		<div class="progress my-20">
+		  <div class="progress-bar" role="progressbar" aria-valuenow="{{ $profile_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $profile_percent }}%;">
+		    {{ $profile_percent }}% Complete
+		  </div>
+		</div>
+
+		<p class="text-center mb-0">
+			<small>Profile Completion ({{ $profile_percent }}%)</small>
+		</p>
+
 		<p class="text-center">
 			@if(auth()->check())
 				@if((auth()->user()->id != $user->id) && !auth()->user()->is_admin())
-					<a href="{{ route('user.message', ['username' => $user->username]) }}" class="btn btn-xs btn-info"><i class="fa fa-envelope"></i> Send Message</a>
+					<a href="{{ route('user.message', ['username' => $user->username]) }}" class="btn btn-xs btn-info"><i class="fa fa-envelope"></i> Send Message</a> <br> <br>
+
+					<a href = "" data-toggle = "modal" data-target = "#report-user" class="btn btn-xs btn-danger"><i class="fa fa-bullhorn"></i> Report User</a>
+
+					@include('pages.user.modals.report-user')
 				@endif
 			@else
-				<a href="" class="btn btn-xs btn-info"><i class="fa fa-sign-in"></i> Log in to message</a>
+				<a href="" data-toggle = "modal" data-target = "#login-modal" class="btn btn-xs btn-info"><i class="fa fa-sign-in"></i> Log in to message</a> 
+
+				@include('pages.user.modals.login')
 			@endif
 		</p>
 

@@ -18,6 +18,7 @@ class CreateDonationsTable extends Migration
             $table->increments('id');
             $table->string('fname')->nullable();
             $table->string('lname')->nullable();
+            $table->integer('amount')->nullable();
             $table->string('country')->nullable();
             $table->string('organization')->nullable();
             $table->string('phone')->nullable();
@@ -29,10 +30,10 @@ class CreateDonationsTable extends Migration
             $table->timestamp('received_at')->nullable();
             $table->integer('received_by')->nullable();
 
-            $table->boolean('not_received')->default(0);
-            $table->timestamp('not_received_at')->nullable();
-            $table->integer('not_received_by')->nullable();
-            $table->text('not_received_reason')->nullable();
+            $table->boolean('dismissed')->default(0);
+            $table->timestamp('dismissed_at')->nullable();
+            $table->integer('dismissed_by')->nullable();
+            $table->text('dismissed_reason')->nullable();
 
             $table->timestamps();
         });

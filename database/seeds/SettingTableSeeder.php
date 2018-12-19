@@ -43,6 +43,20 @@ class SettingTableSeeder extends Seeder
         		'updated_at'	=> $this->date,
         	],
 
+            [
+                'name'          => 'paypal_enabled',
+                'value'         => '1',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mpesa_enabled',
+                'value'         => '1',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
         	[
         		'name'			=> 'coin_value',
         		'value'			=> '10',

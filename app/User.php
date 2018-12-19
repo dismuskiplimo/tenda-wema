@@ -5,11 +5,13 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Carbon\Carbon;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -103,6 +105,14 @@ class User extends Authenticatable
 
     public function notifications(){
         return $this->hasMany('App\Notification', 'to_id');
+    }
+
+    public function user_reports(){
+        return $this->hasMany('App\UserReport', 'user_id');
+    }
+
+    public function report_types(){
+        return $this->hasMany('App\UserReportType', 'user_id');
     }
 
     public function check_social_level(){
@@ -264,12 +274,25 @@ class User extends Authenticatable
             $this->update();
             
             //session()->flash('success', $message);
+        }   
+    }
+
+    public function check_profile(){
+        if(!$this->profile){
+            $profile = new \App\Profile;
+            $profile->user_id = $this->id;
+            $profile->save();
         }
-        
+
+        return true;
     }
 
     public function reviews(){
         return $this->hasMany('App\UserReview', 'user_id');
+    }
+
+    public function transactions(){
+        return $this->hasMany('App\Transaction', 'user_id');
     }
 
     public function photos(){

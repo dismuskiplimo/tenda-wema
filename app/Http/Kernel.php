@@ -69,5 +69,7 @@ class Kernel extends HttpKernel
         'active'  => \App\Http\Middleware\Active::class,
         'email_verified'  => \App\Http\Middleware\EmailVerified::class,
         'not_closed'  => \App\Http\Middleware\NotClosed::class,
+
+        'has_profile'  => \App\Http\Middleware\HasProfile::class,
     ];
 }

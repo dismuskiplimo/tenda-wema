@@ -153,6 +153,13 @@
                 </ul>
             </li>
 
+            <li>
+                <a href="{{ route('admin.support-causes') }}" class="waves-effect">
+                    <i class="ti-bag fa-fw"></i> 
+                    <span class="hide-menu">Donation Requests</span>
+                </a> 
+            </li>
+
             <li> 
                 <a href="#" class="waves-effect">
                     <i class="ti-user fa-fw"></i> 
@@ -232,6 +239,10 @@
                         <a href="{{ route('admin.transactions', ['type' => 'mpesa']) }}">MPESA 
                             <span class="label label-rouded label-purple pull-right">{{-- {{ $active_users }} --}}</span>
                         </a> 
+
+                        <a href="{{ route('admin.transactions', ['type' => 'paypal']) }}">Paypal 
+                            <span class="label label-rouded label-purple pull-right">{{-- {{ $active_users }} --}}</span>
+                        </a> 
                     </li>
 
                     
@@ -291,6 +302,53 @@
                     </li>
 
                     
+                    
+                </ul>
+            </li>
+
+            <li>
+                <a href="{{ route('admin.contact-forms') }}" class="waves-effect">
+                    <i class="ti-envelope fa-fw"></i> 
+                    <span class="hide-menu">Contact Forms</span>
+                </a> 
+            </li>
+
+            <li> 
+                <a href="#" class="waves-effect">
+                    <i class="fa fa-bullhorn fa-fw"></i> 
+                    <span class="hide-menu">Misconduct Reported
+                        <span class="fa arrow"></span>
+                    </span>
+                </a>
+
+                <ul class="nav nav-second-level">
+                    
+
+                    
+                    <li>
+                        <a href="{{ route('admin.users.reported', ['type' => 'pending']) }}">Pending Approval
+                            <span class="label label-rouded label-purple pull-right">{{-- {{ $active_events_count }} --}}</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('admin.users.reported', ['type' => 'approved']) }}">Approved
+                            <span class="label label-rouded label-purple pull-right">{{-- {{ $featured_events_count }} --}}</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('admin.users.reported', ['type' => 'dismissed']) }}">Dismissed
+                            <span class="label label-rouded label-purple pull-right">{{-- {{ $closed_events_count }} --}}</span>
+                        </a>
+                    </li>                    
+
+                    <li>
+                        <a href="{{ route('admin.users.reported', ['type' => 'all']) }}">All
+                            <span class="label label-rouded label-purple pull-right">{{-- {{ $past_events_count }} --}}</span>
+                        </a>
+                    </li>
+
                     
                 </ul>
             </li>

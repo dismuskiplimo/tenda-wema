@@ -16,6 +16,18 @@
 		return custom_asset('images/simba-coin.png');
 	}
 
+	function mpesa_date($date){
+		$year = substr($date, 0 ,4);
+		$month = substr($date, 4 ,2);
+		$day = substr($date, 6 ,2);
+
+		$hour = substr($date,8 ,2);
+		$min = substr($date,10 ,2);
+		$second = substr($date,12 ,2);
+
+		return $day .'/' . $month . '/' . $year . ' at ' . $hour . ':' . $min . ':' . $second;
+	}
+
 	function simple_date($date){
 		return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format('jS F, Y');
 	}
@@ -27,10 +39,6 @@
 	function fancy_date($date){
 		$date = \Carbon\Carbon::parse($date);
 		$diff = $date->diffForHumans();
-
-		// if(strtolower($diff) == strtolower('Today') || strtolower($diff) == strtolower('Yesterday')){
-		// 	return $diff . ' at ' . $date->format('g:i A');
-		// }
 
 		return $diff;
 	}
@@ -66,6 +74,20 @@
 
 		else{
 			return custom_asset('images/badges/mwanzo.png');
+		}
+	}
+
+	function award($award){
+		if(strtolower($award) == strtolower('most-active')){
+			return custom_asset('images/badges/most-active-member.png');
+		}
+
+		elseif(strtolower($award) == strtolower('community-member')){
+			return custom_asset('images/badges/community-member-award.png');
+		}
+
+		else{
+			return custom_asset('images/badges/most-active-member.png');
 		}
 	}
 

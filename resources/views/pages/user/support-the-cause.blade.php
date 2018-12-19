@@ -39,7 +39,7 @@
 					<h4>Gift Information</h4>
 					
 					<div class="form-group">
-						<label for="">Amount you wish to donate (Min: Ksh 1,000/=)</label>
+						<label for="">Amount you wish to donate in KES (Min: KES 1,000/=)</label>
 						<input type="number" name="amount" min="1000" class="form-control" placeholder="Amount you wish to donate" required="">
 					</div>
 

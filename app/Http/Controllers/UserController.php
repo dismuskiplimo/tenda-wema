@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType};
 
 use Image, Auth, Session;
 
@@ -17,6 +17,7 @@ class UserController extends Controller
         $this->middleware('is_user');
     	$this->middleware('not_closed');
         $this->middleware('check_coins');
+        $this->middleware('has_profile');
         $this->initialize();
     }
 
@@ -654,12 +655,19 @@ class UserController extends Controller
             'name'  => 'max:255|required',
         ]);
 
+        $user = auth()->user();
+
         $membership = new Membership;
         $membership->name = $request->name;
-        $membership->user_id = auth()->user()->id;
+        $membership->user_id = $user->id;
         $membership->save();
 
         $message = 'Membership Added';
+
+        if(!$user->profile->memberships){
+            $user->profile->memberships = 1;
+            $user->profile->update();
+        }
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -718,13 +726,20 @@ class UserController extends Controller
             'year'  => 'min:1900|max:' . date('Y') . '|required|numeric',
         ]);
 
+        $user = auth()->user();
+
         $award = new Award;
         $award->name = $request->name;
         $award->year = $request->year;
-        $award->user_id = auth()->user()->id;
+        $award->user_id = $user->id;
         $award->save();
 
         $message = 'Award Added';
+
+        if(!$user->profile->awards){
+            $user->profile->awards = 1;
+            $user->profile->update();
+        }
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -784,12 +799,19 @@ class UserController extends Controller
             'name'  => 'max:255|required',
         ]);
 
+        $user = auth()->user();
+
         $hobby = new Hobby;
         $hobby->name = $request->name;
-        $hobby->user_id = auth()->user()->id;
+        $hobby->user_id = $user->id;
         $hobby->save();
 
         $message = 'Hobby Added';
+
+        if(!$user->profile->hobbies){
+            $user->profile->hobbies = 1;
+            $user->profile->update();
+        }
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -847,12 +869,19 @@ class UserController extends Controller
             'name'  => 'max:255|required',
         ]);
 
+        $user = auth()->user();
+
         $achievement = new Achievement;
         $achievement->name = $request->name;
-        $achievement->user_id = auth()->user()->id;
+        $achievement->user_id = $user->id;
         $achievement->save();
 
         $message = 'Achievement Added';
+
+        if(!$user->profile->achievements){
+            $user->profile->achievements = 1;
+            $user->profile->update();
+        }
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -912,17 +941,24 @@ class UserController extends Controller
             'position'          => 'required|max:255',
         ]);
 
+        $user = auth()->user();
+
         $work_experience = new WorkExperience;
 
-        $work_experience->fromdate      = $request->from;
-        $work_experience->todate        = $request->to;
+        $work_experience->from_date      = $request->from;
+        $work_experience->to_date        = $request->to;
         $work_experience->company   = $request->company;
         $work_experience->position  = $request->position;
-        $work_experience->user_id   = auth()->user()->id;
+        $work_experience->user_id   = $user->id;
 
         $work_experience->save();
 
         $message = "Work Experience added";
+
+        if(!$user->profile->work_experience){
+            $user->profile->work_experience = 1;
+            $user->profile->update();
+        }
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -955,8 +991,8 @@ class UserController extends Controller
             return redirect()->back();
         }
 
-        $work_experience->fromdate      = $request->from;
-        $work_experience->todate        = $request->to;
+        $work_experience->from_date      = $request->from;
+        $work_experience->to_date        = $request->to;
         $work_experience->company   = $request->company;
         $work_experience->position  = $request->position;
 
@@ -1007,14 +1043,21 @@ class UserController extends Controller
             'skill' => 'required|max:255',
         ]);
 
+        $user = auth()->user();
+
         $skill = new Skill;
 
         $skill->skill   = $request->skill;
-        $skill->user_id = auth()->user()->id;
+        $skill->user_id = $user->id;
 
         $skill->save();
 
         $message = "Skill added";
+
+        if(!$user->profile->skills){
+            $user->profile->skills = 1;
+            $user->profile->update();
+        }
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -1098,6 +1141,8 @@ class UserController extends Controller
             'end_year'          => 'required|max:255',
         ]);
 
+        $user = auth()->user();
+
         $education = new Education;
 
         $education->school = $request->school;
@@ -1111,6 +1156,11 @@ class UserController extends Controller
         $education->save();
 
         $message = "Education added";
+
+        if(!$user->profile->education){
+            $user->profile->education = 1;
+            $user->profile->update();
+        }
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -1205,6 +1255,11 @@ class UserController extends Controller
         $user->update();
 
         session()->flash('success', 'Details updated');
+
+        if(!$user->profile->about_me){
+            $user->profile->about_me = 1;
+            $user->profile->update();
+        }
 
         return redirect()->back();
     }
@@ -1415,6 +1470,48 @@ class UserController extends Controller
         $coin_purchase_history->save();
 
         session()->flash('success', 'Coin Purchase Requested');
+
+        return redirect()->back();
+    }
+
+    public function postReport(Request $request){
+        $this->validate($request, [
+            'section'       => 'required|max:255',
+            'report_type'   => 'required|max:255',
+            'model_id'      => 'required|numeric',
+            'user_id'       => 'required|numeric',
+            'description'   => 'required|max:800',
+        ]);
+
+        $report_type = ReportType::where('type', $request->report_type)->first();
+        
+        $user        = User::findOrFail($request->user_id);
+
+        if(!$report_type){
+            session()->flash('error', 'Invalid Option Selected');
+            return redirect()->back();
+        }
+
+        $user_report = new UserReport;
+        $user_report->report_type_id    = $report_type->id;
+        $user_report->section           = $request->section;
+        $user_report->model_id          = $request->model_id;
+        $user_report->user_id           = $user->id;
+        $user_report->description       = $request->description;
+        $user_report->reported_by       = auth()->user()->id;
+        $user_report->save();
+
+        $notification                       = new Notification;
+        $notification->from_id              = auth()->user()->id;
+        $notification->to_id                = null;
+        $notification->message              = 'User/Item Reported';
+        $notification->notification_type    = 'user.reported';
+        $notification->model_id             = $user_report->id;
+        $notification->system_message       = 1;
+        $notification->save();
+
+
+        session()->flash('success', 'Report received, the admin will review and take the appropriate actions');
 
         return redirect()->back();
     }

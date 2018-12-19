@@ -121,6 +121,8 @@ Route::group(['prefix' => 'user'], function(){
 
 	Route::post('/profile/about-me/update', 'UserController@updateAboutMe')->name('user.about-me.update');
 
+	Route::post('/report', 'UserController@postReport')->name('user.report');
+
 });
 
 Route::group(['prefix' => 'admin'], function(){
@@ -128,6 +130,8 @@ Route::group(['prefix' => 'admin'], function(){
 
 	Route::get('/account', 'AdminController@showAccount')->name('admin.account');
 	Route::get('/account/settings', 'AdminController@showAccountSettings')->name('admin.account.settings');
+	
+	Route::get('/notifications', 'AdminController@showNotifications')->name('admin.notifications');
 
 	// Deeds
 	Route::get('/deeds/{type}', 'AdminController@showDeeds')->name('admin.deeds');
@@ -144,6 +148,8 @@ Route::group(['prefix' => 'admin'], function(){
 	Route::post('/donated-items/{id}/approve-purchase', 'AdminController@approveDonatedItemPurchase')->name('admin.donated-item.approve');
 	Route::post('/donated-items/{id}/disapprove-purchase', 'AdminController@disapproveDonatedItemPurchase')->name('admin.donated-item.disapprove');
 	Route::post('/donated-items/{id}/delete', 'AdminController@deleteDonatedItem')->name('admin.donated-item.delete');
+	Route::get('/donated-items/{id}/delete', 'AdminController@deleteDonatedItem')
+	;
 	Route::post('/donated-items/{id}/confirm-delivery', 'AdminController@confirmDonatedItemDelivery')->name('admin.donated-item.delivery.approve');
 	Route::post('/donated-items/{id}/dispute', 'AdminController@disputeDonatedItem')->name('admin.donated-item.dispute');
 
@@ -153,6 +159,14 @@ Route::group(['prefix' => 'admin'], function(){
 	Route::get('/users/{id}/view', 'AdminController@showUser')->name('admin.user');
 	Route::post('/users/{id}/close', 'AdminController@closeAccount')->name('admin.user.close-account');
 	Route::post('/users/{id}/verify', 'AdminController@verifyUser')->name('admin.user.verify');
+
+	Route::get('/users/{id}/donated-items', 'AdminController@showUserDonatedItems')->name('admin.user.donated-items');
+	Route::get('/users/{id}/transactions', 'AdminController@showUserTransactions')->name('admin.user.transactions');
+	Route::get('/users/{id}/bought-items', 'AdminController@showUserBoughtItems')->name('admin.user.bought-items');
+	Route::get('/users/{id}/reviews', 'AdminController@showUserReviews')->name('admin.user.reviews');
+	Route::get('/users/{id}/photos', 'AdminController@showUserPhotos')->name('admin.user.photos');
+	Route::get('/users/{id}/good-deeds', 'AdminController@showUserGoodDeeds')->name('admin.user.good-deeds');
+	Route::get('/users/{id}/simba-coin-logs', 'AdminController@showUserSimbaCoinLogs')->name('admin.user.simba-coin-logs');
 
 	// Transactions
 	Route::get('/transactions/{type}', 'AdminController@showTransactions')->name('admin.transactions');
@@ -170,8 +184,26 @@ Route::group(['prefix' => 'admin'], function(){
 	
 	Route::get('/messages/{id}/ajax', 'AdminController@getAjaxConversation')->name('admin.message.ajax');
 
+	// Support Cause Requests
+	Route::get('/support-the-cause', 'AdminController@showSupportCausesPage')->name('admin.support-causes');
+	Route::get('/support-the-cause/{id}/show', 'AdminController@showSupportCausePage')->name('admin.support-cause');
+	Route::post('/support-the-cause/{id}/confirm', 'AdminController@postConfirmCause')->name('admin.support-cause.confirm');
+	Route::post('/support-the-cause/{id}/dismiss', 'AdminController@postDismissCause')->name('admin.support-cause.dismiss');
+
+	// Contact Form
+
+	Route::get('/contact-forms', 'AdminController@showContactFormPage')->name('admin.contact-forms');
+	Route::get('/contact-forms/{id}/show', 'AdminController@showContactFormMessage')->name('admin.contact-form');
+
 	//Site Settings
 	Route::get('/site-settings', 'AdminController@showSiteSettings')->name('admin.site-settings');
+
+	// Reports 
+	Route::get('/reports/{type}', 'AdminController@getReportedUsers')->name('admin.users.reported');
+	Route::get('/reports/{id}/view', 'AdminController@getReportedUserSingle')->name('admin.users.reported-single');
+
+	Route::post('/reports/{id}/approve', 'BackController@approveReport')->name('admin.users.reported.approve');
+	Route::post('/reports/{id}/dismiss', 'BackController@dismissReport')->name('admin.users.reported.dismiss');
 });
 
 Route::group(['prefix' => 'auth'], function(){

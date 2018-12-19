@@ -124,7 +124,17 @@
 								<th>Condition</th>
 								<td>{{ ucfirst(strtolower($item->condition)) }}</td>
 							</tr>
-						</table>
+						</table> 
+						
+						@if(auth()->check())
+							<br>
+
+							@if(!$item->bought && !$mine)
+								<a href="" data-toggle = "modal" data-target = "#report-item" class="btn btn-danger"> <i class="fa fa-bullhorn"></i> Report Item</a>
+							@endif
+						@else
+							
+						@endif
 						
 						
 					</div>
@@ -199,9 +209,13 @@
 		
 
 @if(!auth()->check())
-	{{-- @include('pages.user.modals.login') --}}
+	@include('pages.user.modals.login')
 @else
 	@include('pages.user.modals.buy-coins')
+
+	@if(!$item->bought && !$mine)
+		@include('pages.user.modals.report-item')
+	@endif
 @endif
 
 @endsection

@@ -17,14 +17,26 @@ class ImageController extends Controller
 
     public function updateProfilePicture(Request $request){
         if($request->hasFile('image') && $request->file('image')->isValid()){
+            
+            $file = $request->file('image');
+
             try{
                 $this->validate($request,[
-                    'image' => 'mimes:jpg,jpeg,png,bmp|min:0.001|max:40960',
+                    'image' => 'mimes:jpg,jpeg,png,bmp|min:0.001|max:40960|required',
                 ]);
+
+                $ext = $file->getClientOriginalExtension();
+
             }catch(\Exception $e){
-                session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
+                $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+                $ext = strtolower($ext);
+
+                if($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png' || $ext == 'bmp'){
                 
-                return redirect()->back();
+                }else{
+                    session()->flash('error', 'Unsupported File Type');
+                    return redirect()->back();
+                }
             }
 
             $user = auth()->user();
@@ -49,7 +61,7 @@ class ImageController extends Controller
 
             try{
                 $file       = $request->file('image');
-                $name   	= time(). rand(1,10000000) . '.' . $file->getClientOriginalExtension();
+                $name   	= time(). rand(1,10000000) . '.' . $ext;
                 
                 $image_path         = $this->image_path . '/' . $name;
                 $thumbnail_path     = $this->image_path . '/' .'thumbnails'. '/' . $name;

@@ -8,7 +8,7 @@ use Auth, Session, Config;
 
 use Carbon\Carbon;
 
-use App\{Paypal_Transaction, Transaction, MpesaTransaction, Setting, Currency, Notification, MpesaRequest, AppLog, SimbaCoinLog, User};
+use App\{Paypal_Transaction, Transaction, MpesaTransaction, Setting, Currency, Notification, MpesaRequest, AppLog, SimbaCoinLog, User, MpesaRaw};
 
 use \PayPal\Rest\ApiContext;
 
@@ -116,6 +116,12 @@ class PaymentsController extends Controller
     	$this->validate($request, [
             'amount' => 'required|numeric|min:1',
         ]);
+
+        if(!$this->settings->paypal_enabled->value){
+            session()->flash('error', 'Paypal gateway as been disabled');
+
+            return redirect()->back();
+        }
 
         $user           = auth()->user();
 
@@ -384,6 +390,12 @@ class PaymentsController extends Controller
             'amount'    => 'numeric|required|min:10',
         ]);
 
+        if(!$this->settings->mpesa_enabled->value){
+            session()->flash('error', 'Paypal gateway as been disabled');
+
+            return redirect()->back();
+        }
+
         if($this->settings->mpesa_mode->value == 'sandbox'){
             $amount = 1;
             $coins  = 10;
@@ -469,6 +481,16 @@ class PaymentsController extends Controller
 
     public function saveMpesaRequest(Request $request, $id , $type){
         $user   = User::find($id);
+
+        try{
+            list($h, $b) = explode("\r\n\r\n", $request, 2);
+        }catch(\Exception $e){
+            $b = $request;
+        }
+
+        $raw = new MpesaRaw;
+        $raw->contents = $b;
+        $raw->save();
 
         if(!$user){
             $log = new AppLog;

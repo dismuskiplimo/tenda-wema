@@ -117,6 +117,14 @@
 
 	            	<div class="col-sm-4">
 	            		<div class="white-box">
+							<h4 class="box-title">
+								Status
+							</h4>
+
+							<h3>{{ $item->status() }}</h3>
+						</div>
+
+	            		<div class="white-box">
 							<div class="">
 								<h3> <img src="{{ simba_coin() }}" alt="" class="size-30"> {{ $item->price }} <small>Simba Coins</small></h3>
 								<h4>{{ $item->name }}</h4>
@@ -200,9 +208,13 @@
 							<i class="fa fa-send"></i> MESSAGE SELLER
 						</a>
 
+						@if($item->bought)
+
 						<a href="{{ route('admin.message.new', ['id' => $item->buyer->id]) }}" class="btn btn-block btn-primary btn-lg">
 							<i class="fa fa-send"></i> MESSAGE BUYER
 						</a>
+
+						@endif
 
 
 	            	</div>

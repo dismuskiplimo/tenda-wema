@@ -105,7 +105,7 @@
            
             <li class="divider"></li>
             <li>
-                <a class="text-center" href="#"> <strong>See All Notifications</strong> <i class="fa fa-angle-right"></i> </a>
+                <a class="text-center" href="{{ route('admin.notifications') }}"> <strong>See All Notifications</strong> <i class="fa fa-angle-right"></i> </a>
             </li>
         </ul>
         <!-- /.dropdown-tasks -->

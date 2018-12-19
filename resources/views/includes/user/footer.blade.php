@@ -24,7 +24,7 @@
 
 								
 
-								<div style="background: url('images/world-map.png') no-repeat center center; background-size: 100%;">
+								<div style="background: url({{ custom_asset('images/world-map.png') }}) no-repeat center center; background-size: 100%;">
 									<address>
 										<strong>{{ config('app.domain') }}</strong><br>
 										P.o Box 24721-00100<br>
@@ -48,6 +48,7 @@
 									<li><a href="{{ route('support-the-cause') }}">Support the Cause</a></li>
 									<li><a href="{{ route('about-us') }}">About Us</a></li>
 									<li><a href="{{ route('contact-us') }}">Contact Us</a></li>
+									<li><a href="{{ route('how-it-works') }}">How it Works</a></li>
 									
 									
 									
@@ -60,33 +61,32 @@
 						<div class="col_one_third col_last">
 
 							<div class="widget clearfix">
-								<h4>Recent Posts</h4>
+								<h4>Recently Donated Items</h4>
 
-								<div id="post-list-footer">
-									<div class="spost clearfix">
-										<div class="entry-c">
-											<div class="entry-title">
-												<h4><a href="#">Lorem ipsum dolor sit amet, consectetur</a></h4>
+								@php
+									$donated_items = \App\DonatedItem::where('bought', 0)->where('disputed', 0)->orderBy('created_at','DESC')->limit(3)->get();
+								@endphp
+
+								@if(count($donated_items))
+									<div id="post-list-footer">
+										@foreach($donated_items as $item)
+											<div class="spost clearfix">
+												<div class="entry-c">
+													<div class="entry-title">
+														<h4><a href="{{ route('donated-item.show', ['slug' => $item->slug]) }}">{{ characters($item->name, '30') }}</a></h4>
+													</div>
+													<ul class="entry-meta">
+														<li>{{ simple_datetime($item->created_at) }}</li>
+													</ul>
+												</div>
 											</div>
-											<ul class="entry-meta">
-												<li>10th July 2014</li>
-											</ul>
-										</div>
+										@endforeach
+											
 									</div>
-
-									<div class="spost clearfix">
-										<div class="entry-c">
-											<div class="entry-title">
-												<h4><a href="#">Elit Assumenda vel amet dolorum quasi</a></h4>
-											</div>
-											<ul class="entry-meta">
-												<li>10th July 2014</li>
-											</ul>
-										</div>
-									</div>
-
 									
-								</div>
+								@else
+									<p>No Items Donated Recently</p>
+								@endif
 							</div>
 
 						</div>

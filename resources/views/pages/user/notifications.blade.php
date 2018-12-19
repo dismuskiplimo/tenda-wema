@@ -20,9 +20,11 @@
 				@if($notifications->total())
 					@foreach($notifications as $notification)
 						<div class="panel mb-20">
-							<div class="panel-body">
-								<p class="mb-0">{{ $notification->message }}</p>
-							</div>
+							<a href="">
+								<div class="panel-body">
+									<p class="mb-0">{{ $notification->message }}</p>
+								</div>	
+							</a>
 						</div>
 					@endforeach
 				@else

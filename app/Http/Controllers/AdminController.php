@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, MpesaTransaction, Donation, ContactUs, Paypal_Transaction, ReportType, UserReport, UserReportType};
 
 use Image, Auth, Session;
 
@@ -28,9 +28,17 @@ class AdminController extends Controller
     }
 
     public function showAccount(){
+    	return view('pages.admin.account', [
+    		'title' => 'Account',
+    		'nav'	=> 'admin.account',
+    	]);
     }
 
-    public function showAccountSettings(){	
+    public function showAccountSettings(){
+    	return view('pages.admin.account-settings', [
+    		'title' => 'Account Settings',
+    		'nav'	=> 'admin.account-settings',
+    	]);
     }
 
     //**************************DEEDS****************************************
@@ -129,6 +137,10 @@ class AdminController extends Controller
         $notification->model_id             = $deed->id;
         $notification->save();
 
+        if($this->settings->mail_enabled->value){
+
+        }
+
         session()->flash('success', 'Deed Approved');
 
         return redirect()->back();
@@ -163,6 +175,10 @@ class AdminController extends Controller
         $notification->notification_type    = 'deed.disapproved';
         $notification->model_id             = $deed->id;
         $notification->save();
+
+        if($this->settings->mail_enabled->value){
+
+        }
 
         session()->flash('success', 'Deed Dispproved');
 
@@ -325,6 +341,10 @@ class AdminController extends Controller
         $simba_coin_log->save();
 
     	$escrow->delete();
+
+        if($this->settings->mail_enabled->value){
+
+        }
 
 
         session()->flash('success', 'Purchase Disapproved');
@@ -496,6 +516,10 @@ class AdminController extends Controller
 
     	$escrow->delete();
 
+        if($this->settings->mail_enabled->value){
+
+        }
+
     	session()->flash('success', 'Item Disputed');
 
     	return redirect()->back();
@@ -515,6 +539,10 @@ class AdminController extends Controller
     	$donated_item->update();
 
     	$donated_item->delete();
+
+        if($this->settings->mail_enabled->value){
+
+        }
 
     	session()->flash('success', 'Donated Item deleted');
 
@@ -591,11 +619,16 @@ class AdminController extends Controller
     		$me = true;
     	}
 
+    	$stars = $user->reviews ? ($user->rating / $user->reviews) : 0;
+
+		$stars = $stars == 5 ? 5 : floor($stars);
+
     	return view('pages.admin.user', [
     		'title' => $user->name,
     		'nav'	=> 'admin.user',
     		'user'	=> $user,
     		'me'	=> $me,
+    		'stars'	=> $stars,
     	]);
     }
 
@@ -609,6 +642,10 @@ class AdminController extends Controller
     	$user->verified_by = $admin->id;  	
 
     	$user->update();
+
+        if($this->settings->mail_enabled->value){
+
+        }
 
     	session()->flash('success', 'User Verified');
 
@@ -647,16 +684,136 @@ class AdminController extends Controller
 
     	$user->update();
 
+        if($this->settings->mail_enabled->value){
+
+        }
+
     	session()->flash('success', 'Account Closed');
 
     	return redirect()->back();
     }
 
+    public function showUserDonatedItems(Request $request, $id){
+    	$user = User::findOrFail($id);
+
+    	$donated_items = $user->donated_items()->orderBy('created_at', 'DESC')->paginate(48);
+
+    	return view('pages.admin.user-donated-items', [
+    		'title' 		=> $user->name . ' | Donated Items (' . number_format($donated_items->total()) . ')',
+    		'nav'			=> 'admin.user.donated-items',
+    		'user'			=> $user,
+    		'donated_items'	=> $donated_items,
+    	]);
+    }
+
+    public function showUserTransactions(Request $request, $id){
+    	$user 			= User::findOrFail($id);
+    	$transactions 	= $user->transactions()->orderBy('created_at', 'DESC')->paginate(50);
+
+    	return view('pages.admin.user-transactions', [
+    		'title' 		=> $user->name . ' | Transactions (' . number_format($transactions->total()) . ')' ,
+    		'nav'			=> 'admin.user.transactions',
+    		'user'			=> $user,
+    		'transactions' 	=> $transactions,
+    	]);
+    }
+
+    public function showUserBoughtItems(Request $request, $id){
+    	$user = User::findOrFail($id);
+
+    	$bought_items = $user->bought_items()->orderBy('created_at', 'DESC')->paginate(48);
+
+    	return view('pages.admin.user-bought-items', [
+    		'title' 		=> $user->name . ' | Bought Items (' . number_format($bought_items->total()) . ')',
+    		'nav'			=> 'admin.user.bought-items',
+    		'user'			=> $user,
+    		'bought_items'	=> $bought_items,
+    	]);
+    }
+
+    public function showUserReviews(Request $request, $id){
+    	$user = User::findOrFail($id);
+
+    	$reviews = $user->reviews()->orderBy('created_at', 'DESC')->paginate(48);
+
+    	return view('pages.admin.user-reviews', [
+    		'title' 	=> $user->name . ' | Reviews (' . number_format($reviews->total()) . ')',
+    		'nav'		=> 'admin.user.reviews',
+    		'user'		=> $user,
+    		'reviews'	=> $reviews,
+    	]);
+    }
+
+    public function showUserPhotos(Request $request, $id){
+    	$user = User::findOrFail($id);
+
+    	$photos = $user->photos()->orderBy('created_at', 'DESC')->paginate(48);
+
+    	return view('pages.admin.user-photos', [
+    		'title' 	=> $user->name . ' | Photos (' . number_format($photos->total()) . ')',
+    		'nav'		=> 'admin.user.photos',
+    		'user'		=> $user,
+    		'photos'	=> $photos,
+    	]);
+    }
+
+    public function showUserGoodDeeds(Request $request, $id){
+    	$user = User::findOrFail($id);
+    	$good_deeds = $user->good_deeds()->where('approved', 1)->orderBy('created_at', 'DESC')->paginate(50);
+
+    	return view('pages.admin.user-good-deeds', [
+    		'title' 		=> $user->name . ' | Good Deeds (' . number_format($good_deeds->total()) . ')',
+    		'nav'			=> 'admin.user.good-deeds',
+    		'user'			=> $user,
+    		'good_deeds' 	=> $good_deeds,
+    	]);
+    }
+
+    public function showUserSimbaCoinLogs(Request $request, $id){
+    	$user = User::findOrFail($id);
+    	$simba_coin_logs = $user->simba_coin_logs()->orderBy('created_at', 'DESC')->paginate(50);
+
+    	return view('pages.admin.user-simba-coin-logs', [
+    		'title' 			=> $user->name . ' | Simba Coin Logs (' . number_format($simba_coin_logs->total()) . ')',
+    		'nav'				=> 'admin.user.simba-coin-logs',
+    		'user'				=> $user,
+    		'simba_coin_logs' 	=> $simba_coin_logs,
+
+    	]);
+    }
+
     //*********************END OF USERS*********************************************
 
+    
+    //***************************************************START OF TRANSACTIONS **********************
+
+
     public function showTransactions($type){
-    	
+    	if($type == 'mpesa'){
+    		$title 			= 'MPESA Transactions';
+    		$nav 			= 'admin.transactions.mpesa';
+    		$page 			= 'pages.admin.mpesa-transactions';
+    		$transactions 	= MpesaTransaction::orderBy('created_at', 'DESC')->paginate(50);
+    	}
+
+        elseif($type == 'paypal'){
+            $title          = 'Paypal Transactions';
+            $nav            = 'admin.transactions.paypal';
+            $page           = 'pages.admin.paypal-transactions';
+            $transactions   = Paypal_Transaction::orderBy('created_at', 'DESC')->paginate(50);
+        }
+        else{
+    		abort(404);
+    	}
+
+    	return view($page, [
+    		'title' 		=> $title,
+    		'nav' 			=> $nav,
+    		'transactions' 	=> $transactions,
+    	]);
     }
+
+    //*************************END OF TRANSACTIONS *****************************************
 
     //***************************************************START OF ESCROW**********************
 
@@ -722,41 +879,6 @@ class AdminController extends Controller
     		$nav 			= 'admin.conversations.all';
 
     		$conversations 	= Conversation::where('support', 1)->orWhere('from_admin', 1)->orderBy('updated_at', 'DESC')->paginate($pagination);
-
-    	// }elseif($type == 'unread'){
-    	// 	$conversations 	= Conversation::where('support', 1)->orWhere('from_admin', 1)->orderBy('updated_at', 'ASC')->get();
-
-
-    	// 	$con = [];
-
-    	// 	foreach ($conversations as $conversation) {
-    	// 		$unread = false;
-    	// 		$conversation->thread = '';
-
-    	// 		$last_message = $conversation->messages()->orderBy('created_at', 'DESC')->first();
-
-    	// 		if($last_message){
-    	// 			if($last_message->support && is_null($last_message->to_id) && !$last_message->read){
-	    // 				$unread = true;
-	    // 			}
-
-	    // 			$conversation->thread = $last_message->message;
-    	// 		}
-
-    	// 		$conversation->unread = $unread;
-    	// 		$con[] = $conversation; 
-    	// 	}
-
-    	// 	$conversations = $con;
-
-    	// 	$title 			= 'Unread Conversations';
-    	// 	$nav 			= 'admin.conversations.unread';
-
-    	// }elseif($type == 'read'){
-
-    	// 	$title 			= 'Read Conversations';
-    	// 	$nav 			= 'admin.conversations.read';
-
     	}
 
     	else{
@@ -936,6 +1058,8 @@ class AdminController extends Controller
 
     //*********************END OF MESSAGES*****************************************
 
+    // ********************SITE SETTINGS *****************************************
+
     public function showSiteSettings(){
     	
     	return view('pages.admin.site-settings', [
@@ -944,5 +1068,175 @@ class AdminController extends Controller
     		'settings'	=> $this->settings,
     	]);
     }
+
+
+    // **********************END OF SITE SETTINGS ***********************************
+
+    // ******************************NOTIFICATIONS *********************************
+
+    public function showNotifications(){
+    	
+    	return view('pages.admin.notifications', [
+    		'title'		=> 'Notifications',
+    		'nav'		=> 'admin.notifications',
+    	]);
+    }
+
+    // ************************END OF NOTIFICATIONS ********************************
+
+    
+    // **************************SUPPORT THE CAUSE *********************************
+
+    public function showSupportCausesPage(){
+        $donations = Donation::orderBy('created_at', 'DESC')->paginate(50);
+
+        return view('pages.admin.support-causes', [
+            'title'     => 'Support Cause Requests',
+            'nav'       => 'admin.support-causes',
+            'donations' => $donations,
+        ]);
+    }
+
+    public function showSupportCausePage($id){
+        $donation = Donation::findOrFail($id);
+
+        return view('pages.admin.support-cause', [
+            'title' => 'Support the Cause',
+            'nav'   => 'admin.support-cause',
+            'donation'  => $donation,
+        ]);
+    }
+
+    public function postConfirmCause(Request $request, $id){
+        $donation = Donation::findOrFail($id);
+
+        $user = auth()->user();
+
+        $donation->received = 1;
+        $donation->received_by = $user->id;
+        $donation->received_at = $this->date;
+        $donation->update();
+
+        if($this->settings->mail_enabled->value){
+
+        }
+
+        if($this->settings->mail_enabled->value){
+
+        }
+
+        session()->flash('success', 'Donation marked as received');
+
+        return redirect()->back();
+    }
+
+    public function postDismissCause(Request $request, $id){
+        $this->validate($request, [
+            'reason' => 'required|max:800',
+        ]);
+
+        $donation = Donation::findOrFail($id);
+
+        $user = auth()->user();
+
+        $donation->received = 0;
+        $donation->received_by = null;
+        $donation->received_at = null;
+
+        $donation->dismissed = 1;
+        $donation->dismissed_by = $user->id;
+        $donation->dismissed_at = $this->date;
+        $donation->dismissed_reason = $request->reason;
+
+        $donation->update();
+
+        if($this->settings->mail_enabled->value){
+
+        }
+
+        session()->flash('success', 'Donation request dismissed');
+
+        return redirect()->back();
+    }
+
+    // ************************END OF SUPPORT CAUSE*********************************
+
+    
+    // ************************CONTACT US MESSAGES**********************************
+
+    public function showContactFormPage(){
+        $contacts = ContactUs::orderBy('created_at', 'DESC')->paginate(50);
+
+        return view('pages.admin.contact-form-messages', [
+            'title'     => 'Contact From Messages',
+            'nav'       => 'admin.contact-form-messages',
+            'contacts'  => $contacts,
+        ]);
+    }
+
+    public function showContactFormMessage($id){
+        $contact = ContactUs::findOrFail($id);
+        $user = auth()->user();
+
+        if(!$contact->read){
+            $contact->read = 1;
+            $contact->read_at = $this->date;
+            $contact->read_by = $user->id;
+            $contact->update();
+        }
+
+        return view('pages.admin.contact-form-message', [
+            'title'     => $contact->subject,
+            'nav'       => 'admin.support-causes',
+            'contact'   => $contact,
+        ]);
+    }
+
+    // ************************* END OF CONTACT US MESSAGES *************************
+
+    
+    // ************************ USER REPORTS ****************************************
+
+    public function getReportedUsers($type){
+        if($type == 'all'){
+            $reports = UserReport::orderBy('created_at', 'DESC')->paginate(50);
+            $title = 'All Misconduct Instances';
+            $nav = 'user.reported.all';
+
+        }elseif($type == 'approved'){
+            $reports = UserReport::where('approved', 1)->where('dismissed', 0)->orderBy('created_at', 'DESC')->paginate(50);
+            $title = 'Confirmed Misconducts';
+            $nav = 'user.reported.approved';
+
+        }elseif($type == 'dismissed'){
+            $reports = UserReport::where('dismissed', 1)->where('approved', 0)->orderBy('created_at', 'DESC')->paginate(50);
+            $title = 'Dismissed Misconducts';
+            $nav = 'user.reported.dismissed';
+        }elseif($type == 'pending'){
+            $reports = UserReport::where('approved', 0)->where('dismissed', 0)->orderBy('created_at', 'DESC')->paginate(50);
+            $title = 'Confirmed Misconducts';
+            $nav = 'user.reported.approved';
+        }else{
+            abort(404);
+        }
+
+        return view('pages.admin.user-misconducts', [
+            'title'     => $title,
+            'nav'       => $nav,
+            'reports'   => $reports,
+        ]);
+    }
+
+    public function getReportedUserSingle($id){
+        $user_report = UserReport::findOrFail($id);
+
+        return view('pages.admin.user-misconduct', [
+            'title'     => $user_report->report_type->description,
+            'nav'       => 'admin.user-misconduct',
+            'report'    => $user_report,
+        ]);
+    }
+
+    // ************************ END OF USER REPORTS *********************************
 
 }
