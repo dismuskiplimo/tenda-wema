@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSimbaCoinLogsTable extends Migration
+class CreateDonatedItemReviewsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateSimbaCoinLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('simba_coin_logs', function (Blueprint $table) {
+        Schema::create('donated_item_reviews', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->nullable();
+            $table->integer('donated_item_id');
+            $table->integer('user_id');
+            $table->integer('rating')->default(1);
             $table->text('message')->nullable();
-            $table->enum('type',['credit', 'debit'])->nullable();
-            $table->integer('coins')->default(0);
-            $table->integer('previous_balance')->default(0);
-            $table->integer('current_balance')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +31,6 @@ class CreateSimbaCoinLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('simba_coin_logs');
+        Schema::dropIfExists('donated_item_reviews');
     }
 }

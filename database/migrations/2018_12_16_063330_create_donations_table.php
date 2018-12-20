@@ -36,6 +36,7 @@ class CreateDonationsTable extends Migration
             $table->text('dismissed_reason')->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

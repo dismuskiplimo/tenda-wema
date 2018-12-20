@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Carbon\Carbon;
@@ -32,7 +31,7 @@ class User extends Authenticatable
     ];
 
     protected $dates = [
-        'email_confirmed_at', 'last_seen', 'closed_at', 'suspended_from', 'suspended_until', 'social_level_attained_at', 'verified_at',
+        'email_confirmed_at', 'last_seen', 'closed_at', 'suspended_from', 'suspended_until', 'social_level_attained_at', 'verified_at', 'deleted_at',
     ];
 
     public function is_admin(){

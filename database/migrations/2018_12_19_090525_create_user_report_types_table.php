@@ -19,6 +19,7 @@ class CreateUserReportTypesTable extends Migration
             $table->integer('count')->default(0);
             $table->integer('user_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

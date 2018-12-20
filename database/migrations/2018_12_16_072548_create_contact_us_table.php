@@ -24,6 +24,7 @@ class CreateContactUsTable extends Migration
             $table->timestamp('read_at')->nullable();
             $table->integer('read_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

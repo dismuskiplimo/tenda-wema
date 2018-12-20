@@ -3,8 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notification extends Model
 {
-    protected $dates = ['read_at'];
+    use SoftDeletes;
+
+    protected $dates = ['read_at', 'deleted_at'];
 }

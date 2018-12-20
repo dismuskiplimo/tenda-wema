@@ -26,6 +26,7 @@ class CreateMpesaRequestsTable extends Migration
             $table->integer('amount')->default(0);
             $table->boolean('queried')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

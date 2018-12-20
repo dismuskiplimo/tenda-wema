@@ -25,6 +25,7 @@ class CreateMpesaTransactionsTable extends Migration
             $table->integer('mpesa_request_id');
             $table->integer('transaction_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

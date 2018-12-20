@@ -22,6 +22,7 @@ class CreateDonatedItemImagesTable extends Migration
             $table->integer('donated_item_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

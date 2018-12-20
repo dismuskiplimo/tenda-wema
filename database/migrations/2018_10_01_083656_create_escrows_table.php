@@ -22,6 +22,7 @@ class CreateEscrowsTable extends Migration
             $table->integer('released_by')->nullable();
             $table->timestamp('released_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

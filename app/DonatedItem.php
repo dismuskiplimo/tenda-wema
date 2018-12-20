@@ -36,6 +36,10 @@ class DonatedItem extends Model
         return $this->hasOne('App\Escrow', 'donated_item_id');
     }
 
+    public function reviews(){
+        return $this->hasMany('App\DonatedItemReview', 'donated_item_id');
+    }
+
     public function category(){
     	return $this->belongsTo('App\Category', 'category_id');
     }
