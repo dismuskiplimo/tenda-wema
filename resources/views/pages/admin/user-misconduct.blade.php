@@ -108,23 +108,34 @@
 								@if($report->section == 'user')
 									<tr>
 										<th>View Reported User</th>
-										<td><a href="{{ route('admin.user', ['id' => $report->user_model->id]) }}">{{ $report->user_model->name }}</a></td>
+										<td><a target="_blank" href="{{ route('admin.user', ['id' => $report->user_model->id]) }}">{{ $report->user_model->name }}</a></td>
 									</tr>
 
 								@elseif($report->section == 'item')
 									<tr>
 										<th>View Reported Item</th>
-										<td><a href="{{ route('admin.donated-item', ['id' => $report->item_model->id]) }}">{{ $report->item_model->name }}</a></td>
+										<td><a target="_blank" href="{{ route('admin.donated-item', ['id' => $report->item_model->id]) }}">{{ $report->item_model->name }}</a></td>
 									</tr>
 								@elseif($report->section == 'post')
 									<tr>
 										<th>View Reported Post</th>
-										<td></td>
+										<td>
+											<a target="_blank" href="{{ route('post', ['slug' => $report->post_model->slug ]) }}">
+												
+												<strong>{{ $report->post_model->title }}</strong> <br>
+
+												{!! clean(nl2br($report->post_model->content)) !!}
+											</a>
+										</td>
 									</tr>
 								@elseif($report->section == 'comment')
 									<tr>
 										<th>View Reported Comment</th>
-										<td></td>
+										<td>
+											<a href="{{ route('post', ['slug' => $report->comment_model->post->slug]) }}#comment-{{ $report->comment_model->id }}">
+													{!! clean(nl2br($report->comment_model->content)) !!}
+											</a>
+										</td>
 									</tr>
 								@endif
 

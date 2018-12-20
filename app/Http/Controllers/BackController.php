@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use Hash;
 
-use App\{Message,MessageNotification,Notification, ReportType, UserReport, UserReportType, SimbaCoinLog, DonatedItem};
+use App\{Message,MessageNotification,Notification, ReportType, UserReport, UserReportType, SimbaCoinLog, DonatedItem, Comment, Post};
 
 class BackController extends Controller
 {
@@ -140,6 +140,8 @@ class BackController extends Controller
         $user_report->approved_at = $this->date;
 
         $user = $user_report->user;
+
+        $extras = '';
 
         $user_report_type = $user->report_types()->where('report_type_id', $user_report->report_type_id)->first();
 
@@ -303,7 +305,33 @@ class BackController extends Controller
             return redirect()->route('admin.donated-item.delete', ['id' => $user_report->model_id, 'reason' => $message]);
         }
 
-        session()->flash('success', 'Misconduct Confirmed');
+        if($user_report->section == 'post'){
+
+            $post = Post::where('slug', $user_report->post_model->slug)->firstOrFail();
+
+            $comments = $post->comments;
+
+            if(count($comments)){
+                foreach ($comments as $comment) {
+                    $comment->delete();
+                }
+            }
+
+            $post->delete();
+
+            $extras .= 'Post Deleted';
+    
+        }
+
+        if($user_report->section == 'comment'){
+            $comment = Comment::findOrFail($user_report->comment_model->id);
+
+            $comment->delete();
+
+            $extras .= 'Comment Deleted';
+        }
+
+        session()->flash('success', 'Misconduct Confirmed. ' . $extras);
 
         return redirect()->back();
     }
@@ -337,7 +365,7 @@ class BackController extends Controller
         $notification->from_admin           = 1;
         $notification->save();
 
-        session()->flash('success', 'Misconduct dismissed');
+        session()->flash('success', 'Misconduct dismissed.');
          return redirect()->back();
     }
 }

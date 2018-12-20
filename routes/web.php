@@ -94,6 +94,7 @@ Route::group(['prefix' => 'user'], function(){
 	Route::post('/coins/purchase', 'UserController@postPurchaseCoins');
 
 	Route::get('/notifications', 'UserController@showNotifications')->name('user.notifications');
+	Route::get('/notifications/{id}/view', 'UserController@showNotification')->name('user.notification');
 	Route::get('/conversations', 'UserController@showConversations')->name('user.messages');
 	Route::get('/conversations/{id}/view', 'UserController@showConversation')->name('user.conversation');
 	Route::get('/conversations/{id}/ajax', 'UserController@ ')->name('user.conversation.ajax');

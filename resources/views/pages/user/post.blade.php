@@ -35,7 +35,7 @@
 
 					    	<div class="col-sm-3 text-right">
 					    		@if(auth()->check() && !auth()->user()->is_admin())
-									@if(!auth()->user()->id == $post->user_id)
+									@if(!$mine)
 										<a href="" data-toggle="modal" data-target="#report-post-{{ $post->id }}" title="report post" class="btn btn-danger"><i class="fa fa-bullhorn"></i></a>
 
 										@include('pages.user.modals.report-post')
@@ -84,7 +84,7 @@
 
 				@if(count($post->comments))
 					@foreach($comments as $comment)
-						<div class="panel">
+						<div class="panel" id = "comment-{{ $comment->id }}">
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-sm-10">
@@ -102,7 +102,7 @@
 									
 									<div class="col-sm-2 text-right">
 										@if(auth()->check() && !auth()->user()->is_admin())
-											@if(!auth()->user()->id == $comment->user_id)
+											@if(auth()->user()->id != $comment->user_id)
 												<a href="" data-toggle="modal" data-target="#report-comment-{{ $comment->id }}" title="report comment" class="btn text-danger btn-xs"><i class="fa fa-bullhorn"></i></a>
 
 												@include('pages.user.modals.report-comment')

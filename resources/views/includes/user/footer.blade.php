@@ -83,10 +83,16 @@
 										@endforeach
 											
 									</div>
+
+									<br><p>
+										<a href="{{ route('posts') }}">See all posts</a>
+									</p>
 									
 								@else
 									<p>No Recent Posts</p>
 								@endif
+
+								
 							</div>
 
 						</div>

@@ -1,4 +1,4 @@
-@extends('layouts.user-plain')
+@extends('layouts.user')
 
 @section('content')
 	<section id="page-title">
@@ -16,13 +16,16 @@
 
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 mt-50">
+			<div class="col-sm-10 col-sm-offset-1 py-50">
 				@if($notifications->total())
 					@foreach($notifications as $notification)
-						<div class="panel mb-20">
-							<a href="">
+						<div class="panel {{ $notification->read ? '' : 'panel-primary' }} mb-20">
+							<a href="{{ route('user.notification', ['id' => $notification->id]) }}">
 								<div class="panel-body">
-									<p class="mb-0">{{ $notification->message }}</p>
+									<p class="nobottommargin">
+										{{ $notification->message }} <br>
+										<small class="pull-right">{{ simple_datetime($notification->created_at) }}</small>
+									</p>
 								</div>	
 							</a>
 						</div>

@@ -351,6 +351,22 @@ class UserController extends Controller
         ]);
     }
 
+    public function showNotification($id){
+        $notification = Notification::findOrFail($id);
+        $user = auth()->user();
+
+        if($notification->to_id != $user->id){
+            session()->flash('error', 'Forbidden');
+        }
+
+        $notification->read = 1;
+        $notification->read_at = $this->date;
+        $notification->update();
+
+        return redirect()->back();
+
+    }
+
     public function postDonateItem(Request $request){
 
         $this->validate($request, [
@@ -1600,6 +1616,19 @@ class UserController extends Controller
         $comment->post_id  = $post->id;
         $comment->user_id  = $user->id;
         $comment->save();
+
+        if($post->user_id != $user->id){
+            $notification                       = new Notification;
+            $notification->from_id              = $user->id;
+            $notification->to_id                = $post->user_id;
+            $notification->message              = $user->name . ' Commented on your post ' . $post->title;
+            $notification->notification_type    = 'post.commented';
+            $notification->model_id             = $post->id;
+            $notification->system_message       = 0;
+            $notification->save();
+        }
+
+
 
         session()->flash('success', 'Comment Added');
 
