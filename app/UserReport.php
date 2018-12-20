@@ -45,7 +45,7 @@ class UserReport extends Model
     }
 
     public function user_model(){
-    	return $this->belongsTo('App\User', 'model_id'->withTrashed(););
+    	return $this->belongsTo('App\User', 'model_id')->withTrashed();
     }
 
     public function item_model(){
@@ -53,10 +53,10 @@ class UserReport extends Model
     }
 
     public function post_model(){
-    	return $this->belongsTo('App\Post', 'model_id')->withTrashed();;
+    	return $this->belongsTo('App\Post', 'model_id')->withTrashed();
     }
 
     public function comment_model(){
-    	return $this->belongsTo('App\Comment', 'model_id')->withTrashed();;
+    	return $this->belongsTo('App\Comment', 'model_id')->withTrashed();
     }
 }

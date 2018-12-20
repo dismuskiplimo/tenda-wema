@@ -61,22 +61,22 @@
 						<div class="col_one_third col_last">
 
 							<div class="widget clearfix">
-								<h4>Recently Donated Items</h4>
+								<h4>Latest Posts</h4>
 
 								@php
-									$donated_items = \App\DonatedItem::where('bought', 0)->where('disputed', 0)->orderBy('created_at','DESC')->limit(3)->get();
+									$posts = \App\Post::orderBy('created_at','DESC')->limit(3)->get();
 								@endphp
 
-								@if(count($donated_items))
+								@if(count($posts))
 									<div id="post-list-footer">
-										@foreach($donated_items as $item)
+										@foreach($posts as $post)
 											<div class="spost clearfix">
 												<div class="entry-c">
 													<div class="entry-title">
-														<h4><a href="{{ route('donated-item.show', ['slug' => $item->slug]) }}">{{ characters($item->name, '30') }}</a></h4>
+														<h4><a href="{{ route('post', ['slug' => $post->slug]) }}">{{ characters($post->title, '30') }}</a></h4>
 													</div>
 													<ul class="entry-meta">
-														<li>{{ simple_datetime($item->created_at) }}</li>
+														<li>{{ simple_datetime($post->created_at) }}</li>
 													</ul>
 												</div>
 											</div>
@@ -85,7 +85,7 @@
 									</div>
 									
 								@else
-									<p>No Items Donated Recently</p>
+									<p>No Recent Posts</p>
 								@endif
 							</div>
 
