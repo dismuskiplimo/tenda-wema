@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{DonatedItem, User, Category, GoodDeed, Country, Donation, ContactUs};
+use App\{DonatedItem, User, Category, GoodDeed, Country, Donation, ContactUs, Post, Comment};
 
 class FrontController extends Controller
 {
@@ -35,6 +35,38 @@ class FrontController extends Controller
     		'title' 	=> 'Report a Good Deed',
     		'nav' 		=> 'report-goog-deed',
     	]);
+    }
+
+    public function showPostsPage(){
+        $posts = Post::orderBy('created_at', 'DESC')->paginate(20);
+
+        return view('pages.user.posts',[
+            'title'     => 'Posts',
+            'nav'       => 'posts',
+            'posts'     => $posts,
+        ]);
+    }
+
+    public function showPostPage($slug){
+        $post = Post::where('slug', $slug)->firstOrFail();
+
+        $mine = false;
+
+        if(auth()->check()){
+            if(auth()->user()->id == $post->user_id){
+                $mine = true;
+            }
+        }
+
+        $comments = $post->comments()->orderBy('created_at', 'ASC')->get();
+
+        return view('pages.user.post',[
+            'title'     => $post->title,
+            'nav'       => 'post',
+            'post'      => $post,
+            'comments'  => $comments,
+            'mine'      => $mine,
+        ]);
     }
 
     public function showTermsAndConditions(){

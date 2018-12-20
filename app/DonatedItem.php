@@ -10,6 +10,8 @@ class DonatedItem extends Model
 {
     use SoftDeletes;
 
+    protected $dates = ['deleted_at'];
+
     public function images(){
     	return $this->hasMany('App\DonatedItemImage', 'donated_item_id');
     }
@@ -84,6 +86,4 @@ class DonatedItem extends Model
             return 'STATE UNKNOWN';
         }
     }
-
-    protected $dates = ['deleted_at'];
 }

@@ -18,9 +18,9 @@ class BackController extends Controller
 
     public function updateUserPassword(Request $request){
         $this->validate($request,[
-            'old_password' => 'required|max:255',
-            'new_password' => 'required|max:255|confirmed',
-            'new_password_confirmation' => 'required|max:255',
+            'old_password' => 'required|max:191',
+            'new_password' => 'required|max:191|confirmed',
+            'new_password_confirmation' => 'required|max:191',
         ]);
 
         $user = auth()->user();
@@ -54,11 +54,11 @@ class BackController extends Controller
 
     public function updateUserProfile(Request $request){
         $this->validate($request, [
-            'fname'  	=> 'required|max:255',
-            'lname' 	=> 'required|max:255',
-            'dob' 		=> 'required|max:255',
-            'username' 	=> 'required|max:255',
-            'email' 	=> 'required|email|max:255',
+            'fname'  	=> 'required|max:191',
+            'lname' 	=> 'required|max:191',
+            'dob' 		=> 'required|max:191',
+            'username' 	=> 'required|max:191',
+            'email' 	=> 'required|email|max:191',
         ]);
 
         $user = auth()->user();

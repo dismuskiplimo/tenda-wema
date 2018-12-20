@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment};
 
 use Image, Auth, Session;
 
@@ -354,9 +354,9 @@ class UserController extends Controller
     public function postDonateItem(Request $request){
 
         $this->validate($request, [
-            'name'              => 'required|max:255',
-            'type'              => 'required|max:255',
-            'condition'         => 'required|max:255',
+            'name'              => 'required|max:191',
+            'type'              => 'required|max:191',
+            'condition'         => 'required|max:191',
             'category_id'       => 'required|numeric',
             'description'       => 'required',
         ]);
@@ -492,8 +492,8 @@ class UserController extends Controller
     public function postGoodDeed(Request $request){
 
         $this->validate($request, [
-            'name'          => 'required|max:255',
-            'location'      => 'required|max:255',
+            'name'          => 'required|max:191',
+            'location'      => 'required|max:191',
             'description'   => 'required|max:800',
             'contacts'      => 'max:800',
             
@@ -652,7 +652,7 @@ class UserController extends Controller
     public function addMembership(Request $request){
         
         $this->validate($request, [
-            'name'  => 'max:255|required',
+            'name'  => 'max:191|required',
         ]);
 
         $user = auth()->user();
@@ -690,7 +690,7 @@ class UserController extends Controller
         }
 
         $this->validate($request, [
-            'name'  => 'required|max:255',
+            'name'  => 'required|max:191',
         ]);
 
         $membership->name = $request->name;
@@ -722,7 +722,7 @@ class UserController extends Controller
     public function addAward(Request $request){
         
         $this->validate($request, [
-            'name'  => 'max:255|required',
+            'name'  => 'max:191|required',
             'year'  => 'min:1900|max:' . date('Y') . '|required|numeric',
         ]);
 
@@ -762,7 +762,7 @@ class UserController extends Controller
         }
 
         $this->validate($request, [
-            'name'  => 'required|max:255',
+            'name'  => 'required|max:191',
             'year'  => 'required|numeric|min:1900|max:' . date('Y'),
         ]);
 
@@ -796,7 +796,7 @@ class UserController extends Controller
     public function addHobby(Request $request){
         
         $this->validate($request, [
-            'name'  => 'max:255|required',
+            'name'  => 'max:191|required',
         ]);
 
         $user = auth()->user();
@@ -834,7 +834,7 @@ class UserController extends Controller
         }
 
         $this->validate($request, [
-            'name'  => 'required|max:255',
+            'name'  => 'required|max:191',
         ]);
 
         $hobby->name = $request->name;
@@ -866,7 +866,7 @@ class UserController extends Controller
     public function addAchievement(Request $request){
         
         $this->validate($request, [
-            'name'  => 'max:255|required',
+            'name'  => 'max:191|required',
         ]);
 
         $user = auth()->user();
@@ -904,7 +904,7 @@ class UserController extends Controller
         }
 
         $this->validate($request, [
-            'name'  => 'required|max:255',
+            'name'  => 'required|max:191',
         ]);
 
         $achievement->name = $request->name;
@@ -935,10 +935,10 @@ class UserController extends Controller
 
     public function addWorkExperience(Request $request){
         $this->validate($request,[
-            'from'              => 'required|max:255',
-            'to'                => 'required|max:255',
-            'company'           => 'required|max:255',
-            'position'          => 'required|max:255',
+            'from'              => 'required|max:191',
+            'to'                => 'required|max:191',
+            'company'           => 'required|max:191',
+            'position'          => 'required|max:191',
         ]);
 
         $user = auth()->user();
@@ -971,10 +971,10 @@ class UserController extends Controller
 
     public function updateWorkExperience(Request $request, $id){
         $this->validate($request,[
-            'from'              => 'required|max:255',
-            'to'                => 'required|max:255',
-            'company'           => 'required|max:255',
-            'position'          => 'required|max:255',
+            'from'              => 'required|max:191',
+            'to'                => 'required|max:191',
+            'company'           => 'required|max:191',
+            'position'          => 'required|max:191',
         ]);
 
         $work_experience = WorkExperience::findOrFail($id);
@@ -1040,7 +1040,7 @@ class UserController extends Controller
 
     public function addSkill(Request $request){
         $this->validate($request,[
-            'skill' => 'required|max:255',
+            'skill' => 'required|max:191',
         ]);
 
         $user = auth()->user();
@@ -1070,7 +1070,7 @@ class UserController extends Controller
 
     public function updateSkill(Request $request, $id){
         $this->validate($request,[
-            'skill' => 'required|max:255',
+            'skill' => 'required|max:191',
         ]);
 
         $skill = Skill::findOrFail($id);
@@ -1133,12 +1133,12 @@ class UserController extends Controller
 
     public function addEducation(Request $request){
         $this->validate($request,[
-            'school'            => 'required|max:255',
-            'level'             => 'required|max:255',
-            'field_of_study'    => 'required|max:255',
-            'grade'             => 'max:255',
-            'start_year'        => 'required|max:255',
-            'end_year'          => 'required|max:255',
+            'school'            => 'required|max:191',
+            'level'             => 'required|max:191',
+            'field_of_study'    => 'required|max:191',
+            'grade'             => 'max:191',
+            'start_year'        => 'required|max:191',
+            'end_year'          => 'required|max:191',
         ]);
 
         $user = auth()->user();
@@ -1173,12 +1173,12 @@ class UserController extends Controller
 
     public function updateEducation(Request $request, $id){
         $this->validate($request,[
-            'school'            => 'required|max:255',
-            'level'             => 'required|max:255',
-            'field_of_study'    => 'required|max:255',
-            'grade'             => 'max:255',
-            'start_year'        => 'required|max:255',
-            'end_year'          => 'required|max:255',
+            'school'            => 'required|max:191',
+            'level'             => 'required|max:191',
+            'field_of_study'    => 'required|max:191',
+            'grade'             => 'max:191',
+            'start_year'        => 'required|max:191',
+            'end_year'          => 'required|max:191',
         ]);
 
         $education = Education::findOrFail($id);
@@ -1266,9 +1266,9 @@ class UserController extends Controller
 
     public function updateDonatedItem(Request $request, $slug){
         $this->validate($request, [
-            'name'              => 'required|max:255',
-            'type'              => 'required|max:255',
-            'condition'         => 'required|max:255',
+            'name'              => 'required|max:191',
+            'type'              => 'required|max:191',
+            'condition'         => 'required|max:191',
             'category_id'       => 'required|numeric',
             'description'       => 'required',
         ]);
@@ -1459,7 +1459,7 @@ class UserController extends Controller
         $this->validate($request, [
             'coins'             => 'required|numeric|min:1|max:' . config('coins.limit.purchase_coins'),
             'amount_paid'       => 'required|numeric',
-            'transaction_code'  => 'required|max:255',
+            'transaction_code'  => 'required|max:191',
         ]);
 
         $coin_purchase_history                      = new CoinPurchaseHistory;
@@ -1476,8 +1476,8 @@ class UserController extends Controller
 
     public function postReport(Request $request){
         $this->validate($request, [
-            'section'       => 'required|max:255',
-            'report_type'   => 'required|max:255',
+            'section'       => 'required|max:191',
+            'report_type'   => 'required|max:191',
             'model_id'      => 'required|numeric',
             'user_id'       => 'required|numeric',
             'description'   => 'required|max:800',
@@ -1512,6 +1512,135 @@ class UserController extends Controller
 
 
         session()->flash('success', 'Report received, the admin will review and take the appropriate actions');
+
+        return redirect()->back();
+    }
+
+    public function postNewPost(Request $request){
+        $this->validate($request, [
+            'title'     => 'max:191|required',
+            'content'   => 'max:50000|required',
+        ]);
+
+        $user = auth()->user();
+
+        $post           = new Post;
+        $post->title    = $request->title;
+        $post->slug     = str_slug($request->title) . '-' . rand(1, 10000);
+        $post->content  = $request->content;
+        $post->user_id  = $user->id;
+        $post->save();
+
+        session()->flash('success', 'Post Created');
+
+        return redirect()->back();
+    }
+
+    public function updatePost(Request $request, $slug){
+        $this->validate($request, [
+            'title' => 'required|max:191',
+            'content' => 'required|max:50000',
+        ]);
+
+        $user = auth()->user();
+
+        $post = Post::where('slug', $slug)->firstOrFail();
+
+        if($user->id != $post->user_id){
+            session()->flash('error', 'Forbidden');
+            return redirect()->back();
+        }
+
+        $post->title = $request->title;
+        $post->slug = str_slug($request->title) . '-' . rand(1,10000);
+        $post->content = $request->content;
+        $post->update();
+
+        session()->flash('success', 'Post Updated');
+
+        return redirect()->route('post', ['slug' => $post->slug]);
+    }
+
+    public function deletePost(Request $request, $slug){
+        $user = auth()->user();
+
+        $post = Post::where('slug', $slug)->firstOrFail();
+
+        if($user->id != $post->user_id){
+            session()->flash('error', 'Forbidden');
+            return redirect()->back();
+        }
+
+        $comments = $post->comments;
+
+        if(count($comments)){
+            foreach ($comments as $comment) {
+                $comment->delete();
+            }
+        }
+
+        $post->delete();
+
+        session()->flash('success', 'Post Deleted');
+
+        return redirect()->route('posts');
+    }    
+
+    public function postComment(Request $request, $slug){
+        $this->validate($request, [
+            'content'   => 'max:5000|required',
+        ]);
+
+        $post = Post::where('slug', $slug)->firstOrFail();
+
+        $user = auth()->user();
+
+        $comment           = new Comment;
+        $comment->content  = $request->content;
+        $comment->post_id  = $post->id;
+        $comment->user_id  = $user->id;
+        $comment->save();
+
+        session()->flash('success', 'Comment Added');
+
+        return redirect()->back();
+    }
+
+    public function updateComment(Request $request, $slug, $id){
+        $this->validate($request, [
+            'content' => 'required|max:5000',
+        ]);
+
+        $user = auth()->user();
+
+        $comment = Comment::findOrFail($id);
+
+        if($user->id != $comment->user_id){
+            session()->flash('error', 'Forbidden');
+            return redirect()->back();
+        }
+
+        $comment->content = $request->content;
+        $comment->update();
+
+        session()->flash('success', 'Comment Update');
+
+        return redirect()->back();
+    }
+
+    public function deleteComment(Request $request, $slug, $id){
+        $user = auth()->user();
+
+        $comment = Comment::findOrFail($id);
+
+        if($user->id != $comment->user_id){
+            session()->flash('error', 'Forbidden');
+            return redirect()->back();
+        }
+
+        $comment->delete();
+
+        session()->flash('success', 'Comment Deleted');
 
         return redirect()->back();
     }

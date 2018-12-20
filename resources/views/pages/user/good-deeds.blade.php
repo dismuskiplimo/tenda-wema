@@ -19,10 +19,16 @@
 			<div class="col-sm-10 col-sm-offset-1 py-50">
 				<div class="row">
 					<div class="col-sm-12">
-						<p class="text-right">
-							<a href="{{ route('report-a-good-deed') }}" class="btn btn-info"><i class="fa fa-smile-o"></i> REPORT A GOOD DEED</a>
+						<p class="">
+							<a href="{{ route('report-a-good-deed') }}" class="button button-green button-3d"><i class="fa fa-smile-o"></i> REPORT A GOOD DEED</a>
+
+							<a href="{{ route('posts') }}" class="button button-black  button-3d pull-right"><i class="fa fa-comment"></i> DISCUSSION FORUM</a>
 						</p>
+
+						<hr>
 					</div>
+
+
 				</div>
 				@if($deeds->total())
 					@foreach($deeds as $deed)

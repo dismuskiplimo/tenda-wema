@@ -34,6 +34,19 @@ Route::post('/donated-items/{slug}/images/{id}/delete', 'UserController@deleteDo
 Route::get('/donated-items/{slug}/purchase', 'UserController@purchaseDonatedItem')->name('user.donated-item.purchase');
 
 Route::get('/report-a-good-deed', 'FrontController@showReportGoodDeedPage')->name('report-a-good-deed');
+
+Route::get('/posts', 'FrontController@showPostsPage')->name('posts');
+Route::post('/posts', 'UserController@postNewPost');
+
+Route::get('/posts/{slug}/view', 'FrontController@showPostPage')->name('post');
+Route::post('/posts/{slug}/comment', 'UserController@postComment')->name('post.comment');
+
+Route::post('/posts/{slug}/update', 'UserController@updatePost')->name('post.update');
+Route::post('/posts/{slug}/delete', 'UserController@deletePost')->name('post.delete');
+
+Route::post('/posts/{slug}/comments/{id}/delete', 'UserController@deleteComment')->name('comment.delete');
+Route::post('/posts/{slug}/comments/{id}/update', 'UserController@updateComment')->name('comment.update');
+
 Route::post('/report-a-good-deed', 'UserController@postGoodDeed');
 
 Route::get('/terms-and-conditions', 'FrontController@showTermsAndConditions')->name('terms-and-conditions');
