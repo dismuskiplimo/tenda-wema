@@ -40,6 +40,10 @@ class DonatedItem extends Model
         return $this->hasMany('App\DonatedItemReview', 'donated_item_id');
     }
 
+    public function cancel_requests(){
+        return $this->hasMany('App\CancelOrder', 'donated_item_id');
+    }
+
     public function category(){
     	return $this->belongsTo('App\Category', 'category_id');
     }

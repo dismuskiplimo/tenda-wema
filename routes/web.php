@@ -37,6 +37,7 @@ Route::post('/donated-items/{slug}/images/{id}/delete', 'UserController@deleteDo
 Route::get('/donated-items/{slug}/purchase', 'UserController@purchaseDonatedItem')->name('user.donated-item.purchase');
 
 Route::post('/donated-items/{slug}/confirm-delivery', 'UserController@confirmDonatedItemDelivery')->name('user.donated-item.confirm-delivery');
+Route::post('/donated-items/{slug}/cancel', 'UserController@cancelPurchasedOrder')->name('user.donated-item.order.cancel');
 
 Route::get('/report-a-good-deed', 'FrontController@showReportGoodDeedPage')->name('report-a-good-deed');
 

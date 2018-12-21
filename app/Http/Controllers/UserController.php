@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment, DonatedItemReview};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment, DonatedItemReview, CancelOrder};
 
 use Image, Auth, Session;
 
@@ -544,6 +544,57 @@ class UserController extends Controller
         session()->flash('success', 'Item bought, the admin will contact you with the details on how to collect your item(s)');
 
         return redirect()->back();
+    }
+
+    // **************************CANCEL PURCHASE **************************************
+
+    public function cancelPurchasedOrder(Request $request, $slug){
+        $this->validate($request, [
+            'reason' => 'required|max:50000',
+        ]);
+
+        $item = DonatedItem::where('slug', $slug)->firstOrFail();
+        $user = auth()->user();
+        
+        if($user->id != $item->buyer_id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $cancel_request = $item->cancel_requests()->where('approved',0)->where('dismissed',0)->first();
+
+        if($cancel_request){
+            session()->flash('error', 'Cancel purchase request still pending, please wait for feedback from the admin');
+
+            return redirect()->back();
+        }
+
+        if($item->bought && !$item->disapproved !&& $item->received){
+            $cancel_order                   = new CancelOrder;
+            $cancel_order->user_id          = $user->id;
+            $cancel_order->donated_item_id  = $item->id;
+            $cancel_order->reason           = $request->reason;
+            $cancel_order->save();
+
+            $notification                       = new Notification;
+            $notification->from_id              = $user->id;
+            $notification->to_id                = null;
+            $notification->message              = 'Cancel Donated Item Purchase (' . $item->name . ')';
+            $notification->notification_type    = 'item.purchase.cancel';
+            $notification->model_id             = $item->id;
+            $notification->system_message       = 1;
+            $notification->save();
+
+            session()->flash('success', 'Cancel Request received, please wait for action from admin');
+
+            return redirect()->back();
+
+
+        }else{
+            session()->flash('error', 'You cannot cancel at the moment');
+            return redirect()->back();
+        }
     }
 
     // **************************CONFIRM DELIVERY OF DONATED ITEM *********************

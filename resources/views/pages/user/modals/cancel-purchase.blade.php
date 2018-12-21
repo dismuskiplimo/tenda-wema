@@ -1,7 +1,7 @@
 <div class="modal fade" id="cancel-purchase-{{ $item->id }}">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="" method="POST">
+      <form action="{{ route('user.donated-item.order.cancel', ['slug' => $item->slug]) }}" method="POST">
         @csrf
         
         <div class="modal-header">
