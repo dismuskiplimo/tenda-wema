@@ -21,6 +21,8 @@ class UserController extends Controller
         $this->initialize();
     }
 
+    // **************************DASHBOARD PAGE ***************************************
+
     public function showDashboard(){
     	$user = auth()->user();
         
@@ -30,6 +32,8 @@ class UserController extends Controller
     		'nav'	=> 'user.dashboard',
     	]);
     }
+
+    // **************************USER BALANCE *****************************************
 
     public function showBalance(){
         $user = auth()->user();
@@ -45,152 +49,31 @@ class UserController extends Controller
         ]);
     }
 
-    public function showConversations(){
+    // **************************SETTING PAGE *****************************************
+
+    public function showSettings(){
         $user = auth()->user();
 
-        $conversations = Conversation::where('from_id', $user->id)->orWhere('to_id', $user->id)->orderBy('updated_at', 'DESC')->get();
-
-        $message_notifications = $user->message_notifications()->where('read', 0)->get();
-
-        if(count($message_notifications)){
-            foreach ($message_notifications as $r) {
-                $r->read = 1;
-                $r->read_at = $this->date;
-                $r->update();
-            }
-        }
-        
-        return view('pages.user.conversations', [
-            'title'         => 'Conversations',
-            'nav'           => 'user.account-balance',
-            'user'          => $user,
-            'conversations' => $conversations,
+        return view('pages.user.user-settings', [
+            'title'     => 'Settings',
+            'nav'       => 'user.settings',
+            'user'      => $user,
         ]);
     }
 
-    public function showConversation($id){
-        $user   = auth()->user();
-        $to     = false;
+    // **************************USER PROFILE *****************************************
 
-        $conversation = Conversation::findOrFail($id);
+    public function showMyProfile(){
+        $user = auth()->user();
 
-        $intended = $conversation->from_id || $conversation->to_id == $user->id ? true : false;
-
-        if(!$intended){
-            session()->flash('error', 'Forbidden');
-            return redirect()->back();
-        }
-
-        $conversations = Conversation::where('from_id', $user->id)->orWhere('to_id', $user->id)->orderBy('updated_at', 'DESC')->get();
-
-        $message_notifications = $conversation->notifications()->where('read', 0)->where('to_id', $user->id)->get();
-
-        if(count($message_notifications)){
-            foreach ($message_notifications as $r) {
-                $r->read = 1;
-                $r->read_at = $this->date;
-                $r->update();
-            }
-        }
-
-        $notifications = $conversation->notifications()->where('read', 0)->where('to_id', $user->id)->get();
-
-        if(count($notifications)){
-            foreach ($notifications as $notification) {
-                $notification->read = 1;
-                $notification->read_at = $this->date;
-                $notification->update();
-            }
-        }
-
-        $messages = $conversation->messages()->orderBy('created_at', 'ASC')->get();
-
-        if($conversation->from_id == $user->id){
-            $to = $conversation->to;
-        }else{
-            $to = $conversation->from;
-        }
-        
-        return view('pages.user.conversation', [
-            'title'                 => 'Conversation',
-            'nav'                   => 'user.account-balance',
-            'user'                  => $user,
-            'conversations'         => $conversations,
-            'current_conversation'  => $conversation,
-            'messages'              => $messages,
-            'support_message'       => $conversation->support,
-            'to'                    => $to,
+        return view('pages.user.my-profile', [
+            'title'     => 'Profile',
+            'nav'       => 'user.profile',
+            'user'      => $user,
         ]);
     }
 
-    public function getAjaxConversation($id){
-        $user           = auth()->user();
-        $conversation   = Conversation::find($id);
-
-        if(!$conversation){
-            return response()->json(['status' => 404, 'message' => 'Conversation not found']);
-        }
-
-        $intended = $conversation->from_id || $conversation->to_id == $user->id ? true : false;
-
-        if(!$intended){
-            return response()->json(['status' => 403, 'message' => 'Forbidden']);
-        }
-
-        $messages = $conversation->messages()->where('read', 0)->where('to_id', $user->id)->get();
-        $notifications = $conversation->notifications()->where('read', 0)->where('to_id', $user->id)->get();
-
-        if(count($notifications)){
-            foreach ($notifications as $notification) {
-                $notification->read = 1;
-                $notification->read_at = $this->date;
-                $notification->update();
-            }
-        }
-        
-        $count = count($messages);
-
-        if($count){
-            foreach ($messages as $message) {
-                $message->read = 1;
-                $message->read_at = $this->date;
-                $message->update();
-            }
-        }
-
-        $messages = [];
-
-        foreach ($conversation->messages()->orderBy('created_at', 'ASC')->get() as $message) {
-            if($message->from_admin){
-                $from = 'Admin';
-            }else{
-                if($message->from_id){
-                    if($message->from_id == $user->id){
-                        $from = 'Me';
-                    }else{
-                        $from = $message->sender->name;
-                    }
-                }
-            }
-            
-
-            $messages[] = [
-                'from'      => $from,
-                'mine'      => $message->from_id == $user->id ? '1' : '0',
-                'message'   => $message->message,
-                'time'      => $message->created_at->diffForHumans(),
-            ];
-        }
-
-        $response = [
-            'status'    => 200,
-            'message'   => 'Success',
-            'messages'  =>  $messages,
-            'count'     =>  $count,
-        ];
-
-        return response()->json($response);
-    }
+    // **************************CREATE CONVERSATION **********************************
 
     public function newMessage(Request $request, $username){
         $support    = $request->has('support') ? 1 : 0;
@@ -247,6 +130,8 @@ class UserController extends Controller
 
         return redirect()->route('user.conversation', ['id' => $conversation->id]);
     }
+
+    // **************************SEND MESSAGE *****************************************
 
     public function postMessage(Request $request, $id){
         $this->validate($request, [
@@ -338,6 +223,159 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    // **************************CONVERSATIONS ****************************************
+
+    public function showConversations(){
+        $user = auth()->user();
+
+        $conversations = Conversation::where('from_id', $user->id)->orWhere('to_id', $user->id)->orderBy('updated_at', 'DESC')->get();
+
+        $message_notifications = $user->message_notifications()->where('read', 0)->get();
+
+        if(count($message_notifications)){
+            foreach ($message_notifications as $r) {
+                $r->read = 1;
+                $r->read_at = $this->date;
+                $r->update();
+            }
+        }
+        
+        return view('pages.user.conversations', [
+            'title'         => 'Conversations',
+            'nav'           => 'user.account-balance',
+            'user'          => $user,
+            'conversations' => $conversations,
+        ]);
+    }
+
+    public function showConversation($id){
+        $user   = auth()->user();
+        $to     = false;
+
+        $conversation = Conversation::findOrFail($id);
+
+        $intended = $conversation->from_id || $conversation->to_id == $user->id ? true : false;
+
+        if(!$intended){
+            session()->flash('error', 'Forbidden');
+            return redirect()->back();
+        }
+
+        $conversations = Conversation::where('from_id', $user->id)->orWhere('to_id', $user->id)->orderBy('updated_at', 'DESC')->get();
+
+        $message_notifications = $conversation->notifications()->where('read', 0)->where('to_id', $user->id)->get();
+
+        if(count($message_notifications)){
+            foreach ($message_notifications as $r) {
+                $r->read = 1;
+                $r->read_at = $this->date;
+                $r->update();
+            }
+        }
+
+        $notifications = $conversation->notifications()->where('read', 0)->where('to_id', $user->id)->get();
+
+        if(count($notifications)){
+            foreach ($notifications as $notification) {
+                $notification->read = 1;
+                $notification->read_at = $this->date;
+                $notification->update();
+            }
+        }
+
+        $messages = $conversation->messages()->orderBy('created_at', 'ASC')->get();
+
+        if($conversation->from_id == $user->id){
+            $to = $conversation->to;
+        }else{
+            $to = $conversation->from;
+        }
+        
+        return view('pages.user.conversation', [
+            'title'                 => 'Conversation',
+            'nav'                   => 'user.account-balance',
+            'user'                  => $user,
+            'conversations'         => $conversations,
+            'current_conversation'  => $conversation,
+            'messages'              => $messages,
+            'support_message'       => $conversation->support,
+            'to'                    => $to,
+        ]);
+    }
+
+    // **************************GET CONVERSATION VIA AJAX ****************************
+
+    public function getAjaxConversation($id){
+        $user           = auth()->user();
+        $conversation   = Conversation::find($id);
+
+        if(!$conversation){
+            return response()->json(['status' => 404, 'message' => 'Conversation not found']);
+        }
+
+        $intended = $conversation->from_id || $conversation->to_id == $user->id ? true : false;
+
+        if(!$intended){
+            return response()->json(['status' => 403, 'message' => 'Forbidden']);
+        }
+
+        $messages = $conversation->messages()->where('read', 0)->where('to_id', $user->id)->get();
+        $notifications = $conversation->notifications()->where('read', 0)->where('to_id', $user->id)->get();
+
+        if(count($notifications)){
+            foreach ($notifications as $notification) {
+                $notification->read = 1;
+                $notification->read_at = $this->date;
+                $notification->update();
+            }
+        }
+        
+        $count = count($messages);
+
+        if($count){
+            foreach ($messages as $message) {
+                $message->read = 1;
+                $message->read_at = $this->date;
+                $message->update();
+            }
+        }
+
+        $messages = [];
+
+        foreach ($conversation->messages()->orderBy('created_at', 'ASC')->get() as $message) {
+            if($message->from_admin){
+                $from = 'Admin';
+            }else{
+                if($message->from_id){
+                    if($message->from_id == $user->id){
+                        $from = 'Me';
+                    }else{
+                        $from = $message->sender->name;
+                    }
+                }
+            }
+            
+
+            $messages[] = [
+                'from'      => $from,
+                'mine'      => $message->from_id == $user->id ? '1' : '0',
+                'message'   => $message->message,
+                'time'      => $message->created_at->diffForHumans(),
+            ];
+        }
+
+        $response = [
+            'status'    => 200,
+            'message'   => 'Success',
+            'messages'  =>  $messages,
+            'count'     =>  $count,
+        ];
+
+        return response()->json($response);
+    }
+
+    // **************************NOTIFICATIONS ****************************************
+
     public function showNotifications(){
         $user = auth()->user();
 
@@ -364,8 +402,9 @@ class UserController extends Controller
         $notification->update();
 
         return redirect()->back();
-
     }
+
+    // **************************SAVE DONATED ITEM ************************************
 
     public function postDonateItem(Request $request){
 
@@ -457,6 +496,8 @@ class UserController extends Controller
         return redirect()->route('donated-item.show', ['slug' => $donated_item->slug]);
     }
 
+    // **************************PURCHASE DONATED ITEM ********************************
+
     public function purchaseDonatedItem($slug){
         $donated_item   = DonatedItem::where('slug', $slug)->firstOrFail();
         $user           = auth()->user();
@@ -487,7 +528,7 @@ class UserController extends Controller
 
         $simba_coin_log                        = new SimbaCoinLog;
         $simba_coin_log->user_id               = $user->id;
-        $simba_coin_log->message               = 'Payment for Donated item purchase. DESC: ' . $donated_item->name;
+        $simba_coin_log->message               = 'Payment for Donated item purchase. (' . $donated_item->name . ')';
         $simba_coin_log->type                  = 'debit';
         $simba_coin_log->coins                 = $donated_item->price;
         $simba_coin_log->previous_balance      = $user->coins + $donated_item->price ;
@@ -504,6 +545,79 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+
+    // **************************CONFIRM DELIVERY OF DONATED ITEM *********************
+
+    public function confirmDonatedItemDelivery(Request $request, $slug){
+        $this->validate($request, [
+            'reason' => 'max:50000',
+        ]);
+
+        $donated_item = DonatedItem::where('slug',$slug)->firstOrFail();
+        $user = auth()->user();
+
+        if($user->id != $donated_item->buyer_id){
+            session()->flash('error','403: Forbidden');
+            return redirect()->back();
+        }
+
+        $donated_item->disapproved          = 0;
+        $donated_item->disapproved_at       = null;
+        $donated_item->disapproved_by       = null;
+        $donated_item->disapproved_reason   = null;
+
+        $donated_item->received             = 1;
+        $donated_item->received_at          = $this->date;
+        $donated_item->received_message     = $donated_item->name .' Was marked as received by ' . $user->name;
+
+        $donated_item->update();
+
+        $escrow                     = $donated_item->escrow;
+        $donor                      = $donated_item->donor;
+
+        $donor->coins               += $escrow->amount;
+        $donor->accumulated_coins   += $escrow->amount;
+        $donor->update();
+
+        $donor->check_social_level();
+
+        $escrow->released       = 1;
+        $escrow->released_at    = $this->date;
+        $escrow->released_by    = $user->id;
+        $escrow->update();
+
+        $timeline           = new \App\Timeline;
+        $timeline->user_id  = $donated_item->buyer->id;
+        $timeline->model_id = $donated_item->id;
+        $timeline->message  = 'Purchased Donated Item:  ' . $donated_item->name;
+        $timeline->type     = 'donated-item.delivery.approved';
+        $timeline->extra    = '';
+        $timeline->save();
+
+        $simba_coin_log                        = new SimbaCoinLog;
+        $simba_coin_log->user_id               = $donor->id;
+        $simba_coin_log->message               = 'Payment for Donated item sold. (' . $donated_item->name .')';
+        $simba_coin_log->type                  = 'credit';
+        $simba_coin_log->coins                 = $escrow->amount;
+        $simba_coin_log->previous_balance      = $donor->coins - $escrow->amount ;
+        $simba_coin_log->current_balance       = $donor->coins;
+        $simba_coin_log->save();
+
+        $notification                       = new Notification;
+        $notification->from_id              = $user->id;
+        $notification->to_id                = $donated_item->donor->id;
+        $notification->system_message       = 0;
+        $notification->message              = 'The Item Purchased by '. $donated_item->buyer->name .' Was marked as received. The funds have been released to your account.';
+        $notification->notification_type    = 'donated-item.delivery.approved';
+        $notification->model_id             = $donated_item->id;
+        $notification->save();
+
+        session()->flash('success', 'Item Marked as Received');
+
+        return redirect()->back();
+    }
+
+    // **************************SAVE GOOD DEED ***************************************
 
     public function postGoodDeed(Request $request){
 
@@ -579,91 +693,7 @@ class UserController extends Controller
         return redirect()->route('good-deed.show', ['slug' => $good_deed->slug]);
     }
 
-    public function postUserReview(Request $request, $username){
-        $this->validate($request,[
-            'rating'    => 'required|numeric|min:1|max:5',
-            'message'   => 'required|max:800',
-        ]);
-
-        $user = User::where('username', $username)->firstOrFail();
-        $auth = auth()->user();
-
-        if($user->id == $auth->id){
-            session()->flash('error', 'You Cannot rate yourself');
-            return redirect()->back();
-        }
-
-        $reviewed = $user->reviews()->where('rater_id', $auth->id)->first();
-
-        if($reviewed){
-            session()->flash('error', 'You have already reviewed this user');
-            return redirect()->back();
-        }
-
-        $review             = new UserReview;
-        $review->user_id    = $user->id;
-        $review->rater_id   = $auth->id;
-        $review->rating     = $request->rating;
-        $review->message    = $request->message;
-        $review->save();
-
-        $user->rating       += $request->rating;
-        $user->reviews      += 1;
-        $user->update();
-
-        $previous_balance   = $auth->coins;
-
-        $auth->coins                += config('coins.earn.rating_member');
-        $auth->accumulated_coins    += config('coins.earn.rating_member');
-        $auth->update();
-
-        $this->settings->available_balance->value       += config('coins.earn.rating_member');
-        $this->settings->available_balance->update();
-
-        $this->settings->coins_in_circulation->value    += config('coins.earn.rating_member');
-        $this->settings->coins_in_circulation->update();
-
-        $simba_coin_log                        = new SimbaCoinLog;
-        $simba_coin_log->user_id               = $auth->id;
-        $simba_coin_log->message               = 'Simba Coins earned for reviewing ' . $user->name;
-        $simba_coin_log->type                  = 'credit';
-        $simba_coin_log->coins                 = config('coins.earn.rating_member');;
-        $simba_coin_log->previous_balance      = $previous_balance;
-        $simba_coin_log->current_balance      += $auth->coins;
-        $simba_coin_log->save();
-
-        $notification                       = new Notification;
-        $notification->from_id              = $auth->id;
-        $notification->to_id                = $user->id;
-        $notification->message              = $auth->name . ' Reviewed your profile.';
-        $notification->notification_type    = 'user.reviewed';
-        $notification->model_id             = $user->id;
-        $notification->save();
-
-        session()->flash('success', 'User reviewed');
-
-        return redirect()->back();
-    }
-
-    public function showMyProfile(){
-        $user = auth()->user();
-
-        return view('pages.user.my-profile', [
-            'title'     => 'Profile',
-            'nav'       => 'user.profile',
-            'user'      => $user,
-        ]);
-    }
-
-    public function showSettings(){
-        $user = auth()->user();
-
-        return view('pages.user.user-settings', [
-            'title'     => 'Settings',
-            'nav'       => 'user.settings',
-            'user'      => $user,
-        ]);
-    }
+    // **************************MEMBERSHIPS ******************************************
 
     public function addMembership(Request $request){
         
@@ -734,6 +764,8 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+
+    // **************************AWARDS **********************************************
 
     public function addAward(Request $request){
         
@@ -809,6 +841,8 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    // **************************HOBBIES *********************************************
+
     public function addHobby(Request $request){
         
         $this->validate($request, [
@@ -879,6 +913,8 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    // **************************HOBBIES *********************************************
+
     public function addAchievement(Request $request){
         
         $this->validate($request, [
@@ -948,6 +984,8 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+
+    // **************************WORK EXPERIENCE *************************************
 
     public function addWorkExperience(Request $request){
         $this->validate($request,[
@@ -1054,6 +1092,8 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    // **************************SKILLS **********************************************
+
     public function addSkill(Request $request){
         $this->validate($request,[
             'skill' => 'required|max:191',
@@ -1146,6 +1186,8 @@ class UserController extends Controller
         session()->flash('success', $message);
         return redirect()->back();
     }
+
+    // **************************EDUCATION *******************************************
 
     public function addEducation(Request $request){
         $this->validate($request,[
@@ -1261,9 +1303,11 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    // **************************ABOUT ME ********************************************
+
     public function updateAboutMe(Request $request){
         $this->validate($request, [
-            'about_me' => 'required|max:800',
+            'about_me' => 'required|min:300|max:50000',
         ]);
 
         $user               = auth()->user();
@@ -1279,6 +1323,8 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+
+    // **************************DONATED ITEMS ********************************************
 
     public function updateDonatedItem(Request $request, $slug){
         $this->validate($request, [
@@ -1469,6 +1515,8 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    // **************************PURCHASE COINS *******************************************
+
     public function postPurchaseCoins(Request $request){
         $user = auth()->user();
 
@@ -1489,6 +1537,9 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+
+    
+    // **************************REPORT USER **********************************************
 
     public function postReport(Request $request){
         $this->validate($request, [
@@ -1531,6 +1582,8 @@ class UserController extends Controller
 
         return redirect()->back();
     }
+
+    // **************************POSTS ****************************************************
 
     public function postNewPost(Request $request){
         $this->validate($request, [
@@ -1602,6 +1655,8 @@ class UserController extends Controller
         return redirect()->route('posts');
     }    
 
+    // **************************POST COMMENTS ********************************************
+
     public function postComment(Request $request, $slug){
         $this->validate($request, [
             'content'   => 'max:5000|required',
@@ -1671,6 +1726,175 @@ class UserController extends Controller
 
         session()->flash('success', 'Comment Deleted');
 
+        return redirect()->back();
+    }
+
+    // **************************REVIEW DONATED ITEM **************************************
+
+    public function reviewDonatedItem(Request $request, $slug){
+        $item = DonatedItem::where('slug', $slug)->firstOrFail();
+        $user = auth()->user();
+
+        $reviews        = $item->reviews()->orderBy('created_at', 'DESC')->get();
+        $review         = $item->reviews()->orderBy('created_at', 'DESC')->first();
+
+        if($item->buyer_id == $user->id && $item->bought && $item->received && $item->approved){
+            if(!$review){
+                $this->validate($request, [
+                    'rating'    => 'numeric|min:1|max:5',
+                    'message'   => 'required|max:50000',
+                ]);
+
+                $review                     = new DonatedItemReview;
+                $review->rating             = $request->rating;
+                $review->message            = $request->message;
+                $review->user_id            = $user->id;
+                $review->donated_item_id    = $item->id;
+                $review->save();
+
+                $coins                       = config('coins.earn.reviewing_item');
+                $user->coins                += $coins;
+                $user->accumulated_coins    += $coins;
+                $user->update();
+
+                $simba_coin_log                        = new SimbaCoinLog;
+                $simba_coin_log->user_id               = $user->id;
+                $simba_coin_log->message               = 'Reviewed Donated item. (' . $item->name . ')';
+                $simba_coin_log->type                  = 'credit';
+                $simba_coin_log->coins                 = $coins;
+                $simba_coin_log->previous_balance      = $user->coins - $coins ;
+                $simba_coin_log->current_balance       = $user->coins;
+                $simba_coin_log->save();
+
+                $notification                       = new Notification;
+                $notification->from_id              = $user->id;
+                $notification->to_id                = $item->donor->id;
+                $notification->message              = $user->name . ' Reviewed your donated item. (' . $item->name . ')';
+                $notification->notification_type    = 'item.reviewed';
+                $notification->model_id             = $item->id;
+                $notification->save();
+
+                session()->flash('success', 'Item Reviewed');
+            }else{
+                return $this->updateDonatedItemReview($request, $review->id);
+            }
+        }else{
+            session()->flash('error', 'Forbidden');
+        }
+
+        return redirect()->back();
+
+    }
+
+    public function updateDonatedItemReview(Request $request, $id){
+        $this->validate($request, [
+            'rating'    => 'numeric|min:1|max:5',
+            'message'   => 'required|max:50000',
+        ]);
+
+        $review = DonatedItemReview::findOrFail($id);
+        $user = auth()->user();
+
+        if($user->id != $review->user_id){
+            session()->flash('error','Forbidden');
+            return redirect()->back();
+        }
+
+        $review->message    = $request->message;
+        $review->rating     = $request->rating;
+        $review->update();
+
+        session()->flash('success','Review Updated');
+        return redirect()->back();
+    }
+
+    // **************************REVIEW USER ******************************************
+
+    public function postUserReview(Request $request, $username){
+        $this->validate($request,[
+            'rating'    => 'required|numeric|min:1|max:5',
+            'message'   => 'required|max:50000',
+        ]);
+
+        $user = User::where('username', $username)->firstOrFail();
+        $auth = auth()->user();
+
+        if($user->id == $auth->id){
+            session()->flash('error', 'You Cannot rate yourself');
+            return redirect()->back();
+        }
+
+        $reviewed = $user->reviews()->where('rater_id', $auth->id)->first();
+
+        if($reviewed){
+            session()->flash('error', 'You have already reviewed this user');
+            return redirect()->back();
+        }
+
+        $review             = new UserReview;
+        $review->user_id    = $user->id;
+        $review->rater_id   = $auth->id;
+        $review->rating     = $request->rating;
+        $review->message    = $request->message;
+        $review->save();
+
+        $user->rating       += $request->rating;
+        $user->reviews      += 1;
+        $user->update();
+
+        $previous_balance   = $auth->coins;
+
+        $auth->coins                += config('coins.earn.rating_member');
+        $auth->accumulated_coins    += config('coins.earn.rating_member');
+        $auth->update();
+
+        $this->settings->available_balance->value       += config('coins.earn.rating_member');
+        $this->settings->available_balance->update();
+
+        $this->settings->coins_in_circulation->value    += config('coins.earn.rating_member');
+        $this->settings->coins_in_circulation->update();
+
+        $simba_coin_log                        = new SimbaCoinLog;
+        $simba_coin_log->user_id               = $auth->id;
+        $simba_coin_log->message               = 'Simba Coins earned for reviewing ' . $user->name;
+        $simba_coin_log->type                  = 'credit';
+        $simba_coin_log->coins                 = config('coins.earn.rating_member');;
+        $simba_coin_log->previous_balance      = $previous_balance;
+        $simba_coin_log->current_balance      += $auth->coins;
+        $simba_coin_log->save();
+
+        $notification                       = new Notification;
+        $notification->from_id              = $auth->id;
+        $notification->to_id                = $user->id;
+        $notification->message              = $auth->name . ' Reviewed your profile.';
+        $notification->notification_type    = 'user.reviewed';
+        $notification->model_id             = $user->id;
+        $notification->save();
+
+        session()->flash('success', 'User reviewed');
+
+        return redirect()->back();
+    }
+
+    public function updateUserReview(Request $request, $id){
+        $this->validate($request, [
+            'rating'    => 'numeric|min:1|max:5',
+            'message'   => 'required|max:50000',
+        ]);
+
+        $review = UserReview::findOrFail($id);
+        $user = auth()->user();
+
+        if($user->id != $review->rater_id){
+            session()->flash('error','Forbidden');
+            return redirect()->back();
+        }
+
+        $review->message    = $request->message;
+        $review->rating     = $request->rating;
+        $review->update();
+
+        session()->flash('success','Review Updated');
         return redirect()->back();
     }
 }

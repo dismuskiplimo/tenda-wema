@@ -26,7 +26,7 @@
 
 								<div style="background: url({{ custom_asset('images/world-map.png') }}) no-repeat center center; background-size: 100%;">
 									<address>
-										<strong>{{ config('app.domain') }}</strong><br>
+										<strong>{{ config('app.name') }}</strong><br>
 										P.o Box 24721-00100<br>
 										Nairobi, Kenya<br>
 									</address>

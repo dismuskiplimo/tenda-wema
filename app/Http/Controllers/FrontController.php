@@ -189,13 +189,18 @@ class FrontController extends Controller
     }
 
     public function showDonatedItem($slug){
-        $item = DonatedItem::where('slug', $slug)->firstOrFail();
-        $mine = false;
-        $categories = null;
-        $user   = false;
-        $coin_request = false;
+        $item           = DonatedItem::where('slug', $slug)->firstOrFail();
+        $mine           = false;
+        $categories     = null;
+        $user           = false;
+        $coin_request   = false;
+        $logged_in      = false;
+
+        $reviews        = $item->reviews()->orderBy('created_at', 'DESC')->get();
+        $review         = $item->reviews()->orderBy('created_at', 'DESC')->first();
 
         if(auth()->check()){
+            $logged_in = true;
             $user = auth()->user();
             $coin_request = $user->coin_purchase_history()->where('approved', 0)->where('disapproved', 0)->first();
 
@@ -209,7 +214,10 @@ class FrontController extends Controller
             'title'           => $item->name,
             'nav'             => 'donated-item',
             'item'            => $item,
+            'reviews'         => $reviews,
+            'review'          => $review,
             'mine'            => $mine,
+            'logged_in'       => $logged_in,
             'user'            => $user,
             'categories'      => $categories,
             'coin_request'    => $coin_request,

@@ -143,7 +143,7 @@ class PaymentsController extends Controller
             $transaction->status            = 'COMPLETE';
             $transaction->currency          = $this->settings->paypal_currency->value;
             $transaction->type              = 'INCOMING';
-            $transaction->description       = number_format($coins) . ' Simba Coin(s) Purchase';
+            $transaction->description       = number_format($coins) . ' Simba Coin(s) Purchase Via PayPal Test';
             $transaction->completed_at      = $this->date;
             $transaction->save();
 
@@ -153,7 +153,7 @@ class PaymentsController extends Controller
             $notification->model_id             = null;
             $notification->notification_type    = 'coins.purchased';
             $notification->system_message       = 1;
-            $notification->message              = ucfirst($coins . ' Simba Coins Purchased By ' . $user->name);
+            $notification->message              = ucfirst($coins . ' Simba Coins Purchased Via PayPal Test By ' . $user->name);
             $notification->save();
 
             $this->settings->available_balance->value += $coins;
@@ -263,7 +263,7 @@ class PaymentsController extends Controller
                 try{
                     $result = $payment->execute($execute, $paypal);
                 }catch(\PayPal\Exception\PayPalConnectionException $e){
-                    Session::flash('error','There was an error processing your payment, the token has already been used');
+                    session()->flash('error','There was an error processing your payment, the token has already been used');
                     return redirect()->route('user.balance');
                 }
 
@@ -336,7 +336,7 @@ class PaymentsController extends Controller
                 //         });
 
                 //     }catch(\Exception $e){
-                //         //Session::flash('error', $e->getMessage());
+                //         //session()->flash('error', $e->getMessage());
                 //     }
                 // }
 
@@ -610,7 +610,7 @@ class PaymentsController extends Controller
                     //         });
 
                     //     }catch(\Exception $e){
-                    //         //Session::flash('error', $e->getMessage());
+                    //         //session()->flash('error', $e->getMessage());
                     //     }
                     // }
 

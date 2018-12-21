@@ -28,10 +28,15 @@ Route::get('/privacy-policy', 'FrontController@showPrivacyPolicyPage')->name('pr
 Route::post('/donated-items/{slug}/update', 'UserController@updateDonatedItem')->name('user.donated-item.update');
 Route::post('/donated-items/{slug}/delete', 'UserController@deleteDonatedItem')->name('user.donated-item.delete');
 
+Route::post('/donated-items/{slug}/review', 'UserController@reviewDonatedItem')->name('user.donated-item.review');
+Route::post('/donated-items/review/{id}/update', 'UserController@updateDonatedItemReview')->name('user.donated-item.review.update');
+
 Route::post('/donated-items/{slug}/images/add', 'UserController@addDonatedItemImage')->name('user.donated-item.image.add');
 Route::post('/donated-items/{slug}/images/{id}/delete', 'UserController@deleteDonatedItemImage')->name('user.donated-item.image.delete');
 
 Route::get('/donated-items/{slug}/purchase', 'UserController@purchaseDonatedItem')->name('user.donated-item.purchase');
+
+Route::post('/donated-items/{slug}/confirm-delivery', 'UserController@confirmDonatedItemDelivery')->name('user.donated-item.confirm-delivery');
 
 Route::get('/report-a-good-deed', 'FrontController@showReportGoodDeedPage')->name('report-a-good-deed');
 

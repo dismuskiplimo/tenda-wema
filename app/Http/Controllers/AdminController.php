@@ -113,7 +113,7 @@ class AdminController extends Controller
 
     	$simba_coin_log                        = new SimbaCoinLog;
         $simba_coin_log->user_id               = $deed->user->id;
-        $simba_coin_log->message               = config('coins.earn.good_deed') . ' Simba Coins for diong a good deed. DESC: ' . $deed->name;
+        $simba_coin_log->message               = config('coins.earn.good_deed') . ' Simba Coins for diong a good deed. (' . $deed->name . ')';
         $simba_coin_log->type                  = 'credit';
         $simba_coin_log->coins                 = config('coins.earn.good_deed');
         $simba_coin_log->previous_balance      = $deed->user->coins - config('coins.earn.good_deed');
@@ -280,7 +280,7 @@ class AdminController extends Controller
         $notification->to_id                = $donated_item->buyer->id;
         $notification->system_message       = 1;
         $notification->from_admin       	= 1;
-        $notification->message              = 'Your Donated Item Purchase Was Approved. DESC' . $donated_item->name;
+        $notification->message              = 'Your Donated Item Purchase Was Approved. (' . $donated_item->name .')';
         $notification->notification_type    = 'donated-item.purchase.approved';
         $notification->model_id             = $donated_item->id;
         $notification->save();
@@ -333,7 +333,7 @@ class AdminController extends Controller
 
     	$simba_coin_log                        = new SimbaCoinLog;
         $simba_coin_log->user_id               = $buyer->id;
-        $simba_coin_log->message               = 'Reversal - Payment for Donated item bought. DESC: ' . $donated_item->name;
+        $simba_coin_log->message               = 'Reversal - Payment for Donated item bought.  (' . $donated_item->name . ')';
         $simba_coin_log->type                  = 'credit';
         $simba_coin_log->coins                 = $escrow->amount;
         $simba_coin_log->previous_balance      = $buyer->coins - $escrow->amount ;
@@ -354,7 +354,7 @@ class AdminController extends Controller
 
     public function confirmDonatedItemDelivery(Request $request, $id){
     	$this->validate($request, [
-    		'reason' => 'max:800',
+    		'reason' => 'max:50000',
     	]);
 
     	$donated_item = DonatedItem::findOrFail($id);
@@ -396,7 +396,7 @@ class AdminController extends Controller
 
         $simba_coin_log                        = new SimbaCoinLog;
         $simba_coin_log->user_id               = $donor->id;
-        $simba_coin_log->message               = 'Payment for Donated item sold. DESC: ' . $donated_item->name;
+        $simba_coin_log->message               = 'Payment for Donated item sold. (' . $donated_item->name . ')';
         $simba_coin_log->type                  = 'credit';
         $simba_coin_log->coins                 = $escrow->amount;
         $simba_coin_log->previous_balance      = $donor->coins - $escrow->amount ;
@@ -408,7 +408,7 @@ class AdminController extends Controller
         $notification->to_id                = $donated_item->buyer->id;
         $notification->system_message       = 1;
         $notification->from_admin       	= 1;
-        $notification->message              = 'Your Donated Item Purchase was marked as Deliverd by the admin. The Coins will now be released to the donor';
+        $notification->message              = 'Your Donated Item Purchase was marked as delivered by the admin. The Coins will now be released to the seller';
         $notification->notification_type    = 'donated-item.delivery.approved';
         $notification->model_id             = $donated_item->id;
         $notification->save();
@@ -418,7 +418,7 @@ class AdminController extends Controller
         $notification->to_id                = $donated_item->donor->id;
         $notification->system_message       = 1;
         $notification->message              = 'The Item Purchased by '. $donated_item->buyer->name .' Was marked as delivered. The funds have been released to your account.';
-        $notification->notification_type    = 'donated-item.purchase.approved';
+        $notification->notification_type    = 'donated-item.delivery.approved';
         $notification->model_id             = $donated_item->id;
         $notification->save();
 
@@ -467,7 +467,7 @@ class AdminController extends Controller
 
     		$simba_coin_log                        = new SimbaCoinLog;
 	        $simba_coin_log->user_id               = $donor->id;
-	        $simba_coin_log->message               = 'Reversal - Payment for Donated item sold. DESC: ' . $donated_item->name;
+	        $simba_coin_log->message               = 'Reversal - Payment for Donated item sold. (' . $donated_item->name . ')';
 	        $simba_coin_log->type                  = 'debit';
 	        $simba_coin_log->coins                 = $escrow->amount;
 	        $simba_coin_log->previous_balance      = $donor->coins + $escrow->amount ;
@@ -497,7 +497,7 @@ class AdminController extends Controller
 
     	$simba_coin_log                        = new SimbaCoinLog;
         $simba_coin_log->user_id               = $buyer->id;
-        $simba_coin_log->message               = 'Refund - Payment for Donated item purchase. DESC: ' . $donated_item->name;
+        $simba_coin_log->message               = 'Refund - Payment for Donated item purchase. (' . $donated_item->name . ')';
         $simba_coin_log->type                  = 'credit';
         $simba_coin_log->coins                 = $escrow->amount;
         $simba_coin_log->previous_balance      = $buyer->coins - $escrow->amount ;
@@ -842,6 +842,17 @@ class AdminController extends Controller
     
     //***************************** MESSAGES ****************************************
 
+    public function showComposeMessageForm(){
+        $pagination = 50;
+        $users = User::where('usertype', 'USER')->where('is_admin', 0)->where('closed', 0)->orderBy('name', 'ASC')->paginate($pagination);
+
+        return view('pages.admin.compose-message', [
+            'title' => 'Compose Message',
+            'nav'   => 'admin.compose-message',
+            'users' => $users,
+        ]);
+    }
+
     public function newMessage(Request $request, $id){
 
         $sender     = auth()->user();
@@ -869,63 +880,6 @@ class AdminController extends Controller
         }
 
         return redirect()->route('admin.message.view', ['id' => $conversation->id]);
-    }
-
-    public function showMessages($type){
-    	$pagination = 50;
-
-    	if($type == 'all'){
-    		$title 			= 'Conversations';
-    		$nav 			= 'admin.conversations.all';
-
-    		$conversations 	= Conversation::where('support', 1)->orWhere('from_admin', 1)->orderBy('updated_at', 'DESC')->paginate($pagination);
-    	}
-
-    	else{
-    		abort(404);
-    	}
-
-    	return view('pages.admin.conversations', [
-    		'title'			=> $title,
-    		'nav'			=> $nav,
-    		'conversations'	=> $conversations
-    	]);
-    }
-
-    public function showMessage($id){
-    	$conversation = Conversation::findOrFail($id);
-
-    	$unread_messages = $conversation->messages()->where('support', 1)->where('from_admin', '0')->where('read', 0)->get();
-
-    	foreach ($unread_messages as $message) {
-    		$message->read = 1;
-    		$message->read_at = $this->date;
-    		$message->update();
-    	}
-
-    	if($conversation->from_admin)
-			$recepient = $conversation->to;
-		else{
-			$recepient = $conversation->from;
-		}
-
-    	return view('pages.admin.conversation', [
-    		'title'			=> $recepient->name,
-    		'nav'			=> 'admin.conversation',
-    		'conversation'	=> $conversation,
-    		'recepient'		=> $recepient,
-    	]);
-    }
-
-    public function showComposeMessageForm(){
-    	$pagination = 50;
-    	$users = User::where('usertype', 'USER')->where('is_admin', 0)->where('closed', 0)->orderBy('name', 'ASC')->paginate($pagination);
-
-    	return view('pages.admin.compose-message', [
-    		'title'	=> 'Compose Message',
-    		'nav'	=> 'admin.compose-message',
-    		'users'	=> $users,
-    	]);
     }
 
     public function postMessage(Request $request, $id){
@@ -980,9 +934,9 @@ class AdminController extends Controller
 
         if($request->ajax()){
             $details = [
-            	'from'		=> 'Admin',
-            	'message'	=> $message->message,
-            	'time'		=> $message->created_at->diffForHumans(),
+                'from'      => 'Admin',
+                'message'   => $message->message,
+                'time'      => $message->created_at->diffForHumans(),
             ];
 
             $response = ['status' => 200, 'message' => $msg, 'details' => $details];
@@ -993,6 +947,52 @@ class AdminController extends Controller
         session()->flash('success', $msg);
 
         return redirect()->back();
+    }
+
+    public function showMessages($type){
+    	$pagination = 50;
+
+    	if($type == 'all'){
+    		$title 			= 'Conversations';
+    		$nav 			= 'admin.conversations.all';
+
+    		$conversations 	= Conversation::where('support', 1)->orWhere('from_admin', 1)->orderBy('updated_at', 'DESC')->paginate($pagination);
+    	}
+
+    	else{
+    		abort(404);
+    	}
+
+    	return view('pages.admin.conversations', [
+    		'title'			=> $title,
+    		'nav'			=> $nav,
+    		'conversations'	=> $conversations
+    	]);
+    }
+
+    public function showMessage($id){
+    	$conversation = Conversation::findOrFail($id);
+
+    	$unread_messages = $conversation->messages()->where('support', 1)->where('from_admin', '0')->where('read', 0)->get();
+
+    	foreach ($unread_messages as $message) {
+    		$message->read = 1;
+    		$message->read_at = $this->date;
+    		$message->update();
+    	}
+
+    	if($conversation->from_admin)
+			$recepient = $conversation->to;
+		else{
+			$recepient = $conversation->from;
+		}
+
+    	return view('pages.admin.conversation', [
+    		'title'			=> $recepient->name,
+    		'nav'			=> 'admin.conversation',
+    		'conversation'	=> $conversation,
+    		'recepient'		=> $recepient,
+    	]);
     }
 
     public function getAjaxConversation($id){

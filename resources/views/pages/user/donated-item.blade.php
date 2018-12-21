@@ -71,14 +71,102 @@
 
 						<br>
 
-						<h4>Description</h4>
+						<h4 class="nobottommargin">Description</h4>
 
-						<p class="mtn-30">{!! nl2br(clean($item->description)) !!}</p>
+						<p class="nobottommargin">{!! clean($item->description) !!}</p>
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<h4 class="nobottommargin">
+									Item Review
+
+									@if($logged_in && $item->buyer_id == $user->id && $item->bought && $item->received && $item->approved)
+										@if(!$review)
+											<a href="" data-toggle="modal" data-target="#review-item-modal" class="btn btn-success btn-xs nobottommargin pull-right"><i class="fa fa-star"></i> REVIEW ITEM</a>
+
+											@include('pages.user.modals.review-item')
+										@else
+											<a href="" data-toggle="modal" data-target="#edit-review-item-modal-{{ $review->id }}" class="btn btn-warning btn-xs nobottommargin pull-right"><i class="fa fa-edit"></i> EDIT REVIEW</a>
+
+											@include('pages.user.modals.edit-review-item')
+										@endif
+									@endif
+									
+
+									
+								</h4>
+
+								<hr class="mt-5 mb-5">
+	
+							</div>
+						</div>
+						
+
+						@if($review)
+							<div>
+								<p class="nobottommargin">
+									
+									<strong>
+										<a href="{{ route('user.show', ['username' => $review->user->username]) }}">
+											<img src="{{ $review->user->thumbnail() }}" alt="" class="size-20 mtn-4">
+
+											{{ $review->user->name }}
+										</a>,  
+									</strong>
+
+									
+
+									<small class="text-muted">{{ simple_datetime($review->created_at) }}</small> 
+									
+									@for($i = 0; $i < $review->rating; $i++)
+										<i class="fa fa-star text-warning"></i>
+									@endfor
+
+									<br>
+
+									
+								</p>
+
+								<p class="nobottommargin mt-10">
+									{{ $review->message }}
+								</p>	
+							</div>
+						@else
+							<p class="nobottommargin">Item not reviewed yet</p>
+						@endif
 					</div>
 				</div>
 			</div>
 
 			<div class="col-sm-4">
+				@if($logged_in && $item->buyer_id == $user->id)
+					@if($item->bought && $item->approved && !$item->disapproved && !$item->received)
+						<div class="row">
+
+							<div class="col-sm-12 mb-20">
+								<p class="nobottommargin">
+									<a href="" data-toggle="modal" data-target="#confirm-item-received-{{ $item->id }}" class="btn btn-block btn-success mb-20">
+										ITEM RECEIVED ?
+									</a>
+									
+									<a href="" data-toggle="modal" data-target="#cancel-purchase-{{ $item->id }}" class="btn btn-block btn-default">
+										CANCEL PURCHASE
+									</a>
+								</p>
+									
+								@include('pages.user.modals.confirm-item-received')
+								@include('pages.user.modals.cancel-purchase')	
+							</div>
+							
+						</div>
+					@endif
+					
+				@endif
+
 				<div class="card">
 					<div class="card-body">
 						<h3> <img src="{{ simba_coin() }}" alt="" class="size-30"> {{ $item->price }} <small>Simba Coins</small></h3>
