@@ -64,7 +64,7 @@
 
 						<p>
 							<strong><i class="fa fa-phone"></i> Phone:</strong> <br>
-							254720XXXXX
+							+254 735 663 734
 
 						</p>
 

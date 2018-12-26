@@ -570,7 +570,7 @@ class UserController extends Controller
             return redirect()->back();
         }
 
-        if($item->bought && !$item->disapproved !&& $item->received){
+        if($item->bought && !$item->disapproved && !$item->received){
             $cancel_order                   = new CancelOrder;
             $cancel_order->user_id          = $user->id;
             $cancel_order->donated_item_id  = $item->id;
@@ -1358,8 +1358,14 @@ class UserController extends Controller
 
     public function updateAboutMe(Request $request){
         $this->validate($request, [
-            'about_me' => 'required|min:300|max:50000',
+            'about_me' => 'required',
         ]);
+
+        if(str_word_count($request->about_me) < 300){
+            session()->flash('error', 'Sorry, you need a minimum of 300 words for your bio');
+
+            return redirect()->back()->withInput();
+        }
 
         $user               = auth()->user();
         $user->about_me     = $request->about_me;

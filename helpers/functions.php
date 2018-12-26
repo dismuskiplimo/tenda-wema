@@ -8,6 +8,12 @@
 		return asset($asset);
 	}
 
+	function word_count($string){
+		$words = explode(' ', $string);
+
+		return count($words);
+	}
+
 	function my_asset($asset){
 		return custom_asset($asset);
 	}

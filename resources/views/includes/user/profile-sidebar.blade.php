@@ -2,12 +2,21 @@
 	<div class="card-body">
 
 		@if(auth()->check() && auth()->user()->id == $user->id)
-			<img src="{{ $user->profile_picture() }}" alt="" class="img-responsive mb-30 profile-picture img-circle" title="Click to update">
+			<a href="" data-toggle = "modal" data-target="#edit-profile-pic">
+				<img src="{{ $user->profile_picture() }}" alt="" class="img-responsive mb-30 profile-picture- img-circle" title="Click to update">
+			</a>
+
+			@include('pages.user.modals.edit-profile-pic')
+			
 
 			<form action="{{ route('user.profile-picture.update') }}" class="hidden profile-picture-form" method="POST" enctype="multipart/form-data">
 				@csrf
 
 				<input type="file" class="profile-picture-file" name="image" accept="image/*" />
+
+				<div class="cropper">
+					<img src="" alt="">
+				</div>
 			</form>	
 		@else
 			<img src="{{ $user->profile_picture() }}" alt="{{ $user->name }}" class="img-responsive img-circle mb-30">
@@ -33,15 +42,7 @@
 		@endphp
 
 		<p class="text-center">
-			@if($stars)
-				
-					@for($i = 0; $i < $stars; $i++)
-						<i class="fa fa-star text-warning"></i>
-					@endfor
-				
-			@else
-				<i>User not reviewed yet</i>
-			@endif
+			{!! $user->stars() !!}
 		</p>
 		
 		<p class=" text-center">

@@ -345,4 +345,18 @@ class User extends Authenticatable
     public function coin_purchase_history(){
         return $this->hasMany('App\CoinPurchaseHistory', 'user_id');
     }
+
+    public function stars(){
+        $stars = $this->reviews ? ($this->rating / $this->reviews) : 0;
+
+        $stars = $stars == 5 ? 5 : floor($stars);
+
+        $str = '';
+
+        for($i = 0; $i < $stars; $i++){
+            $str .= '<i class="fa fa-star text-warning"></i>';
+        }
+
+        return empty($str) ? '<small><i>User not reviewed yet</i></small>' : $str;
+    }
 }

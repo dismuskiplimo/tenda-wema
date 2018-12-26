@@ -37,6 +37,16 @@ class FrontController extends Controller
     	]);
     }
 
+    public function showRegisteredMembersPage(Request $request){
+        $users = User::where('usertype', 'USER')->orderBy('name', 'ASC')->paginate(40);
+
+        return view('pages.user.registered-users',[
+            'title'     => 'Registered Members',
+            'nav'       => 'registered-users',
+            'users'     => $users,
+        ]);
+    }
+
     public function showPostsPage(){
         $posts = Post::orderBy('created_at', 'DESC')->paginate(20);
 

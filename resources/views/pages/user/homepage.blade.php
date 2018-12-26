@@ -77,7 +77,7 @@
 							<div class="fbox-icon">
 								<a href="#"><i class="i-alt noborder icon-megaphone"></i></a>
 							</div>
-							<h3>Report Good Deeds<span class="subtitle">Report good deeds you peformed</span></h3>
+							<h3>Report Good Deeds<span class="subtitle">Report good deeds you performed</span></h3>
 						</div>
 					</div>
 
@@ -112,7 +112,7 @@
 					<div class="col_three_fifth nobottommargin col_last">
 
 						<div class="heading-block">
-							<h2>Why {{ config('app.name') }} was formed? </h2>
+							<h2>Why was {{ config('app.name') }} formed? </h2>
 						</div>
 
 						
@@ -120,9 +120,10 @@
 						<div class="nobottommargin">
 							<ul class="iconlist iconlist-color nobottommargin">
 								<li><i class="icon-caret-right"></i> To give users a chance to donate their less frequently used items</li>
-								<li><i class="icon-caret-right"></i> To give users ability to accedd donated items</li>
+								<li><i class="icon-caret-right"></i> To give users ability to access  donated items</li>
 								<li><i class="icon-caret-right"></i> To give users the ability to state the good deeds they have done that have positively impacted the society</li>
 								<li><i class="icon-caret-right"></i> To provide a platform where well wishers can communicate</li>
+								<li><i class="icon-caret-right"></i> To create a community for social good.</li>
 							</ul>
 						</div>
 
@@ -192,7 +193,7 @@
 									<a href="#"><i class="icon-money"></i></a>
 								</div>
 								<h3>MPESA Support</h3>
-								<p>{{ config('app.name') }} allows purchase of Simba Coins throug MPESA in case you have insufficient funds to purchase an item.</p>
+								<p>{{ config('app.name') }} allows purchase of Simba Coins through  MPESA in case you have insufficient Simba Coins to purchase an item.</p>
 							</div>
 						</div>
 

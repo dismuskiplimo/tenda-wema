@@ -25,6 +25,8 @@ Route::get('/how-it-works', 'FrontController@showHowItWorksPage')->name('how-it-
 
 Route::get('/privacy-policy', 'FrontController@showPrivacyPolicyPage')->name('privacy-policy');
 
+Route::get('/registered-members', 'FrontController@showRegisteredMembersPage')->name('registered-members');
+
 Route::post('/donated-items/{slug}/update', 'UserController@updateDonatedItem')->name('user.donated-item.update');
 Route::post('/donated-items/{slug}/delete', 'UserController@deleteDonatedItem')->name('user.donated-item.delete');
 

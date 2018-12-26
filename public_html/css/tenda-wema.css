@@ -6,6 +6,29 @@ ul{
 	list-style: none;
 }
 
+.cropper{
+  width: 100%;
+  float: left;
+  display: block;
+  text-align: center;
+}
+
+.cropper img{
+  max-width: 100%;
+}
+
+.crop-it-container{
+  width: 100%;
+  float: left;
+  position: relative;
+}
+
+.cropit-preview{
+  margin:0 auto 20px auto;
+  position: relative;
+  background-color: #ccc;
+}
+
 .text-justify{
   text-align: justify;
 }

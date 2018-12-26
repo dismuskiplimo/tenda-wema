@@ -49,6 +49,7 @@
 									<li><a href="{{ route('about-us') }}">About Us</a></li>
 									<li><a href="{{ route('contact-us') }}">Contact Us</a></li>
 									<li><a href="{{ route('how-it-works') }}">How it Works</a></li>
+									<li><a href="{{ route('registered-members') }}">Registered Members</a></li>
 									
 									
 									
@@ -111,7 +112,7 @@
 								</div>
 
 								<div class="col-md-6 bottommargin-sm">
-									<div class="counter counter-small"><span data-from="0" data-to="{{ App\User::count() }}" data-refresh-interval="50" data-speed="2000" data-comma="true"></span></div>
+									<div class="counter counter-small"><span data-from="0" data-to="{{ App\User::where('usertype', 'USER')->count() }}" data-refresh-interval="50" data-speed="2000" data-comma="true"></span></div>
 									<h5 class="nobottommargin">Registered Users</h5>
 								</div>
 
@@ -203,7 +204,17 @@
 	<!-- Footer Scripts
 	============================================= -->
 	<script type="text/javascript" src="{{ custom_asset('js/user/functions.js') }}"></script>
+
+	<script type="text/javascript" src="{{ custom_asset('js/cropper.min.js') }}"></script>
+	<script type="text/javascript" src="{{ custom_asset('js/jquery.cropit.js') }}"></script>
+	<script type="text/javascript" src="{{ custom_asset('js/jquery.color.js') }}"></script>
+	<script type="text/javascript" src="{{ custom_asset('js/jquery.Jcrop.min.js') }}"></script>
+
+	<script type="text/javascript" src="{{ custom_asset('js/exif.js') }}"></script>
+
+	<script type="text/javascript" src="{{ custom_asset('js/validate.min.js') }}"></script>
 	<script type="text/javascript" src="{{ custom_asset('js/tenda-wema.js') }}"></script>
+	
 	@if(auth()->check())
 		<input type="hidden" id="message_count" value="{{ route('messages.count') }}">
 		<input type="hidden" id="notification_count" value="{{ route('notifications.count') }}">

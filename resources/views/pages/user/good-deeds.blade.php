@@ -5,7 +5,7 @@
 
 		<div class="container clearfix">
 			<h1>{{ $title }} ({{ number_format($deeds->total()) }})</h1>
-			<span>Good Deeds</span>
+			<span>Caring has the gift of making the ordinary special - <i>George R. Bach</i></span>
 			<ol class="breadcrumb">
 				<li><a href="{{ route('homepage') }}">Home</a></li>
 				<li class="active">{{ $title }}</li>

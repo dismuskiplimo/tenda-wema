@@ -17,7 +17,16 @@
 	<!-- Footer Scripts
 	============================================= -->
 	<script type="text/javascript" src="{{ custom_asset('js/user/functions.js') }}"></script>
-	<script type="text/javascript" src="{{ custom_asset('js/tenda-wema.js') }}"></script>
+
+	<script type="text/javascript" src="{{ custom_asset('js/cropper.min.js') }}"></script>
+	<script type="text/javascript" src="{{ custom_asset('js/jquery.cropit.js') }}"></script>
+	<script type="text/javascript" src="{{ custom_asset('js/jquery.color.js') }}"></script>
+	<script type="text/javascript" src="{{ custom_asset('js/jquery.Jcrop.min.js') }}"></script>
+
+	<script type="text/javascript" src="{{ custom_asset('js/exif.js') }}"></script>
+	<script type="text/javascript" src="{{ custom_asset('js/croppie.min.js') }}"></script>
+
+	<script type="text/javascript" src="{{ custom_asset('js/validate.min.js') }}"></script>
 
 	<script type="text/javascript" src="{{ custom_asset('js/tenda-wema.js') }}"></script>
 	@if(auth()->check())

@@ -7,7 +7,7 @@
 			<h1>{{ $user->name }}</h1>
 			<ol class="breadcrumb">
 				<li><a href="{{ route('homepage') }}">Home</a></li>
-				<li>Users</li>
+				<li><a href="{{ route('registered-members') }}">Registered Members</a></li>
 				<li class="active">{{ $user->name }}</li>
 			</ol>
 		</div>

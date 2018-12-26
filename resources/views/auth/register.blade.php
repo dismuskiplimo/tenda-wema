@@ -7,7 +7,7 @@
             <div class="col-sm-8 col-sm-offset-2">
                 <h3>Don't have an Account? Register Now.</h3>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde, vel odio non dicta provident sint ex autem mollitia dolorem illum repellat ipsum aliquid illo similique sapiente fugiat minus ratione.</p>
+                <p>I don't know what your destiny will be, but one thing I do know; the only ones among you who will be really happy are those who have sought and found how to serve. - <i>Albert Schweitze</i></p>
 
                 <form id="register-form" name="register-form" class="nobottommargin" action="{{ route('register') }}" method="post">
 

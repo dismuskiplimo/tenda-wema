@@ -239,4 +239,48 @@ $(document).ready(function(){
 	if($('#messages').length){
 		$('#messages').scrollTop($('#messages')[0].scrollHeight);
 	}
+
+	$('#about-me-form').on('submit', function(e){
+		var about_me 	= $.trim($('#about-me-control').val());
+		var length 		= about_me.split(" ").length;
+
+		if(length < 300){
+			alert('Bio must be at least 300 words long');
+			e.preventDefault();
+		}
+	});
+
+	if($('#about-me-form').length){
+		var about_me 	= $.trim($('#about-me-control').val());
+		var length 		= about_me.split(" ").length;
+
+		if(about_me == ""){
+			length = 0;
+		}
+
+		$('#word-count').html(length);
+
+		$('#about-me').on('keyup keydown', function(){
+			about_me 	= $.trim($('#about-me-control').val());
+			length 		= $.trim(about_me.split(" ").length);
+
+			if(about_me == ""){
+				length = 0;
+			}
+
+			$('#word-count').html(length);
+		});
+	}
+
+	if($('.crop-it-container').length){
+		$('#image-cropper').cropit({
+			width : 400,
+			height: 400,
+			initialZoom: 'image',
+		});
+
+		$('.cropit-image-button').on('click', function(){
+			$('.cropit-image-input').click();
+		});
+	}
 });
