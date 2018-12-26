@@ -1,5 +1,5 @@
 <div class="modal fade" id="edit-profile-pic">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content">
       <form action="{{ route('user.profile-picture.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -17,12 +17,23 @@
                 <div id="image-cropper">
                   
                   <div class="cropit-preview"></div>
-                  
-                  <div class="input-group">
-                    <span class="input-group-addon" style="border: none;background-color: #fff"><i class="fa fa-file-image-o"></i></span>
-                    <input type="range" class="cropit-image-zoom-input mt-10" />
-                    <span class="input-group-addon" style="border: none;background-color: #fff"><i class="fa fa-file-image-o" style="font-size: 2em"></i></span>
+
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <button type="button" class="btn btn-sm .rotate-cw-btn"><i class="fa fa-rotate-right"></i></button>
+                      <button type="button" class="btn btn-sm .rotate-ccw-btn"><i class="fa fa-rotate-left"></i></button>
+                    </div>
+                    
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-addon" style="border: none;background-color: #fff"><i class="fa fa-file-image-o"></i></span>
+                        <input type="range" class="cropit-image-zoom-input mt-10" />
+                        <span class="input-group-addon" style="border: none;background-color: #fff"><i class="fa fa-file-image-o" style="font-size: 2em"></i></span>
+                      </div>
+                    </div>
                   </div>
+                  
+                  
                   
                   
                  

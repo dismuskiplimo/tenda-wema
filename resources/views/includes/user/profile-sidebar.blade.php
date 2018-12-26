@@ -6,6 +6,8 @@
 				<img src="{{ $user->profile_picture() }}" alt="" class="img-responsive mb-30 profile-picture- img-circle" title="Click to update">
 			</a>
 
+			
+
 			@include('pages.user.modals.edit-profile-pic')
 			
 

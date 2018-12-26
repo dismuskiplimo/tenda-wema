@@ -7,7 +7,7 @@
 			<h1>{{ $user->name }}</h1>
 			<ol class="breadcrumb">
 				<li><a href="{{ route('homepage') }}">Home</a></li>
-				<li><a href="{{ route('registered-members') }}">Users</a></li>
+				<li><a href="{{ route('registered-members') }}">Registered Members</a></li>
 				<li class="active">{{ $user->name }}</li>
 			</ol>
 		</div>
@@ -32,6 +32,43 @@
 				</h5>
                 <hr class = "mtn-5">
                 {!! clean(nl2br($user->about_me ? : 'No Details')) !!}
+
+                <br>
+
+                <h5>
+                    My Hobbies:
+                    @if($me)
+                        <a href="" data-toggle="modal" data-target="#add-hobby" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Hobby</a>
+                    @endif
+                </h5>
+                <hr class = "mtn-5">
+
+                @if(count($user->hobbies))                        
+                    <ul class="ml-20">
+                        @foreach($user->hobbies as $hobby)
+                            <li>
+                                {{ $hobby->name }}
+
+                                @if($me)
+                                    <span class="pull-right">
+                                        <button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-hobby-{{ $hobby->id }}"  title="edit {{ $hobby->name }}">
+                                            <i class="fa fa-edit"></i>
+                                        </button> 
+
+                                        <button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-hobby-{{ $hobby->id }}" title="delete {{ $hobby->name }}">
+                                            <i class="fa fa-trash"></i>
+                                        </button> 
+                                    </span>
+
+                                    @include('pages.user.modals.edit-hobby')
+                                    @include('pages.user.modals.delete-hobby')
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="ml-20">No Hobbies Stated</p>
+                @endif
                     
                 
                 <br>
@@ -284,43 +321,7 @@
 
                 @else
                     <p class="ml-20">No Awards Stated</p>
-                @endif
-
-                <br>
-                <h5>
-                	Hobbies:
-					@if($me)
-						<a href="" data-toggle="modal" data-target="#add-hobby" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Hobby</a>
-					@endif
-                </h5>
-                <hr class = "mtn-5">
-
-                @if(count($user->hobbies))                        
-                    <ul class="ml-20">
-                        @foreach($user->hobbies as $hobby)
-                            <li>
-                            	{{ $hobby->name }}
-
-                            	@if($me)
-									<span class="pull-right">
-										<button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-hobby-{{ $hobby->id }}"  title="edit {{ $hobby->name }}">
-											<i class="fa fa-edit"></i>
-										</button> 
-
-										<button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-hobby-{{ $hobby->id }}" title="delete {{ $hobby->name }}">
-											<i class="fa fa-trash"></i>
-										</button> 
-									</span>
-
-                                    @include('pages.user.modals.edit-hobby')
-                                    @include('pages.user.modals.delete-hobby')
-								@endif
-                            </li>
-                        @endforeach
-                    </ul>
-                @else
-                    <p class="ml-20">No Hobbies Stated</p>
-                @endif
+                @endif                
 
                 <br>
                 <h5>

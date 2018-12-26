@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment, DonatedItemReview, CancelOrder};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement,QuotesILove, MyInterest, BooksYouShouldRead, WorldIDesire, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment, DonatedItemReview, CancelOrder};
 
 use Image, Auth, Session;
 
@@ -745,6 +745,296 @@ class UserController extends Controller
 
         return redirect()->route('good-deed.show', ['slug' => $good_deed->slug]);
     }
+
+    
+    // **************************Quotes I Love ******************************************
+
+    public function addQuotesILove(Request $request){
+        
+        $this->validate($request, [
+            'content'  => 'max:50000|required',
+        ]);
+
+        $user = auth()->user();
+
+        $quotes_i_love              = new QuotesILove;
+        $quotes_i_love->content     = $request->content;
+        $quotes_i_love->user_id     = $user->id;
+        $quotes_i_love->save();
+
+        $message = 'Quotes Added';
+
+        if(!$user->profile->quotes_i_love){
+            $user->profile->quotes_i_love = 1;
+            $user->profile->update();
+        }
+        
+        if($request->ajax()){
+            $response = ['status' => 200, 'message' => $message];
+            return response()->json($response);
+        }
+
+        session()->flash('success', $message);
+        return redirect()->back();
+    }
+
+    public function updateQuotesILove(Request $request, $id){
+        $quotes_i_love = QuotesILove::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($quotes_i_love->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $this->validate($request, [
+            'content'  => 'required|max:50000',
+        ]);
+
+        $quotes_i_love->content     = $request->content;
+        $quotes_i_love->update();
+
+        session()->flash('success', 'Quotes Updated');
+
+        return redirect()->back();
+    }
+
+    public function deleteQuotesILove(Request $request, $id){
+        $quotes_i_love = QuotesILove::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($quotes_i_love->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $quotes_i_love->delete();
+
+        session()->flash('success', 'Quotes Deleted');
+
+        return redirect()->back();
+    }
+
+    // **************************My Interests ******************************************
+
+    public function addMyInterests(Request $request){
+        
+        $this->validate($request, [
+            'content'  => 'max:50000|required',
+        ]);
+
+        $user = auth()->user();
+
+        $my_interests              = new MyInterest;
+        $my_interests->content     = $request->content;
+        $my_interests->user_id     = $user->id;
+        $my_interests->save();
+
+        $message = 'Interests Added';
+
+        if(!$user->profile->my_interests){
+            $user->profile->my_interests = 1;
+            $user->profile->update();
+        }
+        
+        if($request->ajax()){
+            $response = ['status' => 200, 'message' => $message];
+            return response()->json($response);
+        }
+
+        session()->flash('success', $message);
+        return redirect()->back();
+    }
+
+    public function updateMyInterests(Request $request, $id){
+        $my_interests = MyInterest::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($my_interests->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $this->validate($request, [
+            'content'  => 'required|max:50000',
+        ]);
+
+        $my_interests->content     = $request->content;
+        $my_interests->update();
+
+        session()->flash('success', 'Interests Updated');
+
+        return redirect()->back();
+    }
+
+    public function deleteQuotesILove(Request $request, $id){
+        $my_interests = MyInterest::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($my_interests->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $my_interests->delete();
+
+        session()->flash('success', 'Interests Deleted');
+
+        return redirect()->back();
+    }
+
+    // **************************Books You Should Read ******************************************
+
+    public function addBooksYouShouldRead(Request $request){
+        
+        $this->validate($request, [
+            'content'  => 'max:50000|required',
+        ]);
+
+        $user = auth()->user();
+
+        $books_you_should_read              = new BooksYouShouldRead;
+        $books_you_should_read->content     = $request->content;
+        $books_you_should_read->user_id     = $user->id;
+        $books_you_should_read->save();
+
+        $message = 'Books Added';
+
+        if(!$user->profile->books_you_should_read){
+            $user->profile->books_you_should_read = 1;
+            $user->profile->update();
+        }
+        
+        if($request->ajax()){
+            $response = ['status' => 200, 'message' => $message];
+            return response()->json($response);
+        }
+
+        session()->flash('success', $message);
+        return redirect()->back();
+    }
+
+    public function updateBooksYouShouldRead(Request $request, $id){
+        $books_you_should_read = BooksYouShouldRead::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($books_you_should_read->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $this->validate($request, [
+            'content'  => 'required|max:50000',
+        ]);
+
+        $books_you_should_read->content     = $request->content;
+        $books_you_should_read->update();
+
+        session()->flash('success', 'Books Updated');
+
+        return redirect()->back();
+    }
+
+    public function deleteBooksYouShouldRead(Request $request, $id){
+        $books_you_should_read = BooksYouShouldRead::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($books_you_should_read->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $books_you_should_read->delete();
+
+        session()->flash('success', 'Books Deleted');
+
+        return redirect()->back();
+    }
+
+    // **************************World I Desire ******************************************
+
+    public function addWorldIDesire(Request $request){
+        
+        $this->validate($request, [
+            'content'  => 'max:50000|required',
+        ]);
+
+        $user = auth()->user();
+
+        $world_i_desire              = new WorldIDesire;
+        $world_i_desire->content     = $request->content;
+        $world_i_desire->user_id     = $user->id;
+        $world_i_desire->save();
+
+        $message = 'Message Added';
+
+        if(!$user->profile->world_i_desire){
+            $user->profile->world_i_desire = 1;
+            $user->profile->update();
+        }
+        
+        if($request->ajax()){
+            $response = ['status' => 200, 'message' => $message];
+            return response()->json($response);
+        }
+
+        session()->flash('success', $message);
+        return redirect()->back();
+    }
+
+    public function updateWorldIDesire(Request $request, $id){
+        $world_i_desire = WorldIDesire::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($world_i_desire->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $this->validate($request, [
+            'content'  => 'required|max:50000',
+        ]);
+
+        $world_i_desire->content     = $request->content;
+        $world_i_desire->update();
+
+        session()->flash('success', 'Message Updated');
+
+        return redirect()->back();
+    }
+
+    public function deleteWorldIDesire(Request $request, $id){
+        $world_i_desire = WorldIDesire::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($world_i_desire->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $world_i_desire->delete();
+
+        session()->flash('success', 'Message Deleted');
+
+        return redirect()->back();
+    }
+
 
     // **************************MEMBERSHIPS ******************************************
 

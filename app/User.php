@@ -342,6 +342,22 @@ class User extends Authenticatable
         return $this->hasMany('App\Achievement', 'user_id');
     }
 
+    public function quotes_i_love(){
+        return $this->hasMany('App\QuotesILove', 'user_id');
+    }
+
+    public function interests(){
+        return $this->hasMany('App\MyInterest', 'user_id');
+    }
+
+    public function books_you_should_read(){
+        return $this->hasMany('App\BooksYouShouldRead', 'user_id');
+    }
+
+    public function the_world_i_desire_to_see(){
+        return $this->hasMany('App\WorldIDesire', 'user_id');
+    }
+
     public function coin_purchase_history(){
         return $this->hasMany('App\CoinPurchaseHistory', 'user_id');
     }

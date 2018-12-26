@@ -273,10 +273,20 @@ $(document).ready(function(){
 	}
 
 	if($('.crop-it-container').length){
-		$('#image-cropper').cropit({
+		var $croppie = $('#image-cropper').cropit({
 			width : 400,
 			height: 400,
 			initialZoom: 'image',
+			imageBackground: false,
+			freeMove: false,
+			maxZoom:10,
+		});
+
+		$('.rotate-cw-btn').click(function() {
+		  $('#image-cropper').cropit('rotateCW');
+		});
+		$('.rotate-ccw-btn').click(function() {
+		  $('#image-cropper').cropit('rotateCCW');
 		});
 
 		$('.cropit-image-button').on('click', function(){

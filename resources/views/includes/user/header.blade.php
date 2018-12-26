@@ -23,9 +23,13 @@
 	<link rel="stylesheet" href="{{ custom_asset('css/font-awesome.min.css') }}" type="text/css" />
 	<link rel="stylesheet" href="{{ custom_asset('css/user/jquery.fancybox.min.css') }}" type="text/css" />
 	<link rel="stylesheet" href="{{ custom_asset('css/user/bootstrap-datepicker.min.css') }}" type="text/css" />
+
 	<link rel="stylesheet" href="{{ custom_asset('css/cropper.min.css') }}" type="text/css" />
 	<link rel="stylesheet" href="{{ custom_asset('css/jquery.Jcrop.min.css') }}" type="text/css" />
 	<link rel="stylesheet" href="{{ custom_asset('css/croppie.css') }}" type="text/css" />
+
+	<link rel="stylesheet" href="{{ custom_asset('css/remodal-default-theme.css') }}" type="text/css" />
+	<link rel="stylesheet" href="{{ custom_asset('css/remodal.css') }}" type="text/css" />
 	<link rel="stylesheet" href="{{ custom_asset('css/tenda-wema.css') }}" type="text/css" />
 	
 	

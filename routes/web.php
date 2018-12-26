@@ -141,6 +141,22 @@ Route::group(['prefix' => 'user'], function(){
 	Route::post('/profile/achievments/{id}/update', 'UserController@updateAchievement')->name('user.achievment.update');
 	Route::post('/profile/achievments/{id}/delete', 'UserController@deleteAchievement')->name('user.achievment.delete');
 
+	Route::post('/profile/quotes-i-love/add', 'UserController@addQuotesILove')->name('user.quotes-i-love.add');
+	Route::post('/profile/quotes-i-love/{id}/update', 'UserController@updateQuotesILove')->name('user.quotes-i-love.update');
+	Route::post('/profile/quotes-i-love/{id}/delete', 'UserController@deleteQuotesILove')->name('user.quotes-i-love.delete');
+
+	Route::post('/profile/my-interests/add', 'UserController@addMyInterests')->name('user.my-interests.add');
+	Route::post('/profile/my-interests/{id}/update', 'UserController@updateMyInterests')->name('user.my-interests.update');
+	Route::post('/profile/my-interests/{id}/delete', 'UserController@deleteMyInterests')->name('user.my-interests.delete');
+
+	Route::post('/profile/books-you-should-read/add', 'UserController@addBooksYouShouldRead')->name('user.books-you-should-read.add');
+	Route::post('/profile/books-you-should-read/{id}/update', 'UserController@updateBooksYouShouldRead')->name('user.books-you-should-read.update');
+	Route::post('/profile/books-you-should-read/{id}/delete', 'UserController@deleteBooksYouShouldRead')->name('user.books-you-should-read.delete');
+
+	Route::post('/profile/world-i-desire/add', 'UserController@addWorldIDesire')->name('user.world-i-desire.add');
+	Route::post('/profile/world-i-desire/{id}/update', 'UserController@updateWorldIDesire')->name('user.world-i-desire.update');
+	Route::post('/profile/world-i-desire/{id}/delete', 'UserController@deleteWorldIDesire')->name('user.world-i-desire.delete');
+
 	Route::post('/profile/about-me/update', 'UserController@updateAboutMe')->name('user.about-me.update');
 
 	Route::post('/report', 'UserController@postReport')->name('user.report');
