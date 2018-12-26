@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHobbiesTable extends Migration
+class CreateMyInterestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateHobbiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('hobbies', function (Blueprint $table) {
+        Schema::create('my_interests', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('content');
             $table->integer('user_id');
-            $table->integer('visibility')->default(3);
+            $table->text('content');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +29,6 @@ class CreateHobbiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hobbies');
+        Schema::dropIfExists('my_interests');
     }
 }

@@ -25,10 +25,12 @@ class CreateProfilesTable extends Migration
             $table->boolean('awards')->default(0);
             $table->boolean('hobbies')->default(0);
             $table->boolean('achievements')->default(0);
+
             $table->boolean('quotes_i_love')->default(0);
             $table->boolean('my_interests')->default(0);
             $table->boolean('books_you_should_read')->default(0);
             $table->boolean('world_i_desire')->default(0);
+            
             $table->boolean('redeemed')->default(0);
             $table->timestamps();
             $table->softDeletes();

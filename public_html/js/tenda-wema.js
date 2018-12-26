@@ -245,8 +245,10 @@ $(document).ready(function(){
 		var length 		= about_me.split(" ").length;
 
 		if(length < 300){
-			alert('Bio must be at least 300 words long');
+			$('#about-me-control').focus();
+			Swal('Sorry','Bio must be at least 300 words long', 'error');
 			e.preventDefault();
+			
 		}
 	});
 
@@ -260,7 +262,7 @@ $(document).ready(function(){
 
 		$('#word-count').html(length);
 
-		$('#about-me').on('keyup keydown', function(){
+		$('#about-me').on('keyup keydown paste', function(){
 			about_me 	= $.trim($('#about-me-control').val());
 			length 		= $.trim(about_me.split(" ").length);
 

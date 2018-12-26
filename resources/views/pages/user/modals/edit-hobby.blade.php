@@ -14,7 +14,7 @@
             <div class="col-sm-12">
               <div class="form-group">
                 <label for="name-{{ $hobby->id }}">Hobby</label>
-                <input type="text" name="name" id="name-{{ $hobby->id }}" value="{{ $hobby->name }}" class="form-control">
+                <textarea rows="8" name="content" id="name-{{ $hobby->id }}"  class="form-control">{{ $hobby->name }}</textarea>
               </div> 
             </div>
 

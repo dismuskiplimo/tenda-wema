@@ -258,7 +258,7 @@ class User extends Authenticatable
                 $simba_coin_log->current_balance      += $current_balance;
                 $simba_coin_log->save();
 
-                $message .= ' You have been awarded ' . $amount . ' Simba Coins';
+                $message .= ' You have been awarded ' . $amount . ' Simba Coins for advancing to ' . $new_level . ' Social Level';
 
                 $timeline           = new \App\Timeline;
                 $timeline->user_id  = $this->id;
@@ -267,6 +267,15 @@ class User extends Authenticatable
                 $timeline->type     = 'social_level.upgraded';
                 $timeline->extra    = $new_level;
                 $timeline->save();
+
+                $notification                       = new \App\Notification;
+                $notification->from_id              = null;
+                $notification->to_id                = $this->id;
+                $notification->message              = $message;
+                $notification->notification_type    = 'social-level.updated';
+                $notification->model_id             = $this->id;
+                $notification->system_message       = 1;
+                $notification->save();
             }
 
             $this->social_level_attained_at = Carbon::now();
@@ -354,7 +363,7 @@ class User extends Authenticatable
         return $this->hasMany('App\BooksYouShouldRead', 'user_id');
     }
 
-    public function the_world_i_desire_to_see(){
+    public function world_i_desire(){
         return $this->hasMany('App\WorldIDesire', 'user_id');
     }
 
@@ -374,5 +383,75 @@ class User extends Authenticatable
         }
 
         return empty($str) ? '<small><i>User not reviewed yet</i></small>' : $str;
+    }
+
+    public function check_profile_completion(){
+        $profile = $this->profile;
+
+        if(!$profile->redeemed){
+            $elements = $this->elements();
+            
+            $sum = $this->sections_complete();
+
+            if($sum == $elements){
+
+                $this->coins                += config('coins.earn.complete_profile');
+                $this->accumulated_coins    += config('coins.earn.complete_profile');
+                $this->update();
+                
+                $this->check_social_level();
+
+                $settings = \App\Setting::get();
+
+                $set = new \stdClass();
+
+                foreach ($settings as $setting) {
+                    $set->{$setting->name} = $setting;
+                }
+
+                $set->available_balance->value         += config('coins.earn.complete_profile');
+                $set->available_balance->update();
+
+                $set->coins_in_circulation->value      += config('coins.earn.complete_profile');
+                $set->coins_in_circulation->update();
+
+                $simba_coin_log                        = new \App\SimbaCoinLog;
+                $simba_coin_log->user_id               = $this->id;
+                $simba_coin_log->message               = 'Simba Coins earned for completing profile';
+                $simba_coin_log->type                  = 'credit';
+                $simba_coin_log->coins                 = config('coins.earn.complete_profile');
+                $simba_coin_log->previous_balance      = $this->coins - config('coins.earn.complete_profile');;
+                $simba_coin_log->current_balance       = $this->coins;
+                $simba_coin_log->save();
+
+                $profile->redeemed = 1;
+                $profile->update();
+
+                $message = 'Profile Completed, you have been awarded ' . config('coins.earn.complete_profile') . ' Simba Coins';
+
+                $notification                       = new \App\Notification;
+                $notification->from_id              = null;
+                $notification->to_id                = $this->id;
+                $notification->message              = $message;
+                $notification->notification_type    = 'profile.completed';
+                $notification->model_id             = $this->id;
+                $notification->system_message       = 1;
+                $notification->save();
+            }
+        }
+    }
+
+    public function sections_complete(){
+        $this->check_profile();
+        
+        $profile = $this->profile;
+
+        $sum = $profile->about_me + $profile->hobbies + $profile->quotes_i_love + $profile->my_interests + $profile->books_you_should_read + $profile->world_i_desire;;
+
+        return $sum;
+    }
+
+    public function elements(){
+        return 6;
     }
 }

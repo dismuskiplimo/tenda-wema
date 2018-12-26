@@ -746,6 +746,36 @@ class UserController extends Controller
         return redirect()->route('good-deed.show', ['slug' => $good_deed->slug]);
     }
 
+
+    // **************************ABOUT ME ********************************************
+
+    public function updateAboutMe(Request $request){
+        $this->validate($request, [
+            'about_me' => 'required',
+        ]);
+
+        if(str_word_count($request->about_me) < 300){
+            session()->flash('error', 'Sorry, you need a minimum of 300 words for your bio');
+
+            return redirect()->back()->withInput();
+        }
+
+        $user               = auth()->user();
+        $user->about_me     = $request->about_me;
+        $user->update();
+
+        $user->check_profile_completion();
+
+        session()->flash('success', 'Details updated');
+
+        if(!$user->profile->about_me){
+            $user->profile->about_me = 1;
+            $user->profile->update();
+        }
+
+        return redirect()->back();
+    }
+
     
     // **************************Quotes I Love ******************************************
 
@@ -768,6 +798,8 @@ class UserController extends Controller
             $user->profile->quotes_i_love = 1;
             $user->profile->update();
         }
+
+        $user->check_profile_completion();
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -840,6 +872,8 @@ class UserController extends Controller
             $user->profile->my_interests = 1;
             $user->profile->update();
         }
+
+        $user->check_profile_completion();
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -873,7 +907,7 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function deleteQuotesILove(Request $request, $id){
+    public function deleteMyInterests(Request $request, $id){
         $my_interests = MyInterest::findOrFail($id);
 
         $user = auth()->user();
@@ -912,6 +946,8 @@ class UserController extends Controller
             $user->profile->books_you_should_read = 1;
             $user->profile->update();
         }
+
+        $user->check_profile_completion();
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -984,6 +1020,8 @@ class UserController extends Controller
             $user->profile->world_i_desire = 1;
             $user->profile->update();
         }
+
+        $user->check_profile_completion();
         
         if($request->ajax()){
             $response = ['status' => 200, 'message' => $message];
@@ -1031,6 +1069,81 @@ class UserController extends Controller
         $world_i_desire->delete();
 
         session()->flash('success', 'Message Deleted');
+
+        return redirect()->back();
+    }
+
+
+     // **************************HOBBIES *********************************************
+
+    public function addHobby(Request $request){
+        
+        $this->validate($request, [
+            'content'  => 'max:50000|required',
+        ]);
+
+        $user = auth()->user();
+
+        $hobby          = new Hobby;
+        $hobby->content = $request->content;
+        $hobby->user_id = $user->id;
+        $hobby->save();
+
+        $message = 'Hobby Added';
+
+        if(!$user->profile->hobbies){
+            $user->profile->hobbies = 1;
+            $user->profile->update();
+        }
+
+        $user->check_profile_completion();
+        
+        if($request->ajax()){
+            $response = ['status' => 200, 'message' => $message];
+            return response()->json($response);
+        }
+
+        session()->flash('success', $message);
+        return redirect()->back();
+    }
+
+    public function updateHobby(Request $request, $id){
+        $hobby = Hobby::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($hobby->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $this->validate($request, [
+            'content'  => 'required|max:50000',
+        ]);
+
+        $hobby->content = $request->content;
+        $hobby->update();
+
+        session()->flash('success', 'Hobby Updated');
+
+        return redirect()->back();
+    }
+
+    public function deleteHobby(Request $request, $id){
+        $hobby = Hobby::findOrFail($id);
+
+        $user = auth()->user();
+
+        if($hobby->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        $hobby->delete();
+
+        session()->flash('success', 'Hobby Deleted');
 
         return redirect()->back();
     }
@@ -1184,79 +1297,7 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    // **************************HOBBIES *********************************************
-
-    public function addHobby(Request $request){
-        
-        $this->validate($request, [
-            'name'  => 'max:191|required',
-        ]);
-
-        $user = auth()->user();
-
-        $hobby = new Hobby;
-        $hobby->name = $request->name;
-        $hobby->user_id = $user->id;
-        $hobby->save();
-
-        $message = 'Hobby Added';
-
-        if(!$user->profile->hobbies){
-            $user->profile->hobbies = 1;
-            $user->profile->update();
-        }
-        
-        if($request->ajax()){
-            $response = ['status' => 200, 'message' => $message];
-            return response()->json($response);
-        }
-
-        session()->flash('success', $message);
-        return redirect()->back();
-    }
-
-    public function updateHobby(Request $request, $id){
-        $hobby = Hobby::findOrFail($id);
-
-        $user = auth()->user();
-
-        if($hobby->user_id != $user->id){
-            session()->flash('error', 'Forbidden');
-
-            return redirect()->back();
-        }
-
-        $this->validate($request, [
-            'name'  => 'required|max:191',
-        ]);
-
-        $hobby->name = $request->name;
-        $hobby->update();
-
-        session()->flash('success', 'Hobby Updated');
-
-        return redirect()->back();
-    }
-
-    public function deleteHobby(Request $request, $id){
-        $hobby = Hobby::findOrFail($id);
-
-        $user = auth()->user();
-
-        if($hobby->user_id != $user->id){
-            session()->flash('error', 'Forbidden');
-
-            return redirect()->back();
-        }
-
-        $hobby->delete();
-
-        session()->flash('success', 'Hobby Deleted');
-
-        return redirect()->back();
-    }
-
-    // **************************HOBBIES *********************************************
+    // **************************ACHIEVEMENTS *********************************************
 
     public function addAchievement(Request $request){
         
@@ -1643,33 +1684,6 @@ class UserController extends Controller
         }
 
         session()->flash('success', $message);
-        return redirect()->back();
-    }
-
-    // **************************ABOUT ME ********************************************
-
-    public function updateAboutMe(Request $request){
-        $this->validate($request, [
-            'about_me' => 'required',
-        ]);
-
-        if(str_word_count($request->about_me) < 300){
-            session()->flash('error', 'Sorry, you need a minimum of 300 words for your bio');
-
-            return redirect()->back()->withInput();
-        }
-
-        $user               = auth()->user();
-        $user->about_me     = $request->about_me;
-        $user->update();
-
-        session()->flash('success', 'Details updated');
-
-        if(!$user->profile->about_me){
-            $user->profile->about_me = 1;
-            $user->profile->update();
-        }
-
         return redirect()->back();
     }
 

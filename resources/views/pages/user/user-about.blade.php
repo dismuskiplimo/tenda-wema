@@ -36,330 +36,227 @@
                 <br>
 
                 <h5>
-                    My Hobbies:
-                    @if($me)
+                    My Interests:
+                    
+                    @php
+                        $my_interest = $user->interests()->orderBy('created_at', 'DESC')->first();
+                    @endphp
+
+                    @if($me && !$my_interest)
+                        <a href="" data-toggle="modal" data-target="#add-my-interests" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Interests</a>
+                    @endif
+
+                    @if($my_interest && $me)
+                        <span class="pull-right">
+                            <button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-my-interests-{{ $my_interest->id }}"  title="edit {{ $my_interest->content }}">
+                                <i class="fa fa-edit"></i>
+                            </button> 
+
+                            <button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-my-interests-{{ $my_interest->id }}" title="delete {{ $my_interest->content }}">
+                                <i class="fa fa-trash"></i>
+                            </button> 
+                        </span>
+                    @endif
+                </h5>
+                <hr class = "mtn-5">
+                
+                @if($my_interest)
+                    
+                    <p class="ml-20"> 
+
+                        {!! clean(nl2br($my_interest->content)) !!}
+
+                        @if($me)
+                            @include('pages.user.modals.edit-my-interest')
+                            @include('pages.user.modals.delete-my-interest')
+                        @endif
+                           
+                    </p>
+
+                @else
+                    <p class="ml-20">No Interests</p>
+                @endif
+
+                <br>
+
+            	<h5>
+            		5 Quotes I Love:
+                    
+                    @php
+                        $quotes_i_love = $user->quotes_i_love()->orderBy('created_at', 'DESC')->first();
+                    @endphp
+
+					@if($me && !$quotes_i_love)
+						<a href="" data-toggle="modal" data-target="#add-quotes-i-love" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Quotes I Love</a>
+					@endif
+
+                    @if($quotes_i_love && $me)
+                        <span class="pull-right">
+                            <button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-quotes-i-love-{{ $quotes_i_love->id }}"  title="edit {{ $quotes_i_love->content }}">
+                                <i class="fa fa-edit"></i>
+                            </button> 
+
+                            <button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-quotes-i-love-{{ $quotes_i_love->id }}" title="delete {{ $quotes_i_love->content }}">
+                                <i class="fa fa-trash"></i>
+                            </button> 
+                        </span>
+                    @endif
+            	</h5>
+                <hr class = "mtn-5">
+                
+                @if($quotes_i_love)
+                    
+                    <p class="ml-20"> 
+
+                    	{!! clean(nl2br($quotes_i_love->content)) !!}
+
+						@if($me)
+                            @include('pages.user.modals.edit-quotes-i-love')
+                            @include('pages.user.modals.delete-quotes-i-love')
+						@endif
+                           
+                    </p>
+
+                @else
+                    <p class="ml-20">No quotes</p>
+                @endif
+
+                <br>
+
+
+                <h5>
+                    3 Books You Should Read :
+                    
+                    @php
+                        $books_you_should_read = $user->books_you_should_read()->orderBy('created_at', 'DESC')->first();
+                    @endphp
+
+                    @if($me && !$books_you_should_read)
+                        <a href="" data-toggle="modal" data-target="#add-books-you-should-read" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Books You Should Read</a>
+                    @endif
+
+                    @if($books_you_should_read && $me)
+                        <span class="pull-right">
+                            <button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-books-you-should-read-{{ $books_you_should_read->id }}"  title="edit {{ $books_you_should_read->content }}">
+                                <i class="fa fa-edit"></i>
+                            </button> 
+
+                            <button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-books-you-should-read-{{ $books_you_should_read->id }}" title="delete {{ $books_you_should_read->content }}">
+                                <i class="fa fa-trash"></i>
+                            </button> 
+                        </span>
+                    @endif
+                </h5>
+                <hr class = "mtn-5">
+                
+                @if($books_you_should_read)
+                    
+                    <p class="ml-20"> 
+
+                        {!! clean(nl2br($books_you_should_read->content)) !!}
+
+                        @if($me)
+                            @include('pages.user.modals.edit-books-you-should-read')
+                            @include('pages.user.modals.delete-books-you-should-read')
+                        @endif
+                           
+                    </p>
+
+                @else
+                    <p class="ml-20">No Books</p>
+                @endif
+
+                <br>
+
+                <h5>
+                    The World I Desire to See :
+                    
+                    @php
+                        $world_i_desire = $user->world_i_desire()->orderBy('created_at', 'DESC')->first();
+                    @endphp
+
+                    @if($me && !$world_i_desire)
+                        <a href="" data-toggle="modal" data-target="#add-world-i-desire" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Message</a>
+                    @endif
+
+                    @if($world_i_desire && $me)
+                        <span class="pull-right">
+                            <button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-world-i-desire-{{ $world_i_desire->id }}"  title="edit {{ $world_i_desire->content }}">
+                                <i class="fa fa-edit"></i>
+                            </button> 
+
+                            <button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-world-i-desire-{{ $world_i_desire->id }}" title="delete {{ $world_i_desire->content }}">
+                                <i class="fa fa-trash"></i>
+                            </button> 
+                        </span>
+                    @endif
+                </h5>
+                <hr class = "mtn-5">
+                
+                @if($world_i_desire)
+                    
+                    <p class="ml-20"> 
+
+                        {!! clean(nl2br($world_i_desire->content)) !!}
+
+                        @if($me)
+                            @include('pages.user.modals.edit-world-i-desire')
+                            @include('pages.user.modals.delete-world-i-desire')
+                        @endif
+                           
+                    </p>
+
+                @else
+                    <p class="ml-20">No Message</p>
+                @endif
+
+                <br>
+
+                <h5>
+                    My Hobbies :
+                    
+                    @php
+                        $hobby = $user->hobbies()->orderBy('created_at', 'DESC')->first();
+                    @endphp
+
+                    @if($me && !$hobby)
                         <a href="" data-toggle="modal" data-target="#add-hobby" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Hobby</a>
                     @endif
-                </h5>
-                <hr class = "mtn-5">
 
-                @if(count($user->hobbies))                        
-                    <ul class="ml-20">
-                        @foreach($user->hobbies as $hobby)
-                            <li>
-                                {{ $hobby->name }}
+                    @if($hobby && $me)
+                        <span class="pull-right">
+                            <button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-hobby-{{ $hobby->id }}"  title="edit {{ $hobby->content }}">
+                                <i class="fa fa-edit"></i>
+                            </button> 
 
-                                @if($me)
-                                    <span class="pull-right">
-                                        <button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-hobby-{{ $hobby->id }}"  title="edit {{ $hobby->name }}">
-                                            <i class="fa fa-edit"></i>
-                                        </button> 
-
-                                        <button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-hobby-{{ $hobby->id }}" title="delete {{ $hobby->name }}">
-                                            <i class="fa fa-trash"></i>
-                                        </button> 
-                                    </span>
-
-                                    @include('pages.user.modals.edit-hobby')
-                                    @include('pages.user.modals.delete-hobby')
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                @else
-                    <p class="ml-20">No Hobbies Stated</p>
-                @endif
-                    
-                
-                <br>
-                	<h5>
-                		Memberships:
-						@if($me)
-							<a href="" data-toggle="modal" data-target="#add-membership" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Membership</a>
-						@endif
-                	</h5>
-                <hr class = "mtn-5">
-                
-                @if(count($user->memberships))
-                    
-                    <ul class="ml-20">
-                        @foreach($user->memberships as $membership)
-                            <li>
-                            	{{ $membership->name }}
-								@if($me)
-									<span class="pull-right">
-										<button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-membership-{{ $membership->id }}"  title="edit {{ $membership->name }}">
-											<i class="fa fa-edit"></i>
-										</button> 
-
-										<button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-membership-{{ $membership->id }}" title="delete {{ $membership->name }}">
-											<i class="fa fa-trash"></i>
-										</button> 
-									</span>
-
-                                    @include('pages.user.modals.edit-membership')
-                                    @include('pages.user.modals.delete-membership')
-								@endif
-                            </li>
-                        @endforeach
-                    </ul>
-
-                @else
-                    <p class="ml-20">No Memberships Stated</p>
-                @endif
-
-                <h5>
-                	Education:
-					@if($me)
-						<a href="" data-toggle="modal" data-target="#add-education" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Education</a>
-					@endif
-                </h5>
-                <hr class = "mtn-5">
-                <div>
-                    @if(count($user->education))
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>From</th>
-                                    <th>To</th>
-                                    <th>School</th>
-                                    <th>Level</th>
-                                    <th>Field of Study</th>
-                                    <th>Grade</th>
-
-                                    @if($me)
-                                        <th></th>
-                                    @endif
-                                </tr>
-                                
-                                
-                                
-                            </thead>
-
-                            <tbody>
-                                @foreach($user->education as $education)
-                                    <tr>
-                                        <td>{{ $education->start_year }}</td>
-                                        <td>{{ $education->end_year }}</td>
-                                        <td>{{ $education->school }}</td>
-                                        <td>{{ $education->level }}</td>
-                                        <td>{{ $education->field_of_study }}</td>
-                                        <td>{{ $education->grade }}</td>
-                                        
-                                        @if($me)
-											<td>
-                                                @include('pages.user.modals.edit-education')
-                                                @include('pages.user.modals.delete-education')
-                                            </td>
-
-                                            <td class="text-right">
-												<button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-education-{{ $education->id }}"  title="edit {{ $education->school }}">
-													<i class="fa fa-edit"></i>
-												</button> 
-
-												<button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-education-{{ $education->id }}" title="delete {{ $education->school }}">
-													<i class="fa fa-trash"></i>
-												</button> 	
-
-                                                
-											</td>
-
-											
-										@endif
-                                        
-                                    </tr>
-                                    
-                                @endforeach
-                            </tbody>
-                            
-                        </table>
-                    @else
-                        <p class="ml-20">No Education Info</p>
+                            <button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-hobby-{{ $hobby->id }}" title="delete {{ $hobby->content }}">
+                                <i class="fa fa-trash"></i>
+                            </button> 
+                        </span>
                     @endif
-                </div>
-
-                <h5>
-                	Work Experience:
-					@if($me)
-						<a href="" data-toggle="modal" data-target="#add-work-experience" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Work Experience</a>
-					@endif
-                </h5>
-                
-                <hr class = "mtn-5">
-                <div>
-                    @if(count($user->work_experience))
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>From</th>
-                                    <th>To</th>
-                                    <th>Company</th>
-                                    <th>Position</th>
-
-                                    @if($me)
-                                        <th></th>
-                                    @endif
-                                </tr>
-                                
-                                
-                                
-                                
-                            </thead>
-
-                            <tbody>
-                                @foreach($user->work_experience as $work_experience)
-                                    <tr>
-                                        <td>{{ $work_experience->from_date }}</td>
-                                        <td>{{ $work_experience->to_date }}</td>
-                                        <td>{{ $work_experience->company }}</td>
-                                        <td>{{ $work_experience->position }}</td>
-                                        
-                                        @if($me)
-											<td>
-                                                @include('pages.user.modals.edit-work-experience')
-                                                @include('pages.user.modals.delete-work-experience')
-                                            </td>
-
-                                            <td class="text-right">
-												<button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-work-experience-{{ $work_experience->id }}"  title="edit {{ $work_experience->company }}">
-													<i class="fa fa-edit"></i>
-												</button> 
-
-												<button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-work-experience-{{ $work_experience->id }}" title="delete {{ $work_experience->company }}">
-													<i class="fa fa-trash"></i>
-												</button> 
-
-											</td>
-
-
-                                        @endif
-                                    </tr>
-                                    
-                                @endforeach
-                            </tbody>
-                            
-                        </table>
-                    @else
-                        <p class="ml-20">No Work Expereince Stated</p>
-                    @endif
-                </div>
-                
-                <br>
-
-                <h5>
-                	Skills:
-					@if($me)
-						<a href="" data-toggle="modal" data-target="#add-skill" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Skill</a>
-					@endif
                 </h5>
                 <hr class = "mtn-5">
                 
-                @if(count($user->skills))
-                    <ul class="ml-20">
-                        @foreach($user->skills as $skill)
-                            <li>
-                            	{{ $skill->skill }}
-								
-								@if($me)
-									<span class="pull-right">
-										<button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-skill-{{ $skill->id }}"  title="edit {{ $skill->skill }}">
-											<i class="fa fa-edit"></i>
-										</button> 
-
-										<button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-skill-{{ $skill->id }}" title="delete {{ $skill->skill }}">
-											<i class="fa fa-trash"></i>
-										</button> 
-									</span>
-
-                                    @include('pages.user.modals.edit-skill')
-                                    @include('pages.user.modals.delete-skill')
-								@endif
-
-                            </li>
-                        @endforeach
-                    </ul>
+                @if($hobby)
                     
+                    <p class="ml-20"> 
+
+                        {!! clean(nl2br($hobby->content)) !!}
+
+                        @if($me)
+                            @include('pages.user.modals.edit-hobby')
+                            @include('pages.user.modals.delete-hobby')
+                        @endif
+                           
+                    </p>
 
                 @else
-                    <p class="ml-20">No Skills Stated</p>
+                    <p class="ml-20">No Hobbies</p>
                 @endif
                 
-                <br>
 
-                <h5>
-					Awards:
-					@if($me)
-						<a href="" data-toggle="modal" data-target="#add-award" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Award</a>
-					@endif
-				</h5>
-                <hr class = "mtn-5">
                 
-                @if(count($user->awards))
-                    <ul class="ml-20">
-                        @foreach($user->awards as $award)
-                            <li>
-                            	{{ $award->name }}, {{ $award->year }} 
-								
-								@if($me)
-									<span class="pull-right">
-										<button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-award-{{ $award->id }}"  title="edit {{ $award->name }}">
-											<i class="fa fa-edit"></i>
-										</button> 
-
-										<button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-award-{{ $award->id }}" title="delete {{ $award->name }}">
-											<i class="fa fa-trash"></i>
-										</button> 
-									</span>
-
-                                    @include('pages.user.modals.edit-award')
-                                    @include('pages.user.modals.delete-award')
-								@endif
-                            </li>
-                        @endforeach
-                    </ul>
-                    
-
-                @else
-                    <p class="ml-20">No Awards Stated</p>
-                @endif                
-
-                <br>
-                <h5>
-                	Achievements:
-					@if($me)
-						<a href="" data-toggle="modal" data-target="#add-achievement" class="btn btn-xs btn-info pull-right"><i class="fa fa-plus"></i> Add Achievements</a>
-					@endif
-                </h5>
-                <hr class = "mtn-5">
-
-                @if(count($user->achievements))
-                    
-                    <ul class="ml-20">
-                        @foreach($user->achievements as $achievement)
-                            <li>
-                            	{{ $achievement->name }}
-
-                            	@if($me)
-									<span class="pull-right">
-										<button class="btn btn-warning btn-xs" type="button"  data-toggle="modal" data-target="#edit-achievment-{{ $achievement->id }}"  title="edit {{ $achievement->name }}">
-											<i class="fa fa-edit"></i>
-										</button> 
-
-										<button class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#delete-achievement-{{ $achievement->id }}" title="delete {{ $achievement->name }}">
-											<i class="fa fa-trash"></i>
-										</button>
-									</span>
-
-                                    @include('pages.user.modals.edit-achievement')
-                                    @include('pages.user.modals.delete-achievement')
-								@endif
-                            </li>
-                        @endforeach
-                    </ul>
-                    
-                @else
-                    <p class="ml-20">No Achievements Stated</p>
-                @endif
+ 
 			</div>
 		</div>
 	</div>
@@ -374,6 +271,11 @@
     @include('pages.user.modals.add-education')
     @include('pages.user.modals.add-work-experience')
     @include('pages.user.modals.add-skill')
+
+    @include('pages.user.modals.add-my-interest')
+    @include('pages.user.modals.add-quotes-i-love')
+    @include('pages.user.modals.add-books-you-should-read')
+    @include('pages.user.modals.add-world-i-desire')
    
 @endif
 		

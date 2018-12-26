@@ -6,7 +6,7 @@
 				<img src="{{ $user->profile_picture() }}" alt="" class="img-responsive mb-30 profile-picture- img-circle" title="Click to update">
 			</a>
 
-			
+
 
 			@include('pages.user.modals.edit-profile-pic')
 			
@@ -35,8 +35,9 @@
 			
 			$profile = $user->profile;
 
-			$profile_elements = 8;
-			$profile_sum = $profile->about_me + $profile->memberships + $profile->education + $profile->work_experience + $profile->skills + $profile->awards + $profile->hobbies + $profile->achievements;
+			$profile_elements = $user->elements();
+            
+            $profile_sum = $user->sections_complete();
 
 			$profile_percent = ($profile_sum / $profile_elements) * 100;
 
