@@ -95,7 +95,7 @@ class AuthController extends Controller
     		'fname' 	=> 'required|max:255',
     		'lname' 	=> 'required|max:255',
     		'email' 	=> 'required|max:255|unique:users',
-    		'username' 	=> 'required|max:255|unique:users',
+    		'username' 	=> 'required|max:255|unique:users,alpha_dash',
     		'dob' 		=> 'required|max:255',
     		'password' 	=> 'required|max:255|confirmed',
     		'accepted' 	=> 'accepted',
@@ -106,7 +106,7 @@ class AuthController extends Controller
         $user->lname                      = $request->lname;
     	$user->name 				      = $request->fname . ' ' . $request->lname;
     	$user->email 				      = $request->email;
-    	$user->username 			      = $request->username;
+    	$user->username 			      = strtolower($request->username);
     	$user->dob 					      = $request->dob;
         $user->password                   = bcrypt($request->password);
         $user->social_level               = 'MWANZO';
