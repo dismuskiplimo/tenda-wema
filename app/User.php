@@ -343,10 +343,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Award', 'user_id');
     }
 
-    public function hobbies(){
-        return $this->hasMany('App\Hobby', 'user_id');
-    }
-
     public function achievements(){
         return $this->hasMany('App\Achievement', 'user_id');
     }
@@ -365,6 +361,10 @@ class User extends Authenticatable
 
     public function world_i_desire(){
         return $this->hasMany('App\WorldIDesire', 'user_id');
+    }
+
+    public function hobbies(){
+        return $this->hasMany('App\Hobby', 'user_id');
     }
 
     public function coin_purchase_history(){
@@ -443,7 +443,7 @@ class User extends Authenticatable
 
     public function sections_complete(){
         $this->check_profile();
-        
+
         $profile = $this->profile;
 
         $sum = $profile->about_me + $profile->hobbies + $profile->quotes_i_love + $profile->my_interests + $profile->books_you_should_read + $profile->world_i_desire;;

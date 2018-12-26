@@ -32,7 +32,7 @@
 
 										<div style="width:calc(100% - 70px); float: left; padding-left: 20px;">
 											<a href="{{ route('user.show', ['username' => $user->username]) }}">
-												<h4>{{ $user->name }}, {!! $user->stars() !!}</h4>
+												<h4 class="nobottommargin">{{ $user->name }}, {!! $user->stars() !!}</h4>
 											</a>
 											<p class="nobottommargin">{{ characters($user->about_me,200) }}</p>
 										</div>		

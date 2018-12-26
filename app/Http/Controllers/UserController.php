@@ -846,6 +846,11 @@ class UserController extends Controller
 
         $quotes_i_love->delete();
 
+        if(!count($user->quotes_i_love)){
+            $user->profile->quotes_i_love = 0;
+            $user->profile->update();
+        }
+
         session()->flash('success', 'Quotes Deleted');
 
         return redirect()->back();
@@ -920,6 +925,11 @@ class UserController extends Controller
 
         $my_interests->delete();
 
+        if(!count($user->interests)){
+            $user->profile->my_interests = 0;
+            $user->profile->update();
+        }
+
         session()->flash('success', 'Interests Deleted');
 
         return redirect()->back();
@@ -993,6 +1003,11 @@ class UserController extends Controller
         }
 
         $books_you_should_read->delete();
+
+        if(!count($user->books_you_should_read)){
+            $user->profile->books_you_should_read = 0;
+            $user->profile->update();
+        }
 
         session()->flash('success', 'Books Deleted');
 
@@ -1070,6 +1085,11 @@ class UserController extends Controller
 
         session()->flash('success', 'Message Deleted');
 
+        if(!count($user->world_i_desire)){
+            $user->profile->world_i_desire = 0;
+            $user->profile->update();
+        }
+
         return redirect()->back();
     }
 
@@ -1142,6 +1162,11 @@ class UserController extends Controller
         }
 
         $hobby->delete();
+
+        if(!count($user->hobbies)){
+            $user->profile->hobbies = 0;
+            $user->profile->update();
+        }
 
         session()->flash('success', 'Hobby Deleted');
 
