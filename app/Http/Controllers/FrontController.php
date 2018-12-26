@@ -267,6 +267,13 @@ class FrontController extends Controller
     public function showUserTimeline($username){
         $user = User::where('username', $username)->firstOrFail();
 
+        if(auth()->check()){
+            if(auth()->user()->id != $user->id){
+                $user->views += 1;
+                $user->update();
+            }
+        }
+
         $timeline = $user->timeline()->orderBy('created_at', 'DESC')->paginate(15);
 
         return view('pages.user.user-timeline',[

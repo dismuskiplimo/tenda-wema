@@ -24,7 +24,7 @@
 			<img src="{{ $user->profile_picture() }}" alt="{{ $user->name }}" class="img-responsive img-circle mb-30">
 		@endif
 
-		<h5 class=" text-center" {!! $user->verified ? 'title = "Verified"' : '' !!}>{{ $user->name }} {!! $user->verified ? '<i class = "fa fa-check text-success" title = "Verified"></i>' : '' !!}</h5>
+		<h5 class=" text-center nobottommargin" {!! $user->verified ? 'title = "Verified"' : '' !!}>{{ $user->name }} {!! $user->verified ? '<i class = "fa fa-check text-success" title = "Verified"></i>' : '' !!}</h5>
 
 		@php
 			$user->check_profile();
@@ -48,7 +48,7 @@
 			{!! $user->stars() !!}
 		</p>
 		
-		<p class=" text-center">
+		<p class="text-center nobottommargin">
 			<img src="{{ $user->badge() }}" alt="{{ $user->name }} Badge" class="size-30"> <br>
 			{{ $user->social_status() }}
 		</p>
@@ -81,9 +81,17 @@
 
 		<hr>
 
-		<p class="text-muted">
+		<p class="text-muted nobottommargin">
 			<small>
-				<strong>Joined</strong>	 <br> {{ simple_datetime($user->created_at) }}
+				<strong>Joined</strong>	 <span class="pull-right"> <small>{{ simple_datetime($user->created_at) }}</small></span>
+			</small>
+		</p>
+
+		<hr>
+
+		<p class="text-muted nobottommargin">
+			<small>
+				<strong>Views</strong>	 <span class="pull-right"> <small>{{ number_format($user->views) }}</small></span>
 			</small>
 		</p>
 

@@ -65,6 +65,8 @@ class CreateUsersTable extends Migration
             $table->timestamp('verified_at')->nullable();
             $table->integer('verified_by')->nullable();
 
+            $table->integer('views')->default(0);
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
