@@ -25,7 +25,7 @@
 									<div class="col-sm-12">
 										<div style="width:50px; float: left">
 											<a href="{{ route('user.show', ['username' => $user->username]) }}">
-												<img class="size-50" src="{{ $user->thumbnail() }}" alt="{{ $user->name }}">
+												<img class="size-50 img-circle" src="{{ $user->thumbnail() }}" alt="{{ $user->name }}">
 											</a>
 											
 										</div>

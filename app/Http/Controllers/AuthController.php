@@ -95,7 +95,7 @@ class AuthController extends Controller
     		'fname' 	=> 'required|max:255',
     		'lname' 	=> 'required|max:255',
     		'email' 	=> 'required|max:255|unique:users',
-    		'username' 	=> 'required|max:255|unique:users,alpha_dash',
+    		'username' 	=> 'required|max:255|unique:users|alpha_dash',
     		'dob' 		=> 'required|max:255',
     		'password' 	=> 'required|max:255|confirmed',
     		'accepted' 	=> 'accepted',
