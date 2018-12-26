@@ -25,6 +25,8 @@ class UserController extends Controller
 
     public function showDashboard(){
     	$user = auth()->user();
+
+        return redirect()->route('user.show', $user->username);
         
 
         return view('pages.user.index', [

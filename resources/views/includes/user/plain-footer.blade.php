@@ -26,6 +26,7 @@
 	<script type="text/javascript" src="{{ custom_asset('js/exif.js') }}"></script>
 	<script type="text/javascript" src="{{ custom_asset('js/croppie.min.js') }}"></script>
 
+	<script type="text/javascript" src="{{ custom_asset('js/sweetalert-2.min.js') }}"></script>
 	<script type="text/javascript" src="{{ custom_asset('js/validate.min.js') }}"></script>
 
 	<script type="text/javascript" src="{{ custom_asset('js/tenda-wema.js') }}"></script>

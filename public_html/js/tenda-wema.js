@@ -283,4 +283,5 @@ $(document).ready(function(){
 			$('.cropit-image-input').click();
 		});
 	}
+
 });
