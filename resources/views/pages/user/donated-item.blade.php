@@ -288,7 +288,9 @@
 							@endif
 							
 						@else
-							<a href="" class="btn btn-info btn-block btn-lg">LOG IN TO PURCHASE</a>
+							<a href="" data-toggle="modal" data-target = "#login-modal" class="btn btn-info btn-block btn-lg">LOG IN TO PURCHASE</a>
+
+							@include('pages.user.modals.login')
 						@endif
 					@else
 						@if($item->disputed)
