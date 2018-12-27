@@ -184,6 +184,14 @@ ul{
 	height: auto;
 }
 
+.container-full-width{
+  width: 100%;
+  height: auto;
+  float: left;
+  position: relative;
+  overflow-x: hidden;
+}
+
 .lato{
 	font-family: 'Lato', 'sans-serif';
 	font-weight: 300;

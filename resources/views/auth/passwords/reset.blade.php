@@ -2,17 +2,14 @@
 
 @section('content')
 
- <section id="content">
+ <div class="container-full-width">
 
-    <div class="content-wrap nopadding">
+    <div class="row">
+        
+            <div style="min-height: 100vh; width: 100%; background-image: url('{{ custom_asset('images/slider/swiper/4.jpg') }}'); background-size: cover; position: relative; background-position: fixed; padding-top: 50px; padding-bottom: 50px ">
+            
+                    <div class="panel panel-default  noradius noborder" style="max-width: 400px; background-color: rgba(255,255,255,0.93); margin: 0 auto;">
 
-        <div class="section nopadding nomargin" style="width: 100%; height: 100%; position: absolute; left: 0; top: 0; background: url('{{ custom_asset('images/parallax/home/1.jpg') }}') center center no-repeat; background-size: cover;">  
-        </div>
-
-        <div class="section nobg full-screen nopadding nomargin">
-            <div class="container vertical-middle divcenter clearfix">
-
-                <div class="panel panel-default divcenter noradius noborder" style="max-width: 400px; background-color: rgba(255,255,255,0.93);">
                     <div class="panel-body" style="padding: 40px;">
                         <form id="login-form" name="login-form" class="nobottommargin" action="{{ route('password.request') }}" method="post">
                             @csrf
@@ -58,11 +55,11 @@
                 </div>
 
             </div>
-        </div>
+        
 
     </div>
 
-</section><!-- #content end -->
+</div><!-- #content end -->
 
 @endsection
 
