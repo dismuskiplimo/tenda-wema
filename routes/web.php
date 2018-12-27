@@ -36,7 +36,7 @@ Route::post('/donated-items/review/{id}/update', 'UserController@updateDonatedIt
 Route::post('/donated-items/{slug}/images/add', 'UserController@addDonatedItemImage')->name('user.donated-item.image.add');
 Route::post('/donated-items/{slug}/images/{id}/delete', 'UserController@deleteDonatedItemImage')->name('user.donated-item.image.delete');
 
-Route::get('/donated-items/{slug}/purchase', 'UserController@purchaseDonatedItem')->name('user.donated-item.purchase');
+Route::post('/donated-items/{slug}/purchase', 'UserController@purchaseDonatedItem')->name('user.donated-item.purchase');
 
 Route::post('/donated-items/{slug}/confirm-delivery', 'UserController@confirmDonatedItemDelivery')->name('user.donated-item.confirm-delivery');
 Route::post('/donated-items/{slug}/cancel', 'UserController@cancelPurchasedOrder')->name('user.donated-item.order.cancel');
@@ -190,6 +190,12 @@ Route::group(['prefix' => 'admin'], function(){
 	;
 	Route::post('/donated-items/{id}/confirm-delivery', 'AdminController@confirmDonatedItemDelivery')->name('admin.donated-item.delivery.approve');
 	Route::post('/donated-items/{id}/dispute', 'AdminController@disputeDonatedItem')->name('admin.donated-item.dispute');
+
+	// Order Cancellation
+	Route::get('/order-cancellation-requests/{type}', 'AdminController@showOrderCancellations')->name('admin.order-cancellations');
+	Route::get('/order-cancellation-requests/{id}/view', 'AdminController@showOrderCancellation')->name('admin.order-cancellation');
+	Route::post('/order-cancellation-requests/{id}/approve', 'AdminController@approveOrderCancellation')->name('admin.order-cancellation.approve');
+	Route::post('/order-cancellation-requests/{id}/dismiss', 'AdminController@dismissOrderCancellation')->name('admin.order-cancellation.dismiss');
 
 	// Users
 	Route::get('/users/{type}', 'AdminController@showUsers')->name('admin.users');

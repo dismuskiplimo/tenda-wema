@@ -15,7 +15,21 @@ class CreateCancelOrdersTable extends Migration
     {
         Schema::create('cancel_orders', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id');
+            $table->integer('donated_item_id');
+            $table->text('reason');
+
+            $table->boolean('approved')->default(0);
+            $table->integer('approved_by')->nullable();
+            $table->timestamp('approved_at')->nullable();
+
+            $table->boolean('dismissed')->default(0);
+            $table->integer('dismissed_by')->nullable();
+            $table->text('dismissed_reason')->nullable();
+            $table->timestamp('dismissed_at')->nullable();
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

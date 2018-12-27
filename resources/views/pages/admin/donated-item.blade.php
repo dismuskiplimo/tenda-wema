@@ -204,15 +204,15 @@
 							</div>
 						</div>
 
-						<a href="{{ route('admin.message.new', ['id' => $item->donor->id]) }}" class="btn btn-block btn-info btn-lg mb-10">
+						<a href="{{ route('admin.message.new', ['id' => $item->donor->id]) }}" class="btn btn-block btn-info btn-lg mb-10" target="_blank">
 							<i class="fa fa-send"></i> MESSAGE SELLER
 						</a>
 
 						@if($item->bought)
 
-						<a href="{{ route('admin.message.new', ['id' => $item->buyer->id]) }}" class="btn btn-block btn-primary btn-lg">
-							<i class="fa fa-send"></i> MESSAGE BUYER
-						</a>
+							<a href="{{ route('admin.message.new', ['id' => $item->buyer->id]) }}" class="btn btn-block btn-primary btn-lg" target="_blank">
+								<i class="fa fa-send"></i> MESSAGE BUYER
+							</a>
 
 						@endif
 

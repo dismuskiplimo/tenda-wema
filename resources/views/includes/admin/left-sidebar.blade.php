@@ -154,6 +154,13 @@
             </li>
 
             <li>
+                <a href="{{ route('admin.order-cancellations', ['type' => 'all']) }}" class="waves-effect">
+                    <i class="ti-bag fa-fw"></i> 
+                    <span class="hide-menu">Order Cancelations</span>
+                </a> 
+            </li>
+
+            <li>
                 <a href="{{ route('admin.support-causes') }}" class="waves-effect">
                     <i class="ti-bag fa-fw"></i> 
                     <span class="hide-menu">Donation Requests</span>

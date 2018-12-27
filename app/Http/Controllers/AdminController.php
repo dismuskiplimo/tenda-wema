@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, MpesaTransaction, Donation, ContactUs, Paypal_Transaction, ReportType, UserReport, UserReportType, DonatedItemReview};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, MpesaTransaction, Donation, ContactUs, Paypal_Transaction, ReportType, UserReport, UserReportType, DonatedItemReview, CancelOrder};
 
 use Image, Auth, Session;
 
@@ -549,7 +549,206 @@ class AdminController extends Controller
     	return redirect()->route('admin.donated-items' , ['type' => 'all']);
     }
 
+    public function cancelDonatedItemPurchase(Request $request, $id){
+        
+        $donated_item = DonatedItem::findOrFail($id);
+
+        $user = auth()->user();
+
+        $donated_item->disapproved          = 0;
+        $donated_item->disapproved_at       = null;
+        $donated_item->disapproved_by       = null;
+        $donated_item->disapproved_reason   = null;
+
+        $donated_item->approved             = 0;
+        $donated_item->approved_by          = null;
+        $donated_item->approved_at          = null;
+
+        $notification                       = new Notification;
+        $notification->from_id              = $user->id;
+        $notification->to_id                = $donated_item->buyer->id;
+        $notification->system_message       = 1;
+        $notification->from_admin           = 1;
+        $notification->message              = 'Your Donated Item Purchase Was Cancelled. (' . $donated_item->name . ')';
+        $notification->notification_type    = 'donated-item.purchase.cancelled';
+        $notification->model_id             = $donated_item->id;
+        $notification->save();
+
+        $notification                       = new Notification;
+        $notification->from_id              = $user->id;
+        $notification->to_id                = $donated_item->donor->id;
+        $notification->system_message       = 1;
+        $notification->from_admin           = 1;
+        $notification->message              = 'Your Donated Item (' . $donated_item->name . ') Sale Was Cancelled. The item has been returned to the community shop';
+        $notification->notification_type    = 'donated-item.purchase.cancelled';
+        $notification->model_id             = $donated_item->id;
+        $notification->save();
+        $notification->save();
+
+        $escrow                             = $donated_item->escrow;
+        $buyer                              = $donated_item->buyer;
+        $buyer->coins                       += $escrow->amount;
+        
+        $buyer->update();
+
+        $simba_coin_log                     = new SimbaCoinLog;
+        $simba_coin_log->user_id            = $buyer->id;
+        $simba_coin_log->message            = 'Reversal - Payment for Donated item bought.  (' . $donated_item->name . ')';
+        $simba_coin_log->type               = 'credit';
+        $simba_coin_log->coins              = $escrow->amount;
+        $simba_coin_log->previous_balance   = $buyer->coins - $escrow->amount ;
+        $simba_coin_log->current_balance    = $buyer->coins;
+        $simba_coin_log->save();
+
+        $donated_item->bought               = 0;
+        $donated_item->buyer_id             = null;
+        $donated_item->bought_at            = null;
+
+        $donated_item->update();
+
+        $escrow->delete();
+
+        if($this->settings->mail_enabled->value){
+
+        }
+
+        session()->flash('success', 'Purchase Cancelled');
+
+        return redirect()->back();
+    }
+
     //**********************END OF DONATED ITEMS ***********************************
+
+
+    //**********************CANCEL ORDER REQUEST ***********************************
+
+    public function showOrderCancellations($type){
+        if($type == 'all'){
+            $cancel_requests    = CancelOrder::orderBy('created_at', 'DESC')->paginate(50);
+            $nav                = 'admin.cancel-orders';
+            $title              = 'All Order Cancellation Requests';
+        }
+
+        return view('pages.admin.cancel-orders', [
+            'nav'               => $nav,
+            'title'             => $title,
+            'cancel_requests'   => $cancel_requests,
+        ]);
+    }
+
+    public function showOrderCancellation($id){
+        $cancel_request = CancelOrder::findOrFail($id);
+
+        return view('pages.admin.cancel-order', [
+            'nav'               => 'admin.cancel-order',
+            'title'             => 'Cancel Order Request',
+            'cancel_request'    => $cancel_request,
+            'item'              => $cancel_request->donated_item,
+        ]);
+    }
+
+    public function approveOrderCancellation(Request $request, $id){
+        $cancel_request = CancelOrder::findOrFail($id);
+        $user           = auth()->user();
+        $donated_item   = $cancel_request->donated_item;
+
+        $donated_item->approved     = 0;
+        $donated_item->approved_by  = null;
+        $donated_item->approved_at  = null;
+
+        $donated_item->disapproved          = 0;
+        $donated_item->disapproved_at       = null;
+        $donated_item->disapproved_by       = null;
+        $donated_item->disapproved_reason   = null;
+
+        $cancel_request->approved          = 1;
+        $cancel_request->approved_by       = $user->id;
+        $cancel_request->approved_at       = $this->date;
+        $cancel_request->update();
+
+        $notification                       = new Notification;
+        $notification->from_id              = $user->id;
+        $notification->to_id                = $donated_item->buyer->id;
+        $notification->system_message       = 1;
+        $notification->from_admin           = 1;
+        $notification->message              = 'Your Donated Item (' . $donated_item->name . ')' . ' Purchase Was Cancelled.';
+        $notification->notification_type    = 'donated-item.purchase.cancelled';
+        $notification->model_id             = $donated_item->id;
+        $notification->save();
+
+        $notification                       = new Notification;
+        $notification->from_id              = $user->id;
+        $notification->to_id                = $donated_item->donor->id;
+        $notification->system_message       = 1;
+        $notification->from_admin           = 1;
+        $notification->message              = 'Your Donated Item (' . $donated_item->name . ') Sale Was Cancelled. The item has been returned to the community shop';
+        $notification->notification_type    = 'donated-item.purchase.cancelled';
+        $notification->model_id             = $donated_item->id;
+        $notification->save();
+
+        $escrow                     = $donated_item->escrow;
+
+        $buyer                      = $donated_item->buyer;
+
+        $buyer->coins               += $escrow->amount;
+        
+        $buyer->update();
+
+        $simba_coin_log                        = new SimbaCoinLog;
+        $simba_coin_log->user_id               = $buyer->id;
+        $simba_coin_log->message               = 'Reversal - Payment for Donated item bought.  (' . $donated_item->name . ')';
+        $simba_coin_log->type                  = 'credit';
+        $simba_coin_log->coins                 = $escrow->amount;
+        $simba_coin_log->previous_balance      = $buyer->coins - $escrow->amount ;
+        $simba_coin_log->current_balance       = $buyer->coins;
+        $simba_coin_log->save();
+
+        $donated_item->bought       = 0;
+        $donated_item->buyer_id     = null;
+        $donated_item->bought_at    = null;
+        $donated_item->update();
+
+        $escrow->delete();
+
+        if($this->settings->mail_enabled->value){
+
+        }
+
+        session()->flash('success', 'Purchase cancelled');
+
+        return redirect()->back();
+
+    }
+
+    public function dismissOrderCancellation(Request $request, $id){
+        $this->validate($request, [
+            'reason' => 'required|max:50000'
+        ]);
+
+        $user = auth()->user();
+
+        $cancel_request                     = CancelOrder::findOrFail($id);
+
+        $cancel_request->dismissed          = 1;
+        $cancel_request->dismissed_by       = $user->id;
+        $cancel_request->dismissed_at       = $this->date;
+        $cancel_request->dismissed_reason   = $request->reason;
+        $cancel_request->update();
+
+        $notification           = new Notification;
+        $notification->from_id  = null;
+        $notification->to_id    = $cancel_request->user->id;
+        $notification->message  = 'Purchase cancellation for (' . $cancel_request->donated_item->name . ') declined. Reason: ' . $request->reason;
+        $notification->notification_type = 'purchase-cancellation.declined';
+        $notification->model_id = $cancel_request->donated_item->id;
+        $notification->save();
+
+        session()->flash('success', 'Request Dismissed');
+
+        return redirect()->back();
+    }
+
+    //**********************END OF ORDER CANCEL REQUEST ***********************************
 
     //**********************USERS***************************************************
 

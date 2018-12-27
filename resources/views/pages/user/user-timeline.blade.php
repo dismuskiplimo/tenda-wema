@@ -54,21 +54,21 @@
 
 										<div class="col-sm-8">
 											<h4>Donated Item</h4>
-											<h5 class="mt-10 mb-0">
+											<h5 class="mt-10 nobottommargin">
 												<a href="{{ route('donated-item.show', ['slug' => $item->slug]) }}">{{characters($item->name, 20)}}</a>	
 											</h5>
 
-											<small class="text-muted">{{ $item->category ? $item->category->name : '' }}</small>
+											<small class="text-muted nobottommargin">{{ $item->category ? $item->category->name : '' }}</small>
 										</div>
 									</div>
 								@elseif($event->type == 'social_level.upgraded')
-									<p>
+									<p class="nobottommargin">
 										<img src="{{ social_badge($event->extra) }}" alt="{{ $event->extra }} badge" class="size-20 mr-10p">
 										{{ $event->message }}
 									</p>
 								@endif
 
-								<p class="text-right mb-0">
+								<p class="text-right nobottommargin">
 									<small class="text-muted">
 										{{ simple_datetime($event->created_at) }}
 									</small>

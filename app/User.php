@@ -311,6 +311,10 @@ class User extends Authenticatable
         return $this->hasMany('App\DonatedItem', 'donor_id');
     }
 
+    public function order_cancellations(){
+        return $this->hasMany('App\CancelOrder', 'user_id');
+    }
+
     public function bought_items(){
         return $this->hasMany('App\DonatedItem', 'buyer_id');
     }

@@ -144,18 +144,26 @@
 
 			<div class="col-sm-4">
 				@if($logged_in && $item->buyer_id == $user->id)
-					@if($item->bought && $item->approved && !$item->disapproved && !$item->received)
+					@if($item->bought && !$item->disapproved && !$item->received)
 						<div class="row">
 
 							<div class="col-sm-12 mb-20">
 								<p class="nobottommargin">
-									<a href="" data-toggle="modal" data-target="#confirm-item-received-{{ $item->id }}" class="btn btn-block btn-success mb-20">
-										ITEM RECEIVED ?
-									</a>
+									@if($item->approved)
+
+										<a href="" data-toggle="modal" data-target="#confirm-item-received-{{ $item->id }}" class="btn btn-block btn-success mb-20">
+											ITEM RECEIVED ?
+										</a>
+
+									@endif
+
+									@if(!$user->order_cancellations()->where('approved', 0)->where('dismissed', 0)->where('donated_item_id', $item->id)->first())
+										<a href="" data-toggle="modal" data-target="#cancel-purchase-{{ $item->id }}" class="btn btn-block btn-default">
+											CANCEL PURCHASE
+										</a>
+									@endif
 									
-									<a href="" data-toggle="modal" data-target="#cancel-purchase-{{ $item->id }}" class="btn btn-block btn-default">
-										CANCEL PURCHASE
-									</a>
+									
 								</p>
 									
 								@include('pages.user.modals.confirm-item-received')
@@ -247,7 +255,9 @@
 									@if($item->disputed)
 										<button class="btn btn-disabled btn-block btn-lg" disabled="">DISPUTED</button>
 									@else
-										<a href="{{ route('user.donated-item.purchase', ['slug' => $item->slug]) }}" class="btn btn-primary btn-block btn-lg">PURCHASE</a>
+										<a href="" data-toggle="modal" data-target="#purchase-item-{{ $item->id }}" class="btn btn-primary btn-block btn-lg">PURCHASE</a>
+
+										@include('pages.user.modals.purchase-item')
 									@endif
 
 

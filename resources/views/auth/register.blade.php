@@ -35,7 +35,7 @@
                     
 
                     <div class="col_half col_last">
-                        <label for="register-form-username">Choose a Username (No spaces special characters allowed) <span class="text-danger">*</span> </label>
+                        <label for="register-form-username">Choose a Username (No spaces allowed) <span class="text-danger">*</span> </label>
                         <input type="text" id="register-form-username" name="username" value="{{ old('username') }}" class="form-control" required="">
                     </div>
 

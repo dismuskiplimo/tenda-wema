@@ -23,6 +23,7 @@ class CreateNotificationsTable extends Migration
             $table->boolean('read')->default(0);
             $table->timestamp('read_at')->nullable();
             $table->string('notification_type')->nullable();
+            $table->string('section')->nullable();
             $table->integer('model_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
