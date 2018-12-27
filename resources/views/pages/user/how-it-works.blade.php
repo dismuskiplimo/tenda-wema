@@ -51,7 +51,7 @@
 
 				<table class="table table-striped">
 					<thead>
-						<tr class="bg-primary">
+						<tr class="bg-theme">
 							<th>Deed</th>
 							<th class="text-right">Simba Coins Earned</th>
 						</tr>

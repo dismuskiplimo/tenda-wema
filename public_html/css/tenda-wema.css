@@ -6,6 +6,15 @@ ul{
 	list-style: none;
 }
 
+.text-theme{
+  color: #edaa1e;
+}
+
+.bg-theme{
+  color: #edaa1e;
+  background-color: #192857;
+}
+
 .cropper{
   width: 100%;
   float: left;

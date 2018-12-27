@@ -127,11 +127,29 @@
 							<div class="row">
 
 								<div class="col-md-6 clearfix bottommargin-sm">
-									<a href="#" class="social-icon si-dark si-colored si-facebook nobottommargin" style="margin-right: 10px;">
-										<i class="icon-facebook"></i>
-										<i class="icon-facebook"></i>
-									</a>
-									<a href="#"><small style="display: block; margin-top: 3px;"><strong>Like us</strong><br>on Facebook</small></a>
+									<small>
+										<ul>
+											<li>
+												<a href="https://www.facebook.com/"  target="_blank"><i class="fa fa-facebook" style="margin-right: 9px"></i> Like us on Facebook</a>
+											</li>
+
+											<li>
+												<a href="https://twitter.com/"  target="_blank"><i class="fa fa-twitter mr-5"></i> Follow us on Twitter</a>
+											</li>
+
+											<li>
+												<a href="https://www.instagram.com/"  target="_blank"><i class="fa fa-instagram mr-5"></i> Follow us on Instagram</a>
+											</li>
+										</ul>
+
+
+									</small>
+
+
+
+									
+
+
 								</div>
 								
 
@@ -158,21 +176,21 @@
 
 					<div class="col_half col_last tright">
 						<div class="fright clearfix">
-							<a href="#" class="social-icon si-small si-borderless si-facebook">
+							<a href="https://www.facebook.com/" target="_blank" class="social-icon si-small si-borderless si-facebook">
 								<i class="icon-facebook"></i>
 								<i class="icon-facebook"></i>
 							</a>
 
-							<a href="#" class="social-icon si-small si-borderless si-twitter">
+							<a href="https://twitter.com/"  target="_blank" class="social-icon si-small si-borderless si-twitter">
 								<i class="icon-twitter"></i>
 								<i class="icon-twitter"></i>
 							</a>
 
 
 
-							<a href="#" class="social-icon si-small si-borderless si-linkedin">
-								<i class="icon-linkedin"></i>
-								<i class="icon-linkedin"></i>
+							<a href="https://www.instagram.com/"  target="_blank" class="social-icon si-small si-borderless si-instagram">
+								<i class="icon-instagram"></i>
+								<i class="icon-instagram"></i>
 							</a>
 						</div>
 
