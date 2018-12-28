@@ -35,6 +35,8 @@
 	
 	<link rel="stylesheet" href="{{ custom_asset('css/user/remodal-default-theme.css') }}" type="text/css" />
 	<link rel="stylesheet" href="{{ custom_asset('css/user/remodal.css') }}" type="text/css" />
+
+	<link rel="icon" href="{{ custom_asset('favicon.ico') }}">	
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 

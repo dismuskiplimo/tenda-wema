@@ -184,7 +184,9 @@
 
 				<div class="card">
 					<div class="card-body">
-						
+						<h5 class="">Donor info</h5>
+
+
 
 						<div class="row">
 							<div class="col-xs-3">
@@ -201,6 +203,32 @@
 						
 					</div>
 				</div>
+
+				@if($mine)
+					@if($item->bought)
+						<div class="card">
+							<div class="card-body">
+								<h5 class="">Buyer info</h5>
+
+								
+
+								<div class="row">
+									<div class="col-xs-3">
+										<img src="{{ $item->buyer ? $item->buyer->profile_thumbnail() : profile_thumbnail() }}" alt="{{ $item->buyer ? $item->buyer->name : '' }}" class="img-responsive img-circle">
+									</div>
+
+									<div class="col-xs-9">
+										<p class="mt-10 mb-0">
+											{{ $item->buyer ? characters($item->buyer->name, 30) : '' }} <br>
+											<a href="{{ route('user.show', ['username' => $item->buyer->username]) }}">View Profile</a>
+										</p>
+									</div>	
+								</div>
+								
+							</div>
+						</div>
+					@endif
+				@endif
 
 				<div class="card">
 					<div class="card-body">

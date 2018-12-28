@@ -63,6 +63,12 @@
 						<h4>Contact Information</h4>
 
 						<p>
+							<strong><i class="fa fa-map"></i> Location:</strong> <br>
+							View Park Towers, Utalii Street
+
+						</p>
+
+						<p>
 							<strong><i class="fa fa-phone"></i> Phone:</strong> <br>
 							+254 735 663 734
 
@@ -91,7 +97,7 @@
 					<div class="col-sm-12">
 						<h4>Map</h4>
 
-						<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8155979947433!2d36.82236121400851!3d-1.2845780990630689!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f139279dcd703%3A0x668a71e3fd24b2f7!2sNairobi+Central+Business+District!5e0!3m2!1sen!2ske!4v1545918436970" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+						<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8176212340572!2d36.81626920510648!3d-1.283281414073657!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f10d23eb49bbb%3A0xf5ebdd7d189417a1!2sView+Park+Towers!5e0!3m2!1sen!2ske!4v1546018468040" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
 					</div>
 				</div>
 			</div>

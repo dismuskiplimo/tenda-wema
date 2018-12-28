@@ -14,8 +14,11 @@
     <meta name="author" content="">
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ custom_asset('ico/favicon.png') }}">
+
+    <link rel="icon" href="{{ custom_asset('favicon.ico') }}">
+
     <title>@yield('title') | {{ config('app.name') }}</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{ custom_asset('css/admin/bootstrap.min.css') }}" rel="stylesheet">

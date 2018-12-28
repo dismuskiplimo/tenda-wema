@@ -130,7 +130,7 @@
 									<small>
 										<ul>
 											<li>
-												<a href="https://www.facebook.com/"  target="_blank"><i class="fa fa-facebook" style="margin-right: 9px"></i> Like us on Facebook</a>
+												<a href="https://www.facebook.com/tendawemacommunity/"  target="_blank"><i class="fa fa-facebook" style="margin-right: 9px"></i> Like us on Facebook</a>
 											</li>
 
 											<li>
@@ -138,7 +138,7 @@
 											</li>
 
 											<li>
-												<a href="https://www.instagram.com/"  target="_blank"><i class="fa fa-instagram mr-5"></i> Follow us on Instagram</a>
+												<a href="https://www.instagram.com/tendawema_com"  target="_blank"><i class="fa fa-instagram mr-5"></i> Follow us on Instagram</a>
 											</li>
 										</ul>
 
@@ -176,7 +176,7 @@
 
 					<div class="col_half col_last tright">
 						<div class="fright clearfix">
-							<a href="https://www.facebook.com/" target="_blank" class="social-icon si-small si-borderless si-facebook">
+							<a href="https://www.facebook.com/tendawemacommunity/" target="_blank" class="social-icon si-small si-borderless si-facebook">
 								<i class="icon-facebook"></i>
 								<i class="icon-facebook"></i>
 							</a>
@@ -188,7 +188,7 @@
 
 
 
-							<a href="https://www.instagram.com/"  target="_blank" class="social-icon si-small si-borderless si-instagram">
+							<a href="https://www.instagram.com/tendawema_com"  target="_blank" class="social-icon si-small si-borderless si-instagram">
 								<i class="icon-instagram"></i>
 								<i class="icon-instagram"></i>
 							</a>
