@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear, {{ $user->name }}</p>
+	<p>Dear {{ $user->name }},</p>
 
 	<p>
 		You need to verify your email in order to get full access to {{ config('app.name') }} Website. Please click the link below to verify your email.

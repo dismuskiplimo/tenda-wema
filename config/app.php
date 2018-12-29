@@ -23,6 +23,8 @@ return [
 
     'contact_email' => env('APP_CONTACT_EMAIL', 'info@tendawema.com'),
 
+    'system_email' => env('APP_SYSTEM_EMAIL', 'info@tendawema.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

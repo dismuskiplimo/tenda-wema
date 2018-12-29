@@ -282,7 +282,7 @@ class PaymentsController extends Controller
                 $transaction->coins             = $coins;
                 $transaction->transaction_code  = $token; 
                 $transaction->amount            = $amount_to_pay;
-                $transaction->medium            = 'PAYPAL SANDBOX';
+                $transaction->medium            = $this->paypal_mode == "sandbox" ? 'PAYPAL SANDBOX' : 'PAYPAL';
                 $transaction->status            = 'COMPLETE';
                 $transaction->currency          = $this->settings->paypal_currency->value;
                 $transaction->type              = 'INCOMING';
@@ -298,7 +298,7 @@ class PaymentsController extends Controller
 
                 $simba_coin_log                        = new SimbaCoinLog;
                 $simba_coin_log->user_id               = $user->id;
-                $simba_coin_log->message               = $coins . ' Simba Coins Purchased From Paypal';
+                $simba_coin_log->message               = $coins . ' Simba Coins Purchased From ' . $this->paypal_mode == "sandbox" ? 'Paypal Sandbox' : 'Paypal';
                 $simba_coin_log->type                  = 'credit';
                 $simba_coin_log->coins                 = $coins;
                 $simba_coin_log->previous_balance      = $user->coins - $coins ;
@@ -320,27 +320,28 @@ class PaymentsController extends Controller
                 $notification->message              = ucfirst($coins . ' Simba Coins Purchased By ' . $user->name);
                 $notification->save();
 
-                ////////////////////////////////////////////////
+                if($this->settings->mail_enabled->value){
 
-            
-                // if($this->_options->mail_enabled){
-                //     $pdf = loadTicket($event_request);
-                //     $event = $event_request->event;
-                //     $user = Auth::user();
-                //     $title = $event->name .  ' Event Ticket';
-                //     try{
-                //         \Mail::send('emails.ticket', ['title' => $title, 'user' => $user, 'event' => $event], function ($message) use($user, $title, $pdf, $event){
-                //             $message->subject($title);
-                //             $message->to($user->email);
-                //             $message->attachData($pdf->output(),  $event->name . ' ticket.pdf', ['mime' => 'application/pdf']);
-                //         });
+                    try{
+                        $title = 'PayPal Payment Received from ' . $user->name;
 
-                //     }catch(\Exception $e){
-                //         //session()->flash('error', $e->getMessage());
-                //     }
-                // }
+                        \Mail::send('emails.payment-paypal-admin', ['title' => $title, 'transaction' => $transaction], function ($message) use($transaction, $title){
+                            $message->subject($title);
+                            $message->to(config('app.system_email'));
+                        });
 
-                /////////////////////////////////////////////////
+                        
+                        $title = config('app.name') .' | PayPal Payment Received.';
+
+                        \Mail::send('emails.payment-paypal-user', ['title' => $title, 'transaction' => $transaction], function ($message) use($transaction, $title){
+                            $message->subject($title);
+                            $message->to($transaction->user->email);
+                        });
+
+                    }catch(\Exception $e){
+                        session()->flash('error', $e->getMessage());
+                    }
+                }
 
                 session()->flash('success', $this->settings->paypal_currency->value . ' ' . number_format($amount_to_pay, 2) . ' Has been received for ' . number_format($coins) . ' Simba Coin(s) Purchase');
 
@@ -535,11 +536,11 @@ class PaymentsController extends Controller
                     $transaction->coins             = $coins;
                     $transaction->transaction_code  = $details['MpesaReceiptNumber'];; 
                     $transaction->amount            = (float)$details['Amount'];
-                    $transaction->medium            = 'MPESA';
+                    $transaction->medium            = $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX';
                     $transaction->status            = 'COMPLETE';
                     $transaction->currency          = $this->settings->system_currency->value;
                     $transaction->type              = 'INCOMING';
-                    $transaction->description       = number_format($coins) . ' Simba Coin(s) Purchase via MPESA';
+                    $transaction->description       = number_format($coins) . ' Simba Coin(s) Purchase via ' . $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX';
                     $transaction->completed_at      = $this->date;
                     $transaction->save();
 
@@ -566,7 +567,7 @@ class PaymentsController extends Controller
 
                     $simba_coin_log                        = new SimbaCoinLog;
                     $simba_coin_log->user_id               = $user->id;
-                    $simba_coin_log->message               = $coins . ' Simba Coins Purchased using MPESA';
+                    $simba_coin_log->message               = $coins . ' Simba Coins Purchased using ' . $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX';
                     $simba_coin_log->type                  = 'credit';
                     $simba_coin_log->coins                 = $coins;
                     $simba_coin_log->previous_balance      = $user->coins - $coins ;
@@ -581,7 +582,7 @@ class PaymentsController extends Controller
                     $notification->model_id             = null;
                     $notification->notification_type    = 'coins.purchased';
                     $notification->system_message       = 1;
-                    $notification->message              = ucfirst($coins . ' Simba Coins Purchased By ' . $user->name . ' via MPESA');
+                    $notification->message              = ucfirst($coins . ' Simba Coins Purchased By ' . $user->name . ' via ' . $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX');
                     $notification->save();
 
                     $notification                       = new Notification;
@@ -591,30 +592,32 @@ class PaymentsController extends Controller
                     $notification->model_id             = null;
                     $notification->notification_type    = 'coins.purchased';
                     $notification->system_message       = 1;
-                    $notification->message              = ucfirst($coins . ' Simba Coins Purchase via MPESA');
+                    $notification->message              = ucfirst($coins . ' Simba Coins Purchase via ' . $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX');
                     $notification->save();
 
 
-                    ////////////////////////////////////////////////
+                    if($this->settings->mail_enabled->value){
 
-                    // if($this->_options->mail_enabled){
-                    //     $pdf = loadTicket($event_request);
-                    //     $event = $event_request->event;
-                    //     $user = Auth::user();
-                    //     $title = $event->name .  ' Event Ticket';
-                    //     try{
-                    //         \Mail::send('emails.ticket', ['title' => $title, 'user' => $user, 'event' => $event], function ($message) use($user, $title, $pdf, $event){
-                    //             $message->subject($title);
-                    //             $message->to($user->email);
-                    //             $message->attachData($pdf->output(),  $event->name . ' ticket.pdf', ['mime' => 'application/pdf']);
-                    //         });
+                        try{
+                            $title = 'MPESA Payment Received from ' . $user->name;
 
-                    //     }catch(\Exception $e){
-                    //         //session()->flash('error', $e->getMessage());
-                    //     }
-                    // }
+                            \Mail::send('emails.payment-mpesa-admin', ['title' => $title, 'transaction' => $transaction, 'mpesa_transaction' => $mpesa_transaction], function ($message) use($transaction, $title){
+                                $message->subject($title);
+                                $message->to(config('app.system_email'));
+                            });
 
-                    /////////////////////////////////////////////////
+                            
+                            $title = config('app.name') .' | MPESA Payment Received.';
+
+                            \Mail::send('emails.payment-mpesa-user', ['title' => $title, 'transaction' => $transaction, 'mpesa_transaction' => $mpesa_transaction], function ($message) use($transaction, $title){
+                                $message->subject($title);
+                                $message->to($transaction->user->email);
+                            });
+
+                        }catch(\Exception $e){
+                            session()->flash('error', $e->getMessage());
+                        }
+                    }
                 }   
 
                 

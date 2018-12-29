@@ -120,16 +120,23 @@ class FrontController extends Controller
 
     public function postSupportCause(Request $request){
         $this->validate($request,[
-            'fname'         => 'required|max:255',
-            'lname'         => 'required|max:255',
-            'amount'        => 'required|numeric|min:1000',
-            'country'       => 'required|max:255',
-            'organization'  => 'max:255',
-            'phone'         => 'required|max:255',
-            'email'         => 'required|max:255|email',
-            'donating_as'   => 'required|max:255',
-            'method'        => 'required|max:255',
+            'fname'         => 'required|max:191',
+            'lname'         => 'required|max:191',
+            'country'       => 'required|max:191',
+            'organization'  => 'max:191',
+            'phone'         => 'required|max:191',
+            'email'         => 'required|max:191|email',
+            'donating_as'   => 'required|max:191',
+            'method'        => 'required|max:191',
         ]);
+
+        if($request->has('amount') && !empty($request->amount)){
+            $this->validate($request, [
+                'amount'        => 'numeric|min:1000',
+            ]);
+        }else{
+            $request->amount = 0;
+        }
 
         $donation                   = new Donation;
         $donation->fname            = $request->fname;
@@ -143,10 +150,20 @@ class FrontController extends Controller
         $donation->method           = $request->method;
         $donation->save();
 
-        session()->flash('success', 'Request received, please wait for follow up from tendawema.com');
+        session()->flash('success', 'Request received, please wait for follow up from '  . config('app.name') );
 
         if($this->settings->mail_enabled->value){
+            $title = 'Support the Cause Request';
 
+            try{
+                \Mail::send('emails.support-the-cause', ['title' => $title, 'donation' => $donation], function ($message) use($donation, $title){
+                    $message->subject($title);
+                    $message->to(config('app.system_email'));
+                });
+
+            }catch(\Exception $e){
+                session()->flash('error', $e->getMessage());
+            }
         }
 
         return redirect()->back();
@@ -160,20 +177,12 @@ class FrontController extends Controller
         ]);
     }
 
-    public function showHowItWorksPage(){
-        
-        return view('pages.user.how-it-works',[
-            'title'     => 'How It Works',
-            'nav'       => 'how-it-works',
-        ]);
-    }
-
     public function postContactUs(Request $request){
         $this->validate($request,[
-            'name'          => 'required|max:255',
-            'email'         => 'required|max:255|email',
-            'subject'       => 'required|max:255',
-            'message'       => 'max:800',
+            'name'          => 'required|max:191',
+            'email'         => 'required|max:191|email',
+            'subject'       => 'required|max:191',
+            'message'       => 'max:50000',
             
         ]);
 
@@ -185,13 +194,31 @@ class FrontController extends Controller
         $contact_us->message    = $request->message;
         $contact_us->save();
 
-        session()->flash('success', 'Message Sent, tendawema.com will reply in due time');
+        session()->flash('success', 'Message Sent, '  . config('app.name') .  ' will reply in due time');
 
         if($this->settings->mail_enabled->value){
-            
+            $title = 'Contact Message from ' . config('app.name');
+
+            try{
+                \Mail::send('emails.contact-us', ['title' => $title, 'contact_us' => $contact_us], function ($message) use($contact_us, $title){
+                    $message->subject($title);
+                    $message->to(config('app.system_email'));
+                });
+
+            }catch(\Exception $e){
+                session()->flash('error', $e->getMessage());
+            }
         }
 
         return redirect()->back();
+    }
+
+    public function showHowItWorksPage(){
+        
+        return view('pages.user.how-it-works',[
+            'title'     => 'How It Works',
+            'nav'       => 'how-it-works',
+        ]);
     }
 
     public function showAboutUsPage(){

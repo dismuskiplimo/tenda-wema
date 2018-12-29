@@ -40,7 +40,7 @@
 					
 					<div class="form-group">
 						<label for="">Amount you wish to donate in KES (Min: KES 1,000/=)</label>
-						<input type="number" name="amount" min="1000" class="form-control" placeholder="Amount you wish to donate" required="">
+						<input type="number" name="amount" min="1000" class="form-control" placeholder="Amount you wish to donate">
 					</div>
 
 					<h4>Donor Information</h4>
@@ -117,7 +117,9 @@
 							<option value="Mobile Money">Mobile Money(MPESA, Airtel Money, TKash)</option>
 							<option value="EFT">EFT (Direct Bank Transfer)</option>>
 
-							<option value="Cheque">Cheque</option>						
+							<option value="Cheque">Cheque</option>	
+
+							<option value="Item/Service">Item/Service</option>						
 						</select>
 					</div>
 
@@ -139,7 +141,7 @@
 						</p>
 
 						<p>
-							tendawema.com <br>
+							{{ config('app.name') }} <br>
 							P. O. Box 24721-00100 Nairobi
 
 						</p>

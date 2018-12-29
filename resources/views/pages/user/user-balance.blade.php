@@ -63,6 +63,7 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
+								<th class="">DATE</th>
 								<th class="text-right">AMOUNT</th>
 								
 								<th class="">DESCRIPTION</th>
@@ -73,6 +74,10 @@
 						<tbody>
 							@foreach($user->simba_coin_logs()->orderBy('created_at', 'DESC')->paginate(50) as $log)
 								<tr class="{{ $log->type == 'credit' ? 'text-success' : 'text-danger' }}">
+									<td>
+										<small>{{ simple_datetime($log->created_at) }}</small>	
+									</td>
+
 									<td class="text-right">
 										{{ $log->type == 'debit' ? '- ' : '+ ' }} {{ number_format($log->coins) }} 
 										<img src="{{ simba_coin() }}" alt="Simba Coin" class="size-20 mtn-4">

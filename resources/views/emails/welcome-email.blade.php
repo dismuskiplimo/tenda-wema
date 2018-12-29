@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear, {{ $user->name }}</p>
+	<p>Dear {{ $user->name }},</p>
 
 	<p>Welcome to {{ config('app.name') }},</p>
 
