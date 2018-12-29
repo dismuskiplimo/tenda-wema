@@ -95,6 +95,8 @@ Route::get('/email/not-verified', 'FrontController@showEmailNotVerified')->name(
 Route::post('/password/update', 'BackController@updateUserPassword')->name('password.update');
 Route::post('/account/update', 'BackController@updateUserProfile')->name('account.update');
 
+Route::get('/search', 'FrontController@showSearchPage')->name('user.search');
+
 Route::group(['prefix' => 'user'], function(){
 	Route::get('/', 'UserController@showDashboard')->name('user.dashboard');
 	
@@ -269,7 +271,7 @@ Route::group(['prefix' => 'auth'], function(){
 	Route::get('/google/login/callback', 'AuthController@processGoogleLogin')->name('auth.google.login.process');
 
 	Route::get('/facebook/login/', 'AuthController@getFacebookLogin')->name('auth.facebook.login');
-	
+
 	Route::get('/facebook/login/callback', 'AuthController@processFacebookLogin')->name('auth.facebook.login.process');
 
 });
