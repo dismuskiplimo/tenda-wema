@@ -44,6 +44,8 @@
                                 </div>
                             </form>
 
+                            <p class="nobottommargin">Don't have an account? <a href="{{ route('auth.signup') }}">Signup Here</a></p>
+
                             <div class="line line-sm"></div>
 
                             <div class="center">

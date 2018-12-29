@@ -71,6 +71,8 @@
                     </div>
 
                 </form>
+
+                <br><p class="nobottommargin">Already have an account? <a href="{{ route('auth.login') }}">Log in Here</a></p>
             </div>
         </div>
     </div>
