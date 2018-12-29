@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement,QuotesILove, MyInterest, BooksYouShouldRead, WorldIDesire, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment, DonatedItemReview, CancelOrder};
 
-use Image, Auth, Session;
+use Image, Auth, Session, Mail;
 
 use Carbon\Carbon;
 
@@ -18,6 +18,7 @@ class UserController extends Controller
     	$this->middleware('not_closed');
         $this->middleware('check_coins');
         $this->middleware('has_profile');
+        $this->middleware('email_verified');
         $this->initialize();
     }
 

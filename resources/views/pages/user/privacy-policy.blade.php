@@ -22,11 +22,11 @@
 				<p>Effective date: December 27, 2018</p>
 
 
-				<p>tendawema.com ("us", "we", or "our") operates the https://tendawema.com website (the "Service").</p>
+				<p>{{ config('app.name') }} ("us", "we", or "our") operates the {{ config('app.url') }} website (the "Service").</p>
 
-				<p>This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data. Our Privacy Policy  for tendawema.com is based on the <a href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/">Free Privacy Policy Template Website</a>.</p>
+				<p>This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.</p>
 
-				<p>We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible from https://tendawema.com</p>
+				<p>We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, accessible from {{ config('app.url') }}</p>
 
 
 				<h2>Information Collection And Use</h2>
@@ -60,7 +60,7 @@
 
 				<h2>Use of Data</h2>
 				    
-				<p>tendawema.com uses the collected data for various purposes:</p>    
+				<p>{{ config('app.name') }} uses the collected data for various purposes:</p>    
 				<ul>
 				    <li>To provide and maintain the Service</li>
 				    <li>To notify you about changes to our Service</li>
@@ -75,15 +75,15 @@
 				<p>Your information, including Personal Data, may be transferred to — and maintained on — computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from your jurisdiction.</p>
 				<p>If you are located outside KENYA and choose to provide information to us, please note that we transfer the data, including Personal Data, to KENYA and process it there.</p>
 				<p>Your consent to this Privacy Policy followed by your submission of such information represents your agreement to that transfer.</p>
-				<p>tendawema.com will take all steps reasonably necessary to ensure that your data is treated securely and in accordance with this Privacy Policy and no transfer of your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of your data and other personal information.</p>
+				<p>{{ config('app.name') }} will take all steps reasonably necessary to ensure that your data is treated securely and in accordance with this Privacy Policy and no transfer of your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of your data and other personal information.</p>
 
 				<h2>Disclosure Of Data</h2>
 
 				<h3>Legal Requirements</h3>
-				<p>tendawema.com may disclose your Personal Data in the good faith belief that such action is necessary to:</p>
+				<p>{{ config('app.name') }} may disclose your Personal Data in the good faith belief that such action is necessary to:</p>
 				<ul>
 				    <li>To comply with a legal obligation</li>
-				    <li>To protect and defend the rights or property of tendawema.com</li>
+				    <li>To protect and defend the rights or property of {{ config('app.name') }}</li>
 				    <li>To prevent or investigate possible wrongdoing in connection with the Service</li>
 				    <li>To protect the personal safety of users of the Service or the public</li>
 				    <li>To protect against legal liability</li>
@@ -102,7 +102,8 @@
 				        <li>
 				        <p><strong>Google Analytics</strong></p>
 				        <p>Google Analytics is a web analytics service offered by Google that tracks and reports website traffic. Google uses the data collected to track and monitor the use of our Service. This data is shared with other Google services. Google may use the collected data to contextualize and personalize the ads of its own advertising network.</p>
-				        <p>You can opt-out of having made your activity on the Service available to Google Analytics by installing the Google Analytics opt-out browser add-on. The add-on prevents the Google Analytics JavaScript (ga.js, analytics.js, and dc.js) from sharing information with Google Analytics about visits activity.</p>                <p>For more information on the privacy practices of Google, please visit the Google Privacy & Terms web page: <a href="https://policies.google.com/privacy?hl=en">https://policies.google.com/privacy?hl=en</a></p>
+				        <p>You can opt-out of having made your activity on the Service available to Google Analytics by installing the Google Analytics opt-out browser add-on. The add-on prevents the Google Analytics JavaScript (ga.js, analytics.js, and dc.js) from sharing information with Google Analytics about visits activity.</p>                
+				        <p>For more information on the privacy practices of Google, please visit the Google Privacy & Terms web page: <a href="https://policies.google.com/privacy?hl=en">https://policies.google.com/privacy?hl=en</a></p>
 				    </li>
 				                            </ul>
 
@@ -126,8 +127,8 @@
 				<h2>Contact Us</h2>
 				<p>If you have any questions about this Privacy Policy, please contact us:</p>
 				<ul>
-				        <li>By email: info@tendawema.com</li>
-				            <li>By visiting this page on our website: https://tendawema.com/contact-us</li>
+				        <li>By email: {{ config('app.contact_email') }}</li>
+				            <li>By visiting this page on our website: {{ config('app.name') }}/contact-us</li>
 				      
 				        <li>By phone number: +254 735 663 734</li>
 				            <li>By mail: P. O. Box 24721-00100  Nairobi, Kenya</li>

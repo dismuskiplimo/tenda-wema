@@ -27,11 +27,12 @@
 								<div style="background: url({{ custom_asset('images/world-map.png') }}) no-repeat center center; background-size: 100%;">
 									<address>
 										<strong>{{ config('app.name') }}</strong><br>
+										View Park Towers, Utalii Street <br><br>
 										P.o Box 24721-00100<br>
 										Nairobi, Kenya<br>
 									</address>
 									
-									<abbr title="Email Address"><strong>email:</strong></abbr> <a href="mailto:info@tendawema.com">info@tendawema.com</a>
+									<abbr title="Email Address"><strong>email:</strong></abbr> <a href="mailto:{{ config('app.contact_email') }}">{{ config('app.contact_email') }}</a>
 								</div>
 
 							</div>
@@ -170,8 +171,8 @@
 				<div class="container clearfix">
 
 					<div class="col_half">
-						Copyrights &copy; {{ date('Y') }} All Rights Reserved by {{ config('app.domain') }}<br>
-						<div class="copyright-links"><a href="{{ route('terms-and-conditions') }}">Terms and Condiions</a> / <a href="{{ route('privacy-policy') }}">Privacy Policy</a></div>
+						Copyright &copy; {{ date('Y') }} All Rights Reserved by {{ config('app.domain') }}<br>
+						<div class="copyright-links"><a href="{{ route('terms-and-conditions') }}">Terms and Conditions</a> / <a href="{{ route('privacy-policy') }}">Privacy Policy</a></div>
 					</div>
 
 					<div class="col_half col_last tright">
@@ -196,7 +197,7 @@
 
 						<div class="clear"></div>
 
-						<i class="icon-envelope2"></i> info@tendawema.com
+						<i class="icon-envelope2"></i> {{ config('app.contact_email') }}
 					</div>
 
 				</div>

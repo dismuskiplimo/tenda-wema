@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Auth, Session, Config;
+use Auth, Session, Config, Mail;
 
 use Carbon\Carbon;
 

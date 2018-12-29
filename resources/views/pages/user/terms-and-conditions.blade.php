@@ -17,12 +17,12 @@
 	<div class="container">
 		<div class="row  my-50">
 			<div class="col-sm-10 col-sm-offset-1">
-				<h2>Welcome to tendawema.com</h2>
-				<p>These terms and conditions outline the rules and regulations for the use of tendawema.com's Website.</p> <br /> 
-				<span style="text-transform: capitalize;"> tendawema.com</span> is located at:<br /> 
-				<address>P.o Box 24721-00100 Nairobi, Kenya Nairobi, Nairobi<br />Nairobi - 00100, Kenya<br />
+				<h2>Welcome to {{ config('app.name') }}</h2>
+				<p>These terms and conditions outline the rules and regulations for the use of {{ config('app.name') }}'s Website.</p> <br /> 
+				<span style="text-transform: capitalize;"> {{ config('app.name') }}</span> is located at:<br /> 
+				<address>View Park Towers, Utalii Street, Nairobi, Kenya <br >P.o Box 24721-00100 Nairobi, Kenya <br />
 				</address>
-				<p>By accessing this website we assume you accept these terms and conditions in full. Do not continue to use tendawema.com's website 
+				<p>By accessing this website we assume you accept these terms and conditions in full. Do not continue to use {{ config('app.name') }}'s website 
 				if you do not accept all of the terms and conditions stated on this page.</p>
 				<p>The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice
 				and any or all Agreements: “Client”, “You” and “Your” refers to you, the person accessing this website
@@ -34,33 +34,33 @@
 				of provision of the Company’s stated services/products, in accordance with and subject to, prevailing law
 				of Kenya. Any use of the above terminology or other words in the singular, plural,
 				capitalisation and/or he/she or they, are taken as interchangeable and therefore as referring to same.</p><h2>Cookies</h2>
-				<p>We employ the use of cookies. By using tendawema.com's website you consent to the use of cookies 
-				in accordance with tendawema.com’s privacy policy.</p><p>Most of the modern day interactive web sites
+				<p>We employ the use of cookies. By using {{ config('app.name') }}'s website you consent to the use of cookies 
+				in accordance with {{ config('app.name') }}’s privacy policy.</p><p>Most of the modern day interactive web sites
 				use cookies to enable us to retrieve user details for each visit. Cookies are used in some areas of our site
 				to enable the functionality of this area and ease of use for those people visiting. Some of our 
 				affiliate / advertising partners may also use cookies.</p><h2>License</h2>
-				<p>Unless otherwise stated, tendawema.com and/or it’s licensors own the intellectual property rights for
-				all material on tendawema.com. All intellectual property rights are reserved. You may view and/or print
-				pages from https://tendawema.com for your own personal use subject to restrictions set in these terms and conditions.</p>
+				<p>Unless otherwise stated, {{ config('app.name') }} and/or it’s licensors own the intellectual property rights for
+				all material on {{ config('app.name') }}. All intellectual property rights are reserved. You may view and/or print
+				pages from {{ config('app.url') }} for your own personal use subject to restrictions set in these terms and conditions.</p>
 				<p>You must not:</p>
 				<ol>
-					<li>Republish material from https://tendawema.com</li>
-					<li>Sell, rent or sub-license material from https://tendawema.com</li>
-					<li>Reproduce, duplicate or copy material from https://tendawema.com</li>
+					<li>Republish material from {{ config('app.url') }}</li>
+					<li>Sell, rent or sub-license material from {{ config('app.url') }}</li>
+					<li>Reproduce, duplicate or copy material from {{ config('app.url') }}</li>
 				</ol>
-				<p>Redistribute content from tendawema.com (unless content is specifically made for redistribution).</p>
+				<p>Redistribute content from {{ config('app.name') }} (unless content is specifically made for redistribution).</p>
 			<h2>User Comments</h2>
 				<ol>
 					<li>This Agreement shall begin on the date hereof.</li>
 					<li>Certain parts of this website offer the opportunity for users to post and exchange opinions, information,
-					material and data ('Comments') in areas of the website. tendawema.com does not screen, edit, publish
+					material and data ('Comments') in areas of the website. {{ config('app.name') }} does not screen, edit, publish
 					or review Comments prior to their appearance on the website and Comments do not reflect the views or
-					opinions oftendawema.com, its agents or affiliates. Comments reflect the view and opinion of the
-					person who posts such view or opinion. To the extent permitted by applicable laws tendawema.comshall
+					opinions of {{ config('app.name') }}, its agents or affiliates. Comments reflect the view and opinion of the
+					person who posts such view or opinion. To the extent permitted by applicable laws {{ config('app.name') }} shall
 					not be responsible or liable for the Comments or for any loss cost, liability, damages or expenses caused
 					and or suffered as a result of any use of and/or posting of and/or appearance of the Comments on this
 					website.</li>
-					<li>tendawema.comreserves the right to monitor all Comments and to remove any Comments which it considers
+					<li>{{ config('app.name') }} reserves the right to monitor all Comments and to remove any Comments which it considers
 					in its absolute discretion to be inappropriate, offensive or otherwise in breach of these Terms and Conditions.</li>
 					<li>You warrant and represent that:
 						<ol>
@@ -74,7 +74,7 @@
 								or unlawful activity.</li>
 							</ol>
 						</li>
-					<li>You hereby grant to <strong>tendawema.com</strong> a non-exclusive royalty-free license to use, reproduce,
+					<li>You hereby grant to <strong>{{ config('app.name') }}</strong> a non-exclusive royalty-free license to use, reproduce,
 					edit and authorize others to use, reproduce and edit any of your Comments in any and all forms, formats
 					or media.</li>
 				</ol>
@@ -125,7 +125,7 @@
 				site.</p>
 
 				<p>If you are among the organizations listed in paragraph 2 above and are interested in linking to our website,
-				you must notify us by sending an e-mail to <a href="mailto:info@tendawema.com" title="send an email to info@tendawema.com">info@tendawema.com</a>.
+				you must notify us by sending an e-mail to <a href="mailto:{{ config('app.contact_email') }}" title="send an email to {{ config('app.contact_email') }}">{{ config('app.contact_email') }}</a>.
 				Please include your name, your organization name, contact information (such as a phone number and/or e-mail
 				address) as well as the URL of your site, a list of any URLs from which you intend to link to our Web site,
 				and a list of the URL(s) on our site to which you would like to link. Allow 2-3 weeks for a response.</p>
@@ -138,7 +138,7 @@
 					<li>By use of any other description of our Web site or material being linked to that makes sense within the
 						context and format of content on the linking party's site.</li>
 				</ol>
-				<p>No use of tendawema.com’s logo or other artwork will be allowed for linking absent a trademark license
+				<p>No use of {{ config('app.name') }}’s logo or other artwork will be allowed for linking absent a trademark license
 				agreement.</p>
 			<h2>Iframes</h2>
 				<p>Without prior approval and express written permission, you may not create frames around our Web pages or
@@ -176,11 +176,11 @@
 				<p>To the extent that the website and the information and services on the website are provided free of charge,
 				we will not be liable for any loss or damage of any nature.</p>
 			<h2>Simba Coins Purchase via MPESA</h2>
-				<p>tendawema.com only sells Simba Coin to members wishing to increase their Simba Coin balance so as to purchase an item in the Community Shop. Simba Coins SHALL not be sold to members to accelerate their movement through social levels within the Community</p>
+				<p>{{ config('app.name') }} only sells Simba Coin to members wishing to increase their Simba Coin balance so as to purchase an item in the Community Shop. Simba Coins SHALL not be sold to members to accelerate their movement through social levels within the Community</p>
 			<h2>Charges</h2>
-				<p>tendawema.com is a social community that is free to use for individuals, families, businesses and organizations.</p>
+				<p>{{ config('app.name') }} is a social community that is free to use for individuals, families, businesses and organizations.</p>
 			<h2>Simba Coin Value</h2>
-				<p>Simba Coin is valuable only because all members of tendawema.com agree to accept it as a reward for doing good deeds and for purchases within the Community. Simba Coin has no inherent value and is not convertible into real money or pegged to any real currency or commodity. Simba Coin does not exist in paper or coin form.</p>
+				<p>Simba Coin is valuable only because all members of {{ config('app.name') }} agree to accept it as a reward for doing good deeds and for purchases within the Community. Simba Coin has no inherent value and is not convertible into real money or pegged to any real currency or commodity. Simba Coin does not exist in paper or coin form.</p>
 				
 			</div>
 		</div>

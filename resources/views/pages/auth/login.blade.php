@@ -48,9 +48,9 @@
 
                             <div class="center">
                                 <h4 style="margin-bottom: 15px;">or Login with:</h4>
-                                <a href="#" class="button button-rounded si-facebook si-colored">Facebook</a>
+                                <a href="{{ route('auth.facebook.login') }}" class="button button-rounded si-facebook si-colored">Facebook</a>
                                 <span class="hidden-xs">or</span>
-                                <a href="#" class="button button-rounded si-twitter si-colored">Twitter</a>
+                                <a href="{{ route('auth.google.login') }}" class="button button-rounded si-google si-colored">Google</a>
                             </div>
                         </div>
                     </div>

@@ -89,7 +89,8 @@ Route::get('/dashboard', 'FrontController@showDashboard')->name('dashboard');
 Route::get('/account/suspended', 'FrontController@showSuspendedAccount')->name('account.suspended');
 Route::get('/account/closed', 'FrontController@showClosedAccount')->name('account.closed');
 Route::get('/account/inactive', 'FrontController@showInactiveAccount')->name('account.inactive');
-Route::get('/email/unverified', 'FrontController@showEmailUnverified')->name('email.unverified');
+
+Route::get('/email/not-verified', 'FrontController@showEmailNotVerified')->name('email.not-verified');
 
 Route::post('/password/update', 'BackController@updateUserPassword')->name('password.update');
 Route::post('/account/update', 'BackController@updateUserProfile')->name('account.update');
@@ -253,12 +254,23 @@ Route::group(['prefix' => 'admin'], function(){
 Route::group(['prefix' => 'auth'], function(){
 	Route::get('/login', 'AuthController@showLoginForm')->name('auth.login');
 	Route::post('/login', 'AuthController@postLogin');
-
+	
 	Route::get('/signup', 'AuthController@showSignupForm')->name('auth.signup');
 	Route::post('/signup', 'AuthController@postSignup');
 
+	Route::get('/email/{token}/verify', 'AuthController@verifyEmail')->name('auth.email.verify');
+	Route::get('/email/verification/resend', 'AuthController@resendVerificationEmail')->name('auth.email.verification.resend');
+	Route::post('/email/update', 'AuthController@updateUserEmail')->name('auth.email.update');
+
 	Route::get('/logout', 'AuthController@logout')->name('auth.logout');
 	Route::post('/logout', 'AuthController@logout');
+
+	Route::get('/google/login/', 'AuthController@getGoogleLogin')->name('auth.google.login');
+	Route::get('/google/login/callback', 'AuthController@processGoogleLogin')->name('auth.google.login.process');
+
+	Route::get('/facebook/login/', 'AuthController@getFacebookLogin')->name('auth.facebook.login');
+	Route::get('/facebook/login/callback', 'AuthController@processFacebookLogin')->name('auth.facebook.login.process');
+
 });
 
 Route::group(['prefix' => 'payments'], function(){

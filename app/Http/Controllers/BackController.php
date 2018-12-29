@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Hash;
+use Hash, Mail;
 
 use App\{Message,MessageNotification,Notification, ReportType, UserReport, UserReportType, SimbaCoinLog, DonatedItem, Comment, Post};
 

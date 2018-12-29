@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\{DonatedItem, User, Category, GoodDeed, Country, Donation, ContactUs, Post, Comment};
 
+use Mail;
+
 class FrontController extends Controller
 {
     public function __construct(){
@@ -28,6 +30,26 @@ class FrontController extends Controller
     		'nav' 		    => 'donate-item',
             'categories'    => $categories,
     	]);
+    }
+
+    public function showEmailNotVerified(){
+        if(!auth()->check()){
+            return redirect()->route('auth.login');
+        }
+
+        else{
+            $user = auth()->user();
+
+            if(!$user->is_email_verified()){
+                return view('pages.user.email-not-verified',[
+                    'title'         => 'Email not verified',
+                    'nav'           => 'email-not-verified',
+                    'user'          => $user,
+                ]);
+            }else{
+                return redirect()->route('user.dashboard');
+            }
+        }
     }
 
     public function showReportGoodDeedPage(){

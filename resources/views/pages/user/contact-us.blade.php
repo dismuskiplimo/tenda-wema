@@ -76,7 +76,7 @@
 
 						<p>
 							<strong><i class="fa fa-send"></i> Email:</strong> <br>
-							<a href="mailto:info@tendawema.com">info@tendawema.com</a>
+							<a href="mailto:{{ config('app.contact_email') }}">{{ config('app.contact_email') }}</a>
 
 						</p>
 

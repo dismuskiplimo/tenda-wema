@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Image;
+use Image, Mail;
 
 use App\{User, UserPhoto};
 

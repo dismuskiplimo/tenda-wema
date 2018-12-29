@@ -16,7 +16,7 @@ class EmailVerified
     public function handle($request, Closure $next)
     {
         if(!auth()->user()->is_email_verified()){
-            return redirect()->route('email.unverified');
+            return redirect()->route('email.not-verified');
         }
 
         return $next($request);

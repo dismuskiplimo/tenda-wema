@@ -21,6 +21,8 @@ return [
 
     'domain' => env('APP_DOMAIN', 'tendawema.com'),
 
+    'contact_email' => env('APP_CONTACT_EMAIL', 'info@tendawema.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

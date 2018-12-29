@@ -25,9 +25,9 @@ class CreateUsersTable extends Migration
             
             $table->text('about_me')->nullable();
             
-            $table->boolean('email_confirmed')->default(0);
+            $table->boolean('email_verified')->default(0);
             $table->string('email_token')->nullable();
-            $table->timestamp('email_confirmed_at')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
 
             $table->integer('coins')->default(0);
             $table->integer('accumulated_coins')->default(0);
