@@ -206,9 +206,11 @@ class AuthController extends Controller
                 auth()->logout();
             }
 
-            session()->flash('success', 'Email Verified, please log in to continue');
+            auth()->login($user);
 
-            return redirect()->route('auth.login');
+            session()->flash('success', 'Email Verified');
+
+            return redirect()->route('dashboard');
 
         }else{
             session()->flash('error', 'Invalid Token');
@@ -295,100 +297,14 @@ class AuthController extends Controller
 
     public function processGoogleLogin(){
         try{
-            $socialite_user = Socialite::driver('google')->user();
+            $oauth_user = Socialite::driver('google')->user();
 
-            $exists = User::where('email', $socialite_user->email)->first();
-
-            if($exists){
-            
-                auth()->login($exists);
-
-                return redirect()->route('dashboard');
-            }
-
-            $names = explode(' ', $socialite_user->name);
-            
-            $fname = $names[0];
-
-            try{
-                $lname = $names[1];
-            }catch(\Exception $e){
-                $lname = 'Last';
-            }
-
-            $user                             = new User;
-            $user->fname                      = $fname;
-            $user->lname                      = $lname;
-            $user->name                       = $fname . ' ' . $lname;
-            $user->email                      = $socialite_user->email;
-            $user->username                   = strtolower($socialite_user->email);
-            $user->dob                        = null;
-            $user->password                   = bcrypt($socialite_user->email);
-            $user->social_level               = 'MWANZO';
-            $user->social_level_attained_at   = $this->date;
-            $user->last_seen                  = $this->date;
-            $user->email_token                = null;
-            $user->email_verified              = 1;
-            $user->email_verified_at           = $this->date;
-
-            $user->coins                      = config('coins.earn.join_community');
-            $user->accumulated_coins          = $user->coins;
-
-            $this->settings->available_balance->value += $user->coins;
-            $this->settings->available_balance->update();
-
-            $this->settings->coins_in_circulation->value += $user->coins;
-            $this->settings->coins_in_circulation->update();
-
-            $simba_coin_log                        = new SimbaCoinLog;
-            $simba_coin_log->user_id               = $user->id;
-            $simba_coin_log->message               = 'Free Simba Coins for joining ' . config('app.name') . 'Community';
-            $simba_coin_log->type                  = 'credit';
-            $simba_coin_log->coins                 = $user->coins;
-            $simba_coin_log->previous_balance      = 0;
-            $simba_coin_log->current_balance      += $user->coins;
-            $simba_coin_log->save();
-            
-            $user->save();
-
-            $profile = $user->profile;
-
-            if(!$profile){
-                $profile = new Profile;
-                $profile->user_id = $user->id;
-                $profile->save();
-            }
-
-            $user->profile_id = $profile->id;
-
-            $timeline           = new Timeline;
-            $timeline->user_id  = $user->id;
-            $timeline->model_id = $user->id;
-            $timeline->message  = 'Joined ' . config('app.name') . ' Community';
-            $timeline->type     = 'user.register';
-            $timeline->save();
-
-            if($this->settings->mail_enabled->value){
-                $title = 'Welcome to ' . config('app.name');
-
-                try{
-                    \Mail::send('emails.welcome-email', ['title' => $title, 'user' => $user], function ($message) use($user, $title){
-                        $message->subject($title);
-                        $message->to($user->email);
-                    });
-
-                }catch(\Exception $e){
-                    session()->flash('error', $e->getMessage());
-                }
-            }
-
-            auth()->login($user);
-
-            return redirect()->route('dashboard');
-
+            return $this->createUserFromOAuth($oauth_user);
 
         }catch(\Exception $e){
-            return redirect()->back();
+            session()->flash('error', $e->getMessage());
+
+            return redirect()->route('auth.login');
         }
     }
 
@@ -400,13 +316,108 @@ class AuthController extends Controller
 
     public function processFacebookLogin(){
         try{
-            $socialite_user = Socialite::driver('facebook')->user();
+            $oauth_user = Socialite::driver('facebook')->user();
 
-            dd($socialite_user);
-            
+            return $this->createUserFromOAuth($oauth_user);
+
         }catch(\Exception $e){
-            dd($e);
+            session()->flash('error', $e->getMessage());
+
+            return redirect()->route('auth.login');
         }
+    }
+
+    // *********************CREATE USER FROM OAUTH ****************************
+
+    public function createUserFromOAuth($oauth_user){
+        $exists = User::where('email', $oauth_user->email)->first();
+
+        if($exists){
+        
+            auth()->login($exists);
+
+            return redirect()->route('dashboard');
+        }
+
+        $names = explode(' ', $oauth_user->name);
+        
+        $fname = $names[0];
+
+        try{
+            $lname = $names[1];
+        }catch(\Exception $e){
+            $lname = 'Last';
+        }
+
+        $user                             = new User;
+        $user->fname                      = $fname;
+        $user->lname                      = $lname;
+        $user->name                       = $fname . ' ' . $lname;
+        $user->email                      = $oauth_user->email;
+        $user->username                   = strtolower($oauth_user->email);
+        $user->dob                        = null;
+        $user->password                   = bcrypt($oauth_user->email);
+        $user->social_level               = 'MWANZO';
+        $user->social_level_attained_at   = $this->date;
+        $user->last_seen                  = $this->date;
+        $user->email_token                = null;
+        $user->email_verified              = 1;
+        $user->email_verified_at           = $this->date;
+
+        $user->coins                      = config('coins.earn.join_community');
+        $user->accumulated_coins          = $user->coins;
+
+        $this->settings->available_balance->value += $user->coins;
+        $this->settings->available_balance->update();
+
+        $this->settings->coins_in_circulation->value += $user->coins;
+        $this->settings->coins_in_circulation->update();
+
+        $simba_coin_log                        = new SimbaCoinLog;
+        $simba_coin_log->user_id               = $user->id;
+        $simba_coin_log->message               = 'Free Simba Coins for joining ' . config('app.name') . 'Community';
+        $simba_coin_log->type                  = 'credit';
+        $simba_coin_log->coins                 = $user->coins;
+        $simba_coin_log->previous_balance      = 0;
+        $simba_coin_log->current_balance      += $user->coins;
+        $simba_coin_log->save();
+        
+        $user->save();
+
+        $profile = $user->profile;
+
+        if(!$profile){
+            $profile = new Profile;
+            $profile->user_id = $user->id;
+            $profile->save();
+        }
+
+        $user->profile_id = $profile->id;
+
+        $timeline           = new Timeline;
+        $timeline->user_id  = $user->id;
+        $timeline->model_id = $user->id;
+        $timeline->message  = 'Joined ' . config('app.name') . ' Community';
+        $timeline->type     = 'user.register';
+        $timeline->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = 'Welcome to ' . config('app.name');
+
+            try{
+                \Mail::send('emails.welcome-email', ['title' => $title, 'user' => $user], function ($message) use($user, $title){
+                    $message->subject($title);
+                    $message->to($user->email);
+                });
+
+            }catch(\Exception $e){
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
+        auth()->login($user);
+
+        return redirect()->route('dashboard');
     }
 
 }

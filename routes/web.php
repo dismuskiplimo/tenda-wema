@@ -269,6 +269,7 @@ Route::group(['prefix' => 'auth'], function(){
 	Route::get('/google/login/callback', 'AuthController@processGoogleLogin')->name('auth.google.login.process');
 
 	Route::get('/facebook/login/', 'AuthController@getFacebookLogin')->name('auth.facebook.login');
+	
 	Route::get('/facebook/login/callback', 'AuthController@processFacebookLogin')->name('auth.facebook.login.process');
 
 });
