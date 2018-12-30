@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{DonatedItem, User, Category, GoodDeed, Country, Donation, ContactUs, Post, Comment};
+use App\{DonatedItem, User, Category, GoodDeed, Country, Donation, ContactUs, Post, Comment, ErrorLog};
 
 use Mail;
 
@@ -119,7 +119,7 @@ class FrontController extends Controller
 
             $where_like = '%' . $request->q . '%';
 
-            $users = User::where('usertype', 'USER')->where('is_admin', 0)->where('closed', 0)->where('name', 'like', $where_like)->orWhere('username', 'like', $where_like)->orderBy('name', 'ASC')->paginate(50);
+            $users = User::where('usertype', 'USER')->where('is_admin', 0)->where('closed', 0)->where('name', 'like', $where_like)->orderBy('name', 'ASC')->paginate(50);
             
             $donated_items = DonatedItem::where('name', 'like', $where_like)->where('disputed', 0)->where('disapproved', 0)->orderBy('name', 'ASC')->paginate(50);
 

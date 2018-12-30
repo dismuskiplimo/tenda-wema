@@ -8,7 +8,7 @@ use Auth, Session, Config, Mail;
 
 use Carbon\Carbon;
 
-use App\{Paypal_Transaction, Transaction, MpesaTransaction, Setting, Currency, Notification, MpesaRequest, AppLog, SimbaCoinLog, User, MpesaRaw};
+use App\{Paypal_Transaction, Transaction, MpesaTransaction, Setting, Currency, Notification, MpesaRequest, AppLog, SimbaCoinLog, User, MpesaRaw, ErrorLog};
 
 use \PayPal\Rest\ApiContext;
 
@@ -241,6 +241,8 @@ class PaymentsController extends Controller
         $paypal->setConfig($this->paypal_config);
 
         $user = auth()->user();
+
+        $medium = $this->settings->paypal_mode->value == 'live' ? 'Paypal' : 'Paypal Sandbox';
         
 
         if($request->has('success') && (bool)$request->success == true){
@@ -298,7 +300,7 @@ class PaymentsController extends Controller
 
                 $simba_coin_log                        = new SimbaCoinLog;
                 $simba_coin_log->user_id               = $user->id;
-                $simba_coin_log->message               = $coins . ' Simba Coins Purchased From ' . $this->paypal_mode == "sandbox" ? 'Paypal Sandbox' : 'Paypal';
+                $simba_coin_log->message               = $coins . ' Simba Coins Purchased From ' . $medium;
                 $simba_coin_log->type                  = 'credit';
                 $simba_coin_log->coins                 = $coins;
                 $simba_coin_log->previous_balance      = $user->coins - $coins ;
@@ -318,6 +320,16 @@ class PaymentsController extends Controller
                 $notification->notification_type    = 'coins.purchased';
                 $notification->system_message       = 1;
                 $notification->message              = ucfirst($coins . ' Simba Coins Purchased By ' . $user->name);
+                $notification->save();
+
+                $notification                       = new Notification;
+                $notification->to_id                = $user->id;
+                $notification->from_id              = null;
+                $notification->model_id             = $paypal_transaction->id;
+                $notification->notification_type    = 'coins.purchased';
+                $notification->system_message       = 1;
+                $notification->from_admin           = 1;
+                $notification->message              = ucfirst($coins . ' Simba Coins Purchase Via ' . $medium);
                 $notification->save();
 
                 if($this->settings->mail_enabled->value){
@@ -503,6 +515,8 @@ class PaymentsController extends Controller
 
         $coins  = $request->coins;
 
+        $medium = $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA Sandbox';
+
         try {
             list($header, $body) = explode("\r\n\r\n", $request, 2);
 
@@ -536,11 +550,11 @@ class PaymentsController extends Controller
                     $transaction->coins             = $coins;
                     $transaction->transaction_code  = $details['MpesaReceiptNumber'];; 
                     $transaction->amount            = (float)$details['Amount'];
-                    $transaction->medium            = $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX';
+                    $transaction->medium            = $medium;
                     $transaction->status            = 'COMPLETE';
                     $transaction->currency          = $this->settings->system_currency->value;
                     $transaction->type              = 'INCOMING';
-                    $transaction->description       = number_format($coins) . ' Simba Coin(s) Purchase via ' . $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX';
+                    $transaction->description       = number_format($coins) . ' Simba Coin(s) Purchase via ' . $medium;
                     $transaction->completed_at      = $this->date;
                     $transaction->save();
 
@@ -567,7 +581,7 @@ class PaymentsController extends Controller
 
                     $simba_coin_log                        = new SimbaCoinLog;
                     $simba_coin_log->user_id               = $user->id;
-                    $simba_coin_log->message               = $coins . ' Simba Coins Purchased using ' . $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX';
+                    $simba_coin_log->message               = $coins . ' Simba Coins Purchased using ' . $medium;
                     $simba_coin_log->type                  = 'credit';
                     $simba_coin_log->coins                 = $coins;
                     $simba_coin_log->previous_balance      = $user->coins - $coins ;
@@ -582,7 +596,7 @@ class PaymentsController extends Controller
                     $notification->model_id             = null;
                     $notification->notification_type    = 'coins.purchased';
                     $notification->system_message       = 1;
-                    $notification->message              = ucfirst($coins . ' Simba Coins Purchased By ' . $user->name . ' via ' . $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX');
+                    $notification->message              = ucfirst($coins . ' Simba Coins Purchased By ' . $user->name . ' via ' . $medium);
                     $notification->save();
 
                     $notification                       = new Notification;
@@ -592,7 +606,7 @@ class PaymentsController extends Controller
                     $notification->model_id             = null;
                     $notification->notification_type    = 'coins.purchased';
                     $notification->system_message       = 1;
-                    $notification->message              = ucfirst($coins . ' Simba Coins Purchase via ' . $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA SANDBOX');
+                    $notification->message              = ucfirst($coins . ' Simba Coins Purchase via ' . $medium);
                     $notification->save();
 
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement,QuotesILove, MyInterest, BooksYouShouldRead, WorldIDesire, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment, DonatedItemReview, CancelOrder};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement,QuotesILove, MyInterest, BooksYouShouldRead, WorldIDesire, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment, DonatedItemReview, CancelOrder, ErrorLog};
 
 use Image, Auth, Session, Mail;
 
@@ -466,7 +466,7 @@ class UserController extends Controller
 
                         Image::make($image)->orientate()->fit(769,433)->save($slide_path);
 
-                        Image::make($image)->orientate()->resize(200,null, function($constraint){
+                        Image::make($image)->orientate()->resize(440, null, function($constraint){
                             return $constraint->aspectRatio();
                         })->save($thumbnail_path);
 
@@ -755,8 +755,8 @@ class UserController extends Controller
             'about_me' => 'required',
         ]);
 
-        if(str_word_count($request->about_me) < 300){
-            session()->flash('error', 'Sorry, you need a minimum of 300 words for your bio');
+        if(str_word_count($request->about_me) < 200){
+            session()->flash('error', 'Sorry, you need a minimum of 200 words for your bio');
 
             return redirect()->back()->withInput();
         }

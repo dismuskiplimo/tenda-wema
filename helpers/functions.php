@@ -234,10 +234,10 @@
 			if(file_exists($file)){
 				return custom_asset('images/uploads/donated_items/thumbnails/' . $image);
 			}else{
-				return custom_asset('images/product.png');	
+				return custom_asset('images/product-1.png');	
 			}
 		}else{
-			return custom_asset('images/product.png');
+			return custom_asset('images/product-1.png');
 		}
 	}
 

@@ -135,7 +135,7 @@
 											</li>
 
 											<li>
-												<a href="https://twitter.com/"  target="_blank"><i class="fa fa-twitter mr-5"></i> Follow us on Twitter</a>
+												<a href="https://twitter.com/tendawema_com"  target="_blank"><i class="fa fa-twitter mr-5"></i> Follow us on Twitter</a>
 											</li>
 
 											<li>
@@ -182,7 +182,7 @@
 								<i class="icon-facebook"></i>
 							</a>
 
-							<a href="https://twitter.com/"  target="_blank" class="social-icon si-small si-borderless si-twitter">
+							<a href="https://twitter.com/tendawema_com"  target="_blank" class="social-icon si-small si-borderless si-twitter">
 								<i class="icon-twitter"></i>
 								<i class="icon-twitter"></i>
 							</a>

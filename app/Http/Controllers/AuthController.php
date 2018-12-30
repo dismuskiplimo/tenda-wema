@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, Profile, SimbaCoinLog, Timeline};
+use App\{User, Profile, SimbaCoinLog, Timeline, ErrorLog};
 
 Use Auth, Session, Mail, Socialite;
 

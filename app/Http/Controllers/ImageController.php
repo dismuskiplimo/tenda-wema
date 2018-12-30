@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use Image, Mail;
 
-use App\{User, UserPhoto};
+use App\{User, UserPhoto, ErrorLog};
 
 class ImageController extends Controller
 {

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use Hash, Mail;
 
-use App\{Message,MessageNotification,Notification, ReportType, UserReport, UserReportType, SimbaCoinLog, DonatedItem, Comment, Post};
+use App\{Message,MessageNotification,Notification, ReportType, UserReport, UserReportType, SimbaCoinLog, DonatedItem, Comment, Post, ErrorLog};
 
 class BackController extends Controller
 {
