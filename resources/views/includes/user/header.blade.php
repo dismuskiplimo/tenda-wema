@@ -4,9 +4,10 @@
 <head>
 
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<meta name="author" content="SemiColonWeb" />
+	<meta name="author" content="Dismus Kiplimo (dismuskiplimo@gmail.com)" />
 
 	<meta name = "csrf-token" content="{{ csrf_token() }}">
+	<meta name = "description" content="{{ config('app.name') }} | The Simba Coin Community for Good Deeds">
 
 	<!-- Stylesheets
 	============================================= -->

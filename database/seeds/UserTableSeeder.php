@@ -36,7 +36,9 @@ class UserTableSeeder extends Seeder
         		'accumulated_coins' 			=> config('coins.earn.join_community'),
         		'dob' 							=> '1992-07-10',
         		'usertype' 						=> 'ADMIN',
-        		'is_admin' 						=> '1',
+                'is_admin'                      => '1',
+                'email_verified'                => '1',
+        		'email_verified_at'   			=> $this->date,
         	],
         ];
 
@@ -54,6 +56,8 @@ class UserTableSeeder extends Seeder
         		'coins' 						=> config('coins.earn.join_community'),
         		'accumulated_coins' 			=> config('coins.earn.join_community'),
         		'dob' 							=> '1992-07-10',
+                'email_verified'                => '1',
+                'email_verified_at'             => $this->date,
         	],
 
         	[
@@ -69,6 +73,8 @@ class UserTableSeeder extends Seeder
         		'coins' 						=> config('coins.earn.join_community') + 300,
         		'accumulated_coins' 			=> config('coins.earn.join_community') + 300,
         		'dob' 							=> '1992-07-10',
+                'email_verified'                => '1',
+                'email_verified_at'             => $this->date,
         	],
 
         	[
@@ -84,6 +90,8 @@ class UserTableSeeder extends Seeder
         		'coins' 						=> config('coins.earn.join_community'),
         		'accumulated_coins' 			=> config('coins.earn.join_community'),
         		'dob' 							=> '1992-07-10',
+                'email_verified'                => '1',
+                'email_verified_at'             => $this->date,
         	],
         ];
 

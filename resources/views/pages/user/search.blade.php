@@ -24,6 +24,8 @@
 								
 						</div>
 					</div>
+					
+				</form>
 
 					@if(!$empty)
 						@if($total)
@@ -135,7 +137,7 @@
 					@else
 						<p class="text-center mt-20">Type something to search</p>
 					@endif
-				</form>
+				
 			</div>
 		</div>
 	</div>

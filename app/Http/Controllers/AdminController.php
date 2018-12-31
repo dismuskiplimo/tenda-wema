@@ -41,6 +41,36 @@ class AdminController extends Controller
     	]);
     }
 
+    public function showSearch(Request $request){
+        $donated_items  = null;
+        $users          = null;
+        $empty          = true;
+        $total          = 0;
+
+        if($request->has('q') && !empty($request->q)){
+            $empty = false;
+
+            $where_like = '%' . $request->q . '%';
+
+            $users = User::where('usertype', 'USER')->where('is_admin', 0)->where('closed', 0)->where('name', 'like', $where_like)->orWhere('username', 'like', $where_like)->orderBy('name', 'ASC')->paginate(50);
+            
+            $donated_items = DonatedItem::where('name', 'like', $where_like)->where('disputed', 0)->where('disapproved', 0)->orderBy('name', 'ASC')->paginate(50);
+
+            $total = $users->total() + $donated_items->total();
+
+        }
+
+        return view('pages.admin.search',[
+            'title'         => 'Search',
+            'nav'           => 'admin.search',
+            'users'         => $users,
+            'donated_items' => $donated_items,
+            'empty'         => $empty,
+            'request'       => $request,
+            'total'         => $total,
+        ]);
+    }
+
 
     // ********************SITE SETTINGS *****************************************
 

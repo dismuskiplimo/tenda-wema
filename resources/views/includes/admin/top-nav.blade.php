@@ -24,7 +24,7 @@
 
             <li>
                 <form role="search" class="app-search hidden-xs" action="{{ route('admin.search') }}" method="GET">
-                    <input type="text" placeholder="Search..." class="form-control"> 
+                    <input type="text" name = "q" placeholder="Search..." class="form-control"> 
                     <a href="">
                         <i class="fa fa-search"></i>
                     </a> 

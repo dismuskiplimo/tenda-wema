@@ -133,7 +133,7 @@
 
 	            			<tr>
 	            				<th>About User</th>
-	            				<td>{{ $user->about_me }}</td>
+	            				<td>{!! clean($user->about_me) !!}</td>
 	            			</tr>
 
 	            			<tr>
