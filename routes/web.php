@@ -174,6 +174,11 @@ Route::group(['prefix' => 'admin'], function(){
 	
 	Route::get('/notifications', 'AdminController@showNotifications')->name('admin.notifications');
 
+	Route::get('/search', 'AdminController@showSearch')->name('admin.search');
+
+	Route::get('/notifications/mark-all-as-read', 'AdminController@markAllNotificationsAsRead')->name('admin.notifications.mark-all-as-read');
+	Route::get('/notifications/{id}/mark-as-read', 'AdminController@markSingleNotificationAsRead')->name('admin.notifications.mark-single-as-read');
+
 	// Deeds
 	Route::get('/deeds/{type}', 'AdminController@showDeeds')->name('admin.deeds');
 	Route::get('/deeds/{id}/view', 'AdminController@showDeed')->name('admin.deed');

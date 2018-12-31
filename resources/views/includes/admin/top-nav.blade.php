@@ -23,7 +23,7 @@
             </li>
 
             <li>
-                <form role="search" class="app-search hidden-xs">
+                <form role="search" class="app-search hidden-xs" action="{{ route('admin.search') }}" method="GET">
                     <input type="text" placeholder="Search..." class="form-control"> 
                     <a href="">
                         <i class="fa fa-search"></i>
@@ -35,15 +35,18 @@
         <ul class="nav navbar-top-links navbar-right pull-right">
             <li class="dropdown"> 
                 <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" aria-expanded="false"><i class="icon-envelope"></i>
-                    <div class="notify">
-                        <span class="heartbit"></span>
-                        <span class="point"></span>
-                    </div>
+                    @if(\App\Message::where('support', 1)->where('from_admin', 0)->where('read', 0)->count())
+                         <div class="notify">
+                            <span class="heartbit"></span>
+                            <span class="point"></span>
+                        </div>     
+                    @endif
                 </a>
         <ul class="dropdown-menu mailbox animated bounceInDown">
             <li>
                 <div class="drop-title">You have <span class="admin-message-count">{{ \App\Message::where('support', 1)->where('from_admin', 0)->where('read', 0)->count() }}</span> new messages</div>
             </li>
+
             <li>
                 <div class="message-center">
                     @php
@@ -88,19 +91,41 @@
     </li>
     
     <!-- /.dropdown -->
-    <li class="dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" aria-expanded="false"><i class="fa fa-globe"></i>
-<div class="notify"><span class="heartbit"></span><span class="point"></span></div>
-</a>
+    <li class="dropdown"> 
+        <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#" aria-expanded="false">
+            <i class="fa fa-globe"></i>
+            @if(\App\Notification::where('to_id', 1)->where('read', 0)->count())
+
+                <div class="notify">
+                    <span class="heartbit"></span>
+                    <span class="point"></span>
+                </div>
+
+            @endif
+        </a>
+        
+        
+
         <ul class="dropdown-menu dropdown-tasks animated slideInUp">
             <li>
-                <a href="#">
-                    <div>
-                        <p> <strong>Task 1</strong> <span class="pull-right text-muted">40% Complete</span> </p>
-                        <div class="progress progress-striped active">
-                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"> <span class="sr-only">40% Complete (success)</span> </div>
-                        </div>
-                    </div>
-                </a>
+                <div class="drop-title">You have <span class="admin-notification-count">{{ \App\Notification::where('to_id', 1)->where('read', 0)->count() }}</span> new notifications</div>
+            </li>
+
+
+            <li>
+                @if(\App\Notification::where('to_id', 1)->where('read', 0)->count())
+                    @foreach(\App\Notification::where('to_id', 1)->where('read', 0)->orderBy('created_at', 'DESC')->limit(5)->get() as $noti)
+                        <a href="#">
+                            <div>
+                                <p>{{ $notification->message }} <br> <span class="text-right text-muted">{{ simple_datetime($notification->created_at) }}</span></p>
+
+
+                            </div>
+                        </a>
+                    @endforeach
+                @endif
+
+                
             </li>
            
             <li class="divider"></li>
