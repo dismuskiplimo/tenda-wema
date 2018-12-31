@@ -23,7 +23,32 @@
 		  <!-- Tab panes -->
 		  <div class="tab-content">
 		    <div role="tabpanel" class="tab-pane fade in active" id="site-settings">
-		    	
+		    	<form action="{{ route('admin.site-settings') }}" method="POST">
+		    		@csrf
+
+		    		<div class="form-group">
+		    			<label for="">Simba Coin Value</label>
+		    			<input type="text"  name="coin_value" class="form-control" value="{{ $settings->coin_value->value }}">
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">Exchange Rate</label>
+		    			<input type="text"  name="exchange_rate" class="form-control" value="{{ $settings->exchange_rate->value }}">
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">Currency</label>
+		    			<select name="system_currency" id="" class="form-control" required="">
+		    				@foreach($currencies as $currency)
+								<option value="{{ $currency->code }}" {{ $currency->code == $settings->system_currency->value ? 'selected' : '' }}>{{ $currency->code }}</option>
+		    				@endforeach
+		    			</select>
+		    			
+		    		</div>
+
+		    		<button class="btn btn-info" type="submit">UPDATE SITE SETTINGS</button>
+
+		    	</form>
 		    </div>
 		    
 		    <div role="tabpanel" class="tab-pane fade" id="email-settings">

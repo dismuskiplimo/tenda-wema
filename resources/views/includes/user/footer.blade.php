@@ -63,7 +63,7 @@
 						<div class="col_one_third col_last">
 
 							<div class="widget clearfix">
-								<h4>Latest Posts</h4>
+								{{-- <h4>Latest Posts</h4>
 
 								@php
 									$posts = \App\Post::orderBy('created_at','DESC')->limit(3)->get();
@@ -92,7 +92,12 @@
 									
 								@else
 									<p>No Recent Posts</p>
-								@endif
+								@endif --}}
+
+								<div class="col-md-12 bottommargin-sm">
+									<div class="counter counter-small"><span data-from="0" data-to="{{ App\GoodDeed::where('approved', 1)->count() }}" data-refresh-interval="80" data-speed="3000" data-comma="true"></span></div>
+									<h5 class="nobottommargin">Good Deeds</h5>
+								</div>
 
 								
 							</div>

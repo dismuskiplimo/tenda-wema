@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, MpesaTransaction, Donation, ContactUs, Paypal_Transaction, ReportType, UserReport, UserReportType, DonatedItemReview, CancelOrder, ErrorLog};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, MpesaTransaction, Donation, ContactUs, Paypal_Transaction, ReportType, UserReport, UserReportType, DonatedItemReview, CancelOrder, ErrorLog, Currency};
 
 use Image, Auth, Session, Mail;
 
@@ -40,6 +40,80 @@ class AdminController extends Controller
     		'nav'	=> 'admin.account-settings',
     	]);
     }
+
+
+    // ********************SITE SETTINGS *****************************************
+
+    public function showSiteSettings(){
+        $currencies = Currency::orderBy('currency', 'ASC')->get();
+        
+        return view('pages.admin.site-settings', [
+            'title'         => 'Site Settings',
+            'nav'           => 'admin.site-settings',
+            'settings'      => $this->settings,
+            'currencies'    => $currencies,
+        ]);
+    }
+
+    public function updateSiteSettings(Request $request){
+        foreach ($request->all() as $field => $value) {
+            
+            if($field != '_token'){
+                if(isset($this->settings->{ $field }) ){
+                    $this->settings->{ $field }->value = $value;
+                    $this->settings->{ $field }->update();
+                } 
+            }
+        }
+
+        session()->flash('success', 'Settings Updated');
+
+        return redirect()->back();
+    }
+
+
+    // **********************END OF SITE SETTINGS ***********************************
+
+    // ******************************NOTIFICATIONS *********************************
+
+    public function showNotifications(){
+        $notifications = Notification::where('to_id', null)->orderBy('created_at', 'DESC')->paginate(50);
+
+        return view('pages.admin.notifications', [
+            'title'         => 'Notifications',
+            'nav'           => 'admin.notifications',
+            'notifications' => $notifications,
+        ]);
+    }
+
+    public function markAllNotificationsAsRead(){
+        $notifications = Notification::where('to_id', null)->where('read', 0)->get();
+
+        foreach($notifications as $notification){
+            $notification->read     = 1;
+            $notification->read_at  = $this->date;
+            $notification->update();
+        }
+
+        return redirect()->back();
+    }
+
+    public function markSingleNotificationAsRead($id){
+        $notification = Notification::find($id);
+
+        if($notification){
+            if(!$notification->read){
+                $notification->read     = 1; 
+                $notification->read_at  = $this->date();
+                $notification->update();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    // ************************END OF NOTIFICATIONS ********************************
+
 
     //**************************DEEDS****************************************
 
@@ -1451,60 +1525,6 @@ class AdminController extends Controller
     }
 
     //*********************END OF MESSAGES*****************************************
-
-    // ********************SITE SETTINGS *****************************************
-
-    public function showSiteSettings(){
-    	
-    	return view('pages.admin.site-settings', [
-    		'title'		=> 'Site Settings',
-    		'nav'		=> 'admin.site-settings',
-    		'settings'	=> $this->settings,
-    	]);
-    }
-
-
-    // **********************END OF SITE SETTINGS ***********************************
-
-    // ******************************NOTIFICATIONS *********************************
-
-    public function showNotifications(){
-    	$notifications = Notification::where('to_id', null)->orderBy('created_at', 'DESC')->paginate(50);
-
-    	return view('pages.admin.notifications', [
-    		'title'		    => 'Notifications',
-    		'nav'		    => 'admin.notifications',
-            'notifications' => $notifications,
-    	]);
-    }
-
-    public function markAllNotificationsAsRead(){
-        $notifications = Notification::where('to_id', null)->where('read', 0)->get();
-
-        foreach($notifications as $notification){
-            $notification->read     = 1;
-            $notification->read_at  = $this->date;
-            $notification->update();
-        }
-
-        return redirect()->back();
-    }
-
-    public function markSingleNotificationAsRead($id){
-        $notification = Notification::find($id);
-
-        if($notification){
-            if(!$notification->read){
-                $notification->read     = 1; 
-                $notification->read_at  = $this->date();
-                $notification->update();
-            }
-        }
-
-        return redirect()->back();
-    }
-
-    // ************************END OF NOTIFICATIONS ********************************
 
     
     // **************************SUPPORT THE CAUSE *********************************

@@ -48,7 +48,7 @@
 									<small>{{ simple_datetime($deed->created_at) }}</small>
 								</p>
 
-								<p class="mb-0 text-right">
+								<p class="nobottommargin text-right">
 									<a href="{{ route('good-deed.show', ['slug' => $deed->slug]) }}" class="btn btn-sm btn-info">See More</a>
 								</p>
 								

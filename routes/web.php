@@ -249,6 +249,7 @@ Route::group(['prefix' => 'admin'], function(){
 
 	//Site Settings
 	Route::get('/site-settings', 'AdminController@showSiteSettings')->name('admin.site-settings');
+	Route::post('/site-settings', 'AdminController@updateSiteSettings');
 
 	// Reports 
 	Route::get('/reports/{type}', 'AdminController@getReportedUsers')->name('admin.users.reported');
