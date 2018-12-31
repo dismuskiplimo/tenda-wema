@@ -54,9 +54,99 @@
 		    			</select>
 		    			
 		    		</div>
-		    		
 
-		    		<button class="btn btn-info" type="submit">UPDATE SITE SETTINGS</button>
+		    		<div class="form-group">
+		    			<label for="">Settings to be used?</label>
+
+		    			<select name="mail_db_preferred" class="form-control">
+		    				<option value="1" {{ $settings->mail_db_preferred->value == 1 ? 'selected' : '' }}>LOAD DB SETTINGS</option>
+		    				<option value="0" {{ $settings->mail_db_preferred->value == 0 ? 'selected' : '' }}>USE .ENV SETTINGS</option>
+		    			</select>
+		    			
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">Email Driver</label>
+
+		    			<select name="mail_driver" class="form-control">
+		    				<option value="smtp" {{ $settings->mail_driver->value == 'smtp' ? 'selected' : '' }}>SMTP</option>
+		    				<option value="sparkpost" {{ $settings->mail_driver->value == 'sparkpost' ? 'selected' : '' }}>SPARKPOST</option>
+		    				<option value="mailgun" {{ $settings->mail_driver->value == 'mailgun' ? 'selected' : '' }}>NO, MAILGUN</option>
+		    			</select>
+		    			
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">Email Host</label>
+		    			<input type="text"  name="mail_host" class="form-control" value="{{ $settings->mail_host->value }}">
+		    		</div>	
+
+		    		<div class="form-group">
+		    			<label for="">Email Port</label>
+		    			<input type="number"  name="mail_port" class="form-control" value="{{ $settings->mail_port->value }}">
+		    		</div>	
+
+		    		<div class="form-group">
+		    			<label for="">Email Username</label>
+		    			<input type="text"  name="mail_username" class="form-control" value="{{ $settings->mail_username->value }}">
+		    		</div>	
+
+		    		<div class="form-group">
+		    			<label for="">Email Password</label>
+		    			<input type="text"  name="mail_password" class="form-control" value="{{ $settings->mail_password->value }}">
+		    		</div>	
+
+		    		<div class="form-group">
+		    			<label for="">Email Encryption</label>
+
+		    			<select name="mail_driver" class="form-control">
+		    				<option value="" {{ $settings->mail_encryption->value == null ? 'selected' : '' }}>NONE</option>
+		    				<option value="tls" {{ $settings->mail_encryption->value == 'tls' ? 'selected' : '' }}>TLS</option>
+		    				<option value="ssl" {{ $settings->mail_encryption->value == 'ssl' ? 'selected' : '' }}>SSL</option>
+		    			</select>
+		    			
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">Email From Address</label>
+		    			<input type="email"  name="mail_from_address" class="form-control" value="{{ $settings->mail_from_address->value }}">
+		    		</div>	
+
+		    		<div class="form-group">
+		    			<label for="">Email From Name</label>
+		    			<input type="text"  name="mail_from_name" class="form-control" value="{{ $settings->mail_from_name->value }}">
+		    		</div>
+
+		    		<h4>SPARKPOST SETTINGS</h4>	
+
+		    		<div class="form-group">
+		    			<label for="">Sparkpost Secret</label>
+		    			<input type="text"  name="sparkpost_secret" class="form-control" value="{{ $settings->sparkpost_secret->value }}">
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">Sparkpost Endpoint</label>
+		    			<input type="text"  name="sparkpost_endpoint" class="form-control" value="{{ $settings->sparkpost_endpoint->value }}">
+		    		</div>	
+
+		    		<h4>MAILGUN SETTINGS</h4>
+
+		    		<div class="form-group">
+		    			<label for="">Mailgun Secret</label>
+		    			<input type="text"  name="mailgun_secret" class="form-control" value="{{ $settings->mailgun_secret->value }}">
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">Mailgun Domain</label>
+		    			<input type="text"  name="mailgun_domain" class="form-control" value="{{ $settings->mailgun_domain->value }}">
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">Mailgun Endpoint</label>
+		    			<input type="text"  name="mailgun_endpoint" class="form-control" value="{{ $settings->mailgun_endpoint->value }}">
+		    		</div>
+
+		    		<button class="btn btn-info" type="submit">UPDATE EMAIL SETTINGS</button>
 
 		    	</form>
 		    </div>

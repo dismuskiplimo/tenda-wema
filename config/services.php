@@ -15,8 +15,9 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
+        'domain'    => env('MAILGUN_DOMAIN'),
+        'secret'    => env('MAILGUN_SECRET'),
+        'endpoint'  => env('MAILGUN_ENDPOINT'),
     ],
 
     'ses' => [
@@ -27,6 +28,9 @@ return [
 
     'sparkpost' => [
         'secret' => env('SPARKPOST_SECRET'),
+        'options' => [
+            'endpoint' => env('SPARKPOST_ENDPOINT');
+        ]
     ],
 
     'stripe' => [

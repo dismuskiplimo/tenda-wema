@@ -40,6 +40,25 @@ class UserTableSeeder extends Seeder
                 'email_verified'                => '1',
         		'email_verified_at'   			=> $this->date,
         	],
+
+            [
+                'fname'                         => 'Root',
+                'lname'                         => 'User',
+                'name'                          => 'Root User',
+                'email'                         => 'root@mail.com',
+                'username'                      => 'root',
+                'password'                      => bcrypt('@Welcome123'),
+                'social_level'                  => 'MWANZO',
+                'social_level_attained_at'      => $this->date,
+                'last_seen'                     => $this->date,
+                'coins'                         => config('coins.earn.join_community'),
+                'accumulated_coins'             => config('coins.earn.join_community'),
+                'dob'                           => '1992-07-10',
+                'usertype'                      => 'ADMIN',
+                'is_admin'                      => '1',
+                'email_verified'                => '1',
+                'email_verified_at'             => $this->date,
+            ],
         ];
 
         $users = [

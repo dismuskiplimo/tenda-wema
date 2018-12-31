@@ -36,12 +36,111 @@ class SettingTableSeeder extends Seeder
         		'updated_at'	=> $this->date,
         	],
 
+            [
+                'name'          => 'mail_enabled',
+                'value'         => 1,
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mail_db_preferred',
+                'value'         => 0,
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
         	[
-        		'name'			=> 'mail_enabled',
-        		'value'			=> '1',
+        		'name'			=> 'mail_driver',
+        		'value'			=> '',
         		'created_at'	=> $this->date,
         		'updated_at'	=> $this->date,
         	],
+
+            [
+                'name'          => 'mail_host',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mail_port',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mail_username',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mail_password',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mail_encryption',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mail_from_address',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mail_from_name',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'sparkpost_secret',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ], 
+
+            [
+                'name'          => 'sparkpost_endpoint',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mailgun_domain',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mailgun_secret',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mailgun_endpoint',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
 
             [
                 'name'          => 'paypal_enabled',

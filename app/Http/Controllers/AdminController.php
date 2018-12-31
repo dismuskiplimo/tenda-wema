@@ -90,8 +90,17 @@ class AdminController extends Controller
             
             if($field != '_token'){
                 if(isset($this->settings->{ $field }) ){
-                    $this->settings->{ $field }->value = $value;
+                    if(empty($value)){
+                        $this->settings->{ $field }->value = null;
+                    }else{
+
+                        $this->settings->{ $field }->value = $value;
+
+                    }
+
                     $this->settings->{ $field }->update();
+                    
+                    
                 } 
             }
         }
