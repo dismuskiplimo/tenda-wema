@@ -425,6 +425,8 @@ class UserController extends Controller
                     'images.*' => 'mimes:jpg,jpeg,png,bmp|min:0.001|max:40960',
                 ]);
             }catch(\Exception $e){
+                $this->log_error($e);
+
                 session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
                 
                 return redirect()->back();
@@ -480,6 +482,8 @@ class UserController extends Controller
                         $donated_item_image->save();
 
                     } catch(\Exception $e){
+                        $this->log_error($e);
+
                         session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
                     }
                 }
@@ -554,6 +558,8 @@ class UserController extends Controller
                 });
 
             }catch(\Exception $e){
+                $this->log_error($e);
+
                 session()->flash('error', $e->getMessage());
             }
         }
@@ -613,6 +619,8 @@ class UserController extends Controller
                     });
 
                 }catch(\Exception $e){
+                    $this->log_error($e);
+
                     session()->flash('error', $e->getMessage());
                 }
             }
@@ -705,6 +713,8 @@ class UserController extends Controller
                     });
 
                 }catch(\Exception $e){
+                    $this->log_error($e);
+
                     session()->flash('error', $e->getMessage());
                 }
             }
@@ -824,6 +834,8 @@ class UserController extends Controller
                 'images.*' => 'mimes:jpg,jpeg,png,bmp|min:0.001|max:40960',
             ]);
         }catch(\Exception $e){
+            $this->log_error($e);
+
             session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
             
             return redirect()->back();
@@ -865,6 +877,8 @@ class UserController extends Controller
                         $donated_item_image->save();
 
                     } catch(\Exception $e){
+                        $this->log_error($e);
+
                         session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
                     }
                 }
@@ -930,6 +944,8 @@ class UserController extends Controller
                     'images.*' => 'mimes:jpg,jpeg,png,bmp|min:0.001|max:40960',
                 ]);
             }catch(\Exception $e){
+                $this->log_error($e);
+
                 session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
                 
                 return redirect()->back();
@@ -975,6 +991,8 @@ class UserController extends Controller
                         $good_deed_image->save();
 
                     } catch(\Exception $e){
+                        $this->log_error($e);
+
                         session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
                     }
                 }
@@ -991,6 +1009,8 @@ class UserController extends Controller
                 });
 
             }catch(\Exception $e){
+                $this->log_error($e);
+
                 $this->log_error($e);
 
                 session()->flash('error', $e->getMessage());
