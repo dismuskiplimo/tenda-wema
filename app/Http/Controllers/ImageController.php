@@ -37,6 +37,8 @@ class ImageController extends Controller
                     session()->flash('error', 'Unsupported File Type');
                     return redirect()->back();
                 }
+
+                $this->log_error($e);
             }
 
             $user = auth()->user();
@@ -76,6 +78,8 @@ class ImageController extends Controller
                 session()->flash('success', 'Profile Picture Updated');
 
             } catch(\Exception $e){
+                $this->log_error($e);
+
                 session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
             }
             
@@ -91,6 +95,8 @@ class ImageController extends Controller
                     'image' => 'mimes:jpg,jpeg,png,bmp|min:0.001|max:40960',
                 ]);
             }catch(\Exception $e){
+                $this->log_error($e);
+
                 session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
                 
                 return redirect()->back();
@@ -130,6 +136,8 @@ class ImageController extends Controller
                 session()->flash('success', 'Photo added');
 
             } catch(\Exception $e){
+                $this->log_error($e);
+
                 session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
             }
             

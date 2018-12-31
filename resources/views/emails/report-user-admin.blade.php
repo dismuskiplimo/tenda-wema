@@ -5,7 +5,7 @@
 
 	@php
 		if($user_report->section == 'user'){
-			$desc = $user_report->ser_model->fname;
+			$desc = $user_report->user_model->fname;
 		}
 
 		elseif($user_report->section == 'item'){
@@ -26,7 +26,11 @@
 	@endphp
 
 	<p>
-		{{  $user_report->reporter->name }} has reported a(n) {{ $user_report->section }} &lt; <strong>{{ $desc }}</strong> &gt; on <strong>{{ simple_datetime($user_report->created_at) }}</strong> as being {{ $user_report->report_type->description }}. Reason being &lt; {{ $user_report->description }} &gt;
+		{{  $user_report->reporter->name }} has reported {{ $user_report->section }} <strong>{{ $desc }}</strong> on <strong>{{ simple_datetime($user_report->created_at) }}</strong> as  <strong>{{ $user_report->report_type->description }}</strong>. <br> <br> <strong>Reason:</strong>
+	</p>
+
+	<p>
+		<i> {{ $user_report->description }} </i>
 	</p>
 
 	<p>
@@ -35,7 +39,4 @@
 
 	<p><a href="{{ route('admin.users.reported-single', ['id' => $user_report->id]) }}">Click here to view</a></p>
 
-	<p><small class="text-muted">This is a system generated message, please do not reply.</small></p> <br>
-
-	<p>Regards, <br> {{ config('app.name') }}</p>
 @endsection

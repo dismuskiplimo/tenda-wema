@@ -91,7 +91,6 @@ class BackController extends Controller
         return redirect()->back();
     }
 
-
     public function getNewMessagesCount(){
         $user = auth()->user();
         
@@ -300,9 +299,14 @@ class BackController extends Controller
         $notification->save();
 
         if($user_report->section == 'item'){
-            $message = 'Item Deleted. Reason: ' . $user_report_type->report_type->description;
+            $message        = 'Item Deleted. Reason: ' . $user_report_type->report_type->description;
 
-            return redirect()->route('admin.donated-item.delete', ['id' => $user_report->model_id, 'reason' => $message]);
+            $donated_item   = DonatedItem::withTrashed()->findOrFail($user_report->model_id);
+
+            $donated_item->deleted_by = $user->id;
+            $donated_item->deleted_reason = $message;
+            $donated_item->update();
+            $donated_item->delete();
         }
 
         if($user_report->section == 'post'){
@@ -320,7 +324,6 @@ class BackController extends Controller
             $post->delete();
 
             $extras .= 'Post Deleted';
-    
         }
 
         if($user_report->section == 'comment'){
@@ -331,9 +334,27 @@ class BackController extends Controller
             $extras .= 'Comment Deleted';
         }
 
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . " | You have been Reported by a Member";
+
+            try{
+                \Mail::send('emails.report-user-user', ['title' => $title, 'user_report' => $user_report, 'coins' => $coins, 'instance'=> $instance], function ($message) use($title, $user_report){
+                    $message->subject($title);
+                    $message->to($user_report->user->email);
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
         session()->flash('success', 'Misconduct Confirmed. ' . $extras);
 
-        return redirect()->back();
+        return redirect()->route('admin.users.reported-single', ['id' => $user_report->id]);
     }
 
     public function dismissReport(Request $request, $id){
@@ -364,6 +385,23 @@ class BackController extends Controller
         $notification->system_message       = 1;
         $notification->from_admin           = 1;
         $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . " | Your report was dismissed by the admin team";
+
+            try{
+                \Mail::send('emails.report-user-dismissed', ['title' => $title, 'user_report' => $user_report], function ($message) use($title, $user_report){
+                    $message->subject($title);
+                    $message->to($user_report->reporter->email);
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
 
         session()->flash('success', 'Misconduct dismissed.');
          return redirect()->back();

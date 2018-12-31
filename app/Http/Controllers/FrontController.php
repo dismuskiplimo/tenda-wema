@@ -192,6 +192,8 @@ class FrontController extends Controller
                 });
 
             }catch(\Exception $e){
+                $this->log_error($e);
+
                 session()->flash('error', $e->getMessage());
             }
         }
@@ -236,6 +238,8 @@ class FrontController extends Controller
                 });
 
             }catch(\Exception $e){
+                $this->log_error($e);
+                
                 session()->flash('error', $e->getMessage());
             }
         }

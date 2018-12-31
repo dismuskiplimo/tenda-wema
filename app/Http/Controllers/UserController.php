@@ -712,6 +712,11 @@ class UserController extends Controller
                         $message->to($donated_item->donor->email);
                     });
 
+                    \Mail::send('emails.donated-item-received-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                        $message->subject($title);
+                        $message->to($donated_item->buyer->email);
+                    });
+
                 }catch(\Exception $e){
                     $this->log_error($e);
 
@@ -1009,8 +1014,6 @@ class UserController extends Controller
                 });
 
             }catch(\Exception $e){
-                $this->log_error($e);
-
                 $this->log_error($e);
 
                 session()->flash('error', $e->getMessage());
@@ -2060,7 +2063,6 @@ class UserController extends Controller
                 });
 
             }catch(\Exception $e){
-
                 $this->log_error($e);
                 
                 session()->flash('error', $e->getMessage());

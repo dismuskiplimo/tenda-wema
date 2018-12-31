@@ -138,7 +138,19 @@ class AdminController extends Controller
         $notification->save();
 
         if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Good Deed Approved';
 
+            try{
+                \Mail::send('emails.good-deed-approved', ['title' => $title, 'deed' => $deed], function ($message) use($title, $deed){
+                    $message->subject($title);
+                    $message->to($deed->user->email);
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
         }
 
         session()->flash('success', 'Deed Approved');
@@ -177,7 +189,19 @@ class AdminController extends Controller
         $notification->save();
 
         if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Good Deed Not Approved';
 
+            try{
+                \Mail::send('emails.good-deed-disapproved', ['title' => $title, 'deed' => $deed], function ($message) use($title, $deed){
+                    $message->subject($title);
+                    $message->to($deed->user->email);
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
         }
 
         session()->flash('success', 'Deed Dispproved');
@@ -285,6 +309,27 @@ class AdminController extends Controller
         $notification->model_id             = $donated_item->id;
         $notification->save();
 
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Donated Item Purchase Approved';
+
+            try{
+                \Mail::send('emails.donated-item-purchase-approved-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->buyer->email);
+                });
+
+                \Mail::send('emails.donated-item-purchase-approved-seller', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->donor->email);
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
         session()->flash('success', 'Purchase Approved');
 
         return redirect()->back();
@@ -343,7 +388,24 @@ class AdminController extends Controller
     	$escrow->delete();
 
         if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Donated Item Purchase Not Approved';
 
+            try{
+                \Mail::send('emails.donated-item-purchase-disapproved-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->buyer->email);
+                });
+
+                \Mail::send('emails.donated-item-purchase-disapproved-seller', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->donor->email);
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
         }
 
 
@@ -421,6 +483,27 @@ class AdminController extends Controller
         $notification->notification_type    = 'donated-item.delivery.approved';
         $notification->model_id             = $donated_item->id;
         $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Donated Item Delivered';
+
+            try{
+                \Mail::send('emails.donated-item-received-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->buyer->email);
+                });
+
+                \Mail::send('emails.donated-item-received-donor', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->donor->email);
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
+        }
 
         session()->flash('success', 'Item Marked as Received');
 
@@ -517,7 +600,24 @@ class AdminController extends Controller
     	$escrow->delete();
 
         if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Donated Item Purchase Disputed';
 
+            try{
+                \Mail::send('emails.donated-item-purchase-disputed-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->buyer->email);
+                });
+
+                \Mail::send('emails.donated-item-purchase-disputed-seller', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->donor->email);
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
         }
 
     	session()->flash('success', 'Item Disputed');
@@ -538,11 +638,23 @@ class AdminController extends Controller
     	$donated_item->deleted_reason = $request->reason;
     	$donated_item->update();
 
-    	$donated_item->delete();
-
         if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Donated Item Removed from Community Shop';
 
+            try{
+                \Mail::send('emails.donated-item-deleted-donor', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->donor->email);
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
         }
+
+        $donated_item->delete();
 
     	session()->flash('success', 'Donated Item deleted');
 
@@ -604,13 +716,31 @@ class AdminController extends Controller
         $donated_item->buyer_id             = null;
         $donated_item->bought_at            = null;
 
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Donated Item Purchase Cancelled';
+
+            try{
+                \Mail::send('emails.donated-item-purchase-cancelled-donor', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->donor->email);
+                });
+
+                \Mail::send('emails.donated-item-purchase-cancelled-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->buyer->email);
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
         $donated_item->update();
 
         $escrow->delete();
 
-        if($this->settings->mail_enabled->value){
-
-        }
 
         session()->flash('success', 'Purchase Cancelled');
 
@@ -703,16 +833,35 @@ class AdminController extends Controller
         $simba_coin_log->current_balance       = $buyer->coins;
         $simba_coin_log->save();
 
+        
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Donated Item Purchase Cancelled';
+
+            try{
+                \Mail::send('emails.donated-item-purchase-cancelled-donor', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->donor->email);
+                });
+
+                \Mail::send('emails.donated-item-purchase-cancelled-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->buyer->email);
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
+
         $donated_item->bought       = 0;
         $donated_item->buyer_id     = null;
         $donated_item->bought_at    = null;
         $donated_item->update();
 
         $escrow->delete();
-
-        if($this->settings->mail_enabled->value){
-
-        }
 
         session()->flash('success', 'Purchase cancelled');
 
@@ -742,6 +891,24 @@ class AdminController extends Controller
         $notification->notification_type = 'purchase-cancellation.declined';
         $notification->model_id = $cancel_request->donated_item->id;
         $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Purchase Cancellation Dismissed';
+
+            try{
+                \Mail::send('emails.donated-item-purchase-cancel-dismissed', ['title' => $title, 'cancel_request' => $cancel_request], function ($message) use($title, $cancel_request){
+                    $message->subject($title);
+                    $message->to($cancel_request->user->email);
+                });
+
+               
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
+        }
 
         session()->flash('success', 'Request Dismissed');
 
@@ -843,7 +1010,21 @@ class AdminController extends Controller
     	$user->update();
 
         if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Account Verified';
 
+            try{
+                \Mail::send('emails.user-account-verified', ['title' => $title, 'user' => $user], function ($message) use($title, $user){
+                    $message->subject($title);
+                    $message->to($user->email);
+                });
+
+               
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
         }
 
     	session()->flash('success', 'User Verified');
@@ -884,7 +1065,21 @@ class AdminController extends Controller
     	$user->update();
 
         if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Account Closed';
 
+            try{
+                \Mail::send('emails.user-account-closed', ['title' => $title, 'user' => $user], function ($message) use($title, $user){
+                    $message->subject($title);
+                    $message->to($user->email);
+                });
+
+               
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
         }
 
     	session()->flash('success', 'Account Closed');
@@ -1317,11 +1512,21 @@ class AdminController extends Controller
         $donation->update();
 
         if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Donation Received';
 
-        }
+            try{
+                \Mail::send('emails.donation-received', ['title' => $title, 'user' => $donation], function ($message) use($title, $donation){
+                    $message->subject($title);
+                    $message->to($donation->email);
+                });
 
-        if($this->settings->mail_enabled->value){
+               
 
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
         }
 
         session()->flash('success', 'Donation marked as received');
@@ -1350,7 +1555,21 @@ class AdminController extends Controller
         $donation->update();
 
         if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Donation Request Dismissed';
 
+            try{
+                \Mail::send('emails.donation-dismissed', ['title' => $title, 'user' => $donation], function ($message) use($title, $donation){
+                    $message->subject($title);
+                    $message->to($donation->email);
+                });
+
+               
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
         }
 
         session()->flash('success', 'Donation request dismissed');
@@ -1398,21 +1617,21 @@ class AdminController extends Controller
 
     public function getReportedUsers($type){
         if($type == 'all'){
-            $reports = UserReport::orderBy('created_at', 'DESC')->paginate(50);
+            $reports = UserReport::orderBy('created_at', 'DESC')->withTrashed()->paginate(50);
             $title = 'All Misconduct Instances';
             $nav = 'user.reported.all';
 
         }elseif($type == 'approved'){
-            $reports = UserReport::where('approved', 1)->where('dismissed', 0)->orderBy('created_at', 'DESC')->paginate(50);
+            $reports = UserReport::where('approved', 1)->where('dismissed', 0)->orderBy('created_at', 'DESC')->withTrashed()->paginate(50);
             $title = 'Confirmed Misconducts';
             $nav = 'user.reported.approved';
 
         }elseif($type == 'dismissed'){
-            $reports = UserReport::where('dismissed', 1)->where('approved', 0)->orderBy('created_at', 'DESC')->paginate(50);
+            $reports = UserReport::where('dismissed', 1)->where('approved', 0)->orderBy('created_at', 'DESC')->withTrashed()->paginate(50);
             $title = 'Dismissed Misconducts';
             $nav = 'user.reported.dismissed';
         }elseif($type == 'pending'){
-            $reports = UserReport::where('approved', 0)->where('dismissed', 0)->orderBy('created_at', 'DESC')->paginate(50);
+            $reports = UserReport::where('approved', 0)->where('dismissed', 0)->orderBy('created_at', 'DESC')->withTrashed()->paginate(50);
             $title = 'Confirmed Misconducts';
             $nav = 'user.reported.approved';
         }else{
@@ -1427,7 +1646,7 @@ class AdminController extends Controller
     }
 
     public function getReportedUserSingle($id){
-        $user_report = UserReport::findOrFail($id);
+        $user_report = UserReport::withTrashed()->findOrFail($id);
 
         return view('pages.admin.user-misconduct', [
             'title'     => $user_report->report_type->description,

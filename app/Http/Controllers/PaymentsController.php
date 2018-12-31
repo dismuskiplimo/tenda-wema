@@ -221,6 +221,8 @@ class PaymentsController extends Controller
             try{
                 $payment->create($paypal);
             }catch(Exception $e){
+                $this->log_error($e);
+
                 session()->flash('error', $e->getMessage());
 
                 return redirect()->back();
@@ -265,7 +267,10 @@ class PaymentsController extends Controller
                 try{
                     $result = $payment->execute($execute, $paypal);
                 }catch(\PayPal\Exception\PayPalConnectionException $e){
+                    $this->log_error($e);
+
                     session()->flash('error','There was an error processing your payment, the token has already been used');
+                    
                     return redirect()->route('user.balance');
                 }
 
@@ -351,6 +356,8 @@ class PaymentsController extends Controller
                         });
 
                     }catch(\Exception $e){
+                        $this->log_error($e);
+
                         session()->flash('error', $e->getMessage());
                     }
                 }
@@ -387,10 +394,12 @@ class PaymentsController extends Controller
             
             $this->mpesa_access_token = $fields->access_token;
         } catch (\Exception $e) {
-            
+
             $log = new AppLog;
             $log->message = $e->getMessage();
             $log->save();
+
+            $this->log_error($e);
         }
     }
 
@@ -629,6 +638,8 @@ class PaymentsController extends Controller
                             });
 
                         }catch(\Exception $e){
+                            $this->log_error($e);
+
                             session()->flash('error', $e->getMessage());
                         }
                     }
@@ -652,10 +663,12 @@ class PaymentsController extends Controller
                 $log->message = $message;
                 $log->save();
             }           
-        } catch (\Exception $e) {
+        } catch(\Exception $e) {
             $log = new AppLog;
             $log->message = $e->getMessage();
             $log->save();
+
+            $this->log_error($e);
 
             //echo $e->getMessage();
         }

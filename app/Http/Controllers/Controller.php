@@ -47,7 +47,7 @@ class Controller extends BaseController
             $title = config('app.name') . " | Error - Action needed";
 
             try{
-                \Mail::send('emails.exception-detected', ['title' => $title, 'e' => $e], function ($message) use($e){
+                \Mail::send('emails.exception-detected', ['title' => $title, 'e' => $e], function ($message) use($title){
                     $message->subject($title);
                     $message->to(config('app.developer_email'));
                 });

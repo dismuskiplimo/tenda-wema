@@ -12,7 +12,7 @@ class Timeline extends Model
     protected $dates = ['deleted_at'];
 
     public function donated_item(){
-    	return $this->belongsTo('App\DonatedItem', 'model_id');
+    	return $this->belongsTo('App\DonatedItem', 'model_id')->withTrashed();
     }
 
     public function user(){

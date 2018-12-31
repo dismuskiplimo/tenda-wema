@@ -9,7 +9,5 @@
 
 	<p><a href="{{ route('donated-item.show', ['slug' => $donated_item->slug]) }}">Click here to view</a></p>
 
-	<p><small class="text-muted">This is a system generated message, please do not reply.</small></p> <br>
 
-	<p>Regards, <br> {{ config('app.name') }}</p>
 @endsection
