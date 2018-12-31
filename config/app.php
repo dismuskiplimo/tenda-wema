@@ -13,17 +13,19 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Temda Wema'),
+    'name'              => env('APP_NAME', 'Temda Wema'),
 
-    'https' => env('HTTPS', false),
+    'https'             => env('HTTPS', false),
     
-    'public_path' => env('PUBLIC_PATH', 'public_html'),
+    'public_path'       => env('PUBLIC_PATH', 'public_html'),
 
-    'domain' => env('APP_DOMAIN', 'tendawema.com'),
+    'domain'            => env('APP_DOMAIN', 'tendawema.com'),
 
-    'contact_email' => env('APP_CONTACT_EMAIL', 'info@tendawema.com'),
+    'contact_email'     => env('APP_CONTACT_EMAIL', 'info@tendawema.com'),
 
-    'system_email' => env('APP_SYSTEM_EMAIL', 'info@tendawema.com'),
+    'system_email'      => env('APP_SYSTEM_EMAIL', 'info@tendawema.com'),
+
+    'developer_email'   => env('APP_DEVELOPER_EMAIL', 'dismuskiplimo@gmail.com'),
 
     /*
     |--------------------------------------------------------------------------

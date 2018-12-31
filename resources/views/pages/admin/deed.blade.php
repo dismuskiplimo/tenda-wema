@@ -64,7 +64,7 @@
 
 						<hr>
 						
-						<h4 class="mb-0 text-muted">CONTACTS</h4>
+						<h4 class="mb-0 text-muted">CONTACTS TO THOSE WHO CAN TESTIFY</h4>
 						{!! clean(nl2br($deed->contacts)) !!}
 						
 					</div>

@@ -544,6 +544,20 @@ class UserController extends Controller
         $donated_item->escrow_id    = $escrow->id;
         $donated_item->update();
 
+        if($this->settings->mail_enabled->value){
+            $title = "Donated Item Purchased - Action needed";
+
+            try{
+                \Mail::send('emails.donated-item-purchased-admin', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title){
+                    $message->subject($title);
+                    $message->to(config('app.system_email'));
+                });
+
+            }catch(\Exception $e){
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
         session()->flash('success', 'Item bought, the admin will contact you with the details on how to collect your item(s)');
 
         return redirect()->back();
@@ -589,6 +603,20 @@ class UserController extends Controller
             $notification->system_message       = 1;
             $notification->save();
 
+            if($this->settings->mail_enabled->value){
+                $title = "Request to Cancel Donated Item Purchase - Action needed";
+
+                try{
+                    \Mail::send('emails.donated-item-cancelled-admin', ['title' => $title, 'donated_item' => $item, 'cancel_order' => $cancel_order], function ($message) use($title){
+                        $message->subject($title);
+                        $message->to(config('app.system_email'));
+                    });
+
+                }catch(\Exception $e){
+                    session()->flash('error', $e->getMessage());
+                }
+            }
+
             session()->flash('success', 'Cancel Request received, please wait for action from admin');
 
             return redirect()->back();
@@ -629,44 +657,257 @@ class UserController extends Controller
         $escrow                     = $donated_item->escrow;
         $donor                      = $donated_item->donor;
 
-        $donor->coins               += $escrow->amount;
-        $donor->accumulated_coins   += $escrow->amount;
-        $donor->update();
+        if(!$escrow->released){
+            $donor->coins               += $escrow->amount;
+            $donor->accumulated_coins   += $escrow->amount;
+            $donor->update();
+        
+            $donor->check_social_level();
 
-        $donor->check_social_level();
+            $escrow->released       = 1;
+            $escrow->released_at    = $this->date;
+            $escrow->released_by    = $user->id;
+            $escrow->update();
 
-        $escrow->released       = 1;
-        $escrow->released_at    = $this->date;
-        $escrow->released_by    = $user->id;
-        $escrow->update();
+            $timeline           = new \App\Timeline;
+            $timeline->user_id  = $donated_item->buyer->id;
+            $timeline->model_id = $donated_item->id;
+            $timeline->message  = 'Purchased Donated Item:  ' . $donated_item->name;
+            $timeline->type     = 'donated-item.delivery.approved';
+            $timeline->extra    = '';
+            $timeline->save();
 
-        $timeline           = new \App\Timeline;
-        $timeline->user_id  = $donated_item->buyer->id;
-        $timeline->model_id = $donated_item->id;
-        $timeline->message  = 'Purchased Donated Item:  ' . $donated_item->name;
-        $timeline->type     = 'donated-item.delivery.approved';
-        $timeline->extra    = '';
-        $timeline->save();
+            $simba_coin_log                        = new SimbaCoinLog;
+            $simba_coin_log->user_id               = $donor->id;
+            $simba_coin_log->message               = 'Payment for Donated item sold. (' . $donated_item->name .')';
+            $simba_coin_log->type                  = 'credit';
+            $simba_coin_log->coins                 = $escrow->amount;
+            $simba_coin_log->previous_balance      = $donor->coins - $escrow->amount ;
+            $simba_coin_log->current_balance       = $donor->coins;
+            $simba_coin_log->save();
 
-        $simba_coin_log                        = new SimbaCoinLog;
-        $simba_coin_log->user_id               = $donor->id;
-        $simba_coin_log->message               = 'Payment for Donated item sold. (' . $donated_item->name .')';
-        $simba_coin_log->type                  = 'credit';
-        $simba_coin_log->coins                 = $escrow->amount;
-        $simba_coin_log->previous_balance      = $donor->coins - $escrow->amount ;
-        $simba_coin_log->current_balance       = $donor->coins;
-        $simba_coin_log->save();
+            $notification                       = new Notification;
+            $notification->from_id              = $user->id;
+            $notification->to_id                = $donated_item->donor->id;
+            $notification->system_message       = 0;
+            $notification->message              = 'The Item Purchased by '. $donated_item->buyer->name .' Was marked as received. The funds have been released to your account.';
+            $notification->notification_type    = 'donated-item.delivery.approved';
+            $notification->model_id             = $donated_item->id;
+            $notification->save();
 
-        $notification                       = new Notification;
-        $notification->from_id              = $user->id;
-        $notification->to_id                = $donated_item->donor->id;
-        $notification->system_message       = 0;
-        $notification->message              = 'The Item Purchased by '. $donated_item->buyer->name .' Was marked as received. The funds have been released to your account.';
-        $notification->notification_type    = 'donated-item.delivery.approved';
-        $notification->model_id             = $donated_item->id;
-        $notification->save();
+            if($this->settings->mail_enabled->value){
+                $title = config('app.name') . ' | '. $donated_item->name ." Marked as Received by the buyer";
+
+                try{
+                    \Mail::send('emails.donated-item-received-donor', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                        $message->subject($title);
+                        $message->to($donated_item->donor->email);
+                    });
+
+                }catch(\Exception $e){
+                    session()->flash('error', $e->getMessage());
+                }
+            }
+        }
 
         session()->flash('success', 'Item Marked as Received');
+
+        return redirect()->back();
+    }
+
+    // **************************DONATED ITEMS ********************************************
+
+    public function updateDonatedItem(Request $request, $slug){
+        $this->validate($request, [
+            'name'              => 'required|max:191',
+            'type'              => 'required|max:191',
+            'condition'         => 'required|max:191',
+            'category_id'       => 'required|numeric',
+            'description'       => 'required',
+        ]);
+
+        $donated_item       = DonatedItem::where('slug', $slug)->firstOrFail();
+
+        $user               = auth()->user();
+        
+        if($user->id != $donated_item->donor_id){
+            session()->flash('error', 'Forbidden');
+            return redirect()->back();
+        }
+
+        if($donated_item->bought){
+            session()->flash('error', 'The Item has already been bought, no more ammendment allowed');
+            return redirect()->back();
+        }
+        
+        if($donated_item->name != $request->name){
+            $donated_item->slug         = str_slug($request->name . '-' . rand(1,1000000));
+        }
+
+        $donated_item->name             = $request->name;
+        
+        $donated_item->type             = $request->type;
+        $donated_item->condition        = $request->condition;
+        $donated_item->category_id      = $request->category_id;
+        $donated_item->description      = $request->description;
+        $donated_item->update();
+
+        session()->flash('success', 'Item Updated');
+
+        return redirect()->route('donated-item.show', ['slug' => $donated_item->slug]);
+    }
+
+    public function deleteDonatedItem(Request $request, $slug){
+        $this->validate($request, [
+            'reason' => 'required|max:800',
+        ]);
+
+        $item = DonatedItem::where('slug', $slug)->firstOrFail();
+        $user = auth()->user();
+
+        if($item->donor_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        if($item->bought){
+            session()->flash('error', 'The Item has already been bought, you cannot delete it');
+            return redirect()->back();
+        }
+
+        if(count($item->images)){
+            foreach ($item->images as $image) {
+                @unlink($this->image_path . '/donated_items/banners/' . $image->image);
+                @unlink($this->image_path . '/donated_items/images/' . $image->image);
+                @unlink($this->image_path . '/donated_items/slides/' . $image->image);
+                @unlink($this->image_path . '/donated_items/thumbnails/' . $image->image);
+            }
+        }
+
+        $timeline = $user->timeline()->where('type', 'item.donated')->where('model_id', $item->id)->first();
+
+        if($timeline){
+            $timeline->delete();
+        }
+
+        $item->deleted_by = $user->id;
+        $item->deleted_reason = $request->reason;
+        $item->update();
+
+        $timeline = Timeline::where('model_id', $item->id)->where('type', 'item.donated')->where('user_id', $user->id)->first();
+
+        if($timeline){
+            $timeline->delete();
+        }
+
+        $item->delete();
+
+        session()->flash('success', 'Donated item removed from community shop');
+
+        return redirect()->route('community-shop');
+    }
+
+    public function addDonatedItemImage(Request $request, $slug){
+        $donated_item = DonatedItem::where('slug', $slug)->firstOrFail();
+
+        $user = auth()->user();
+
+        if($donated_item->donor_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        try{
+            $this->validate($request,[
+                'images.*' => 'mimes:jpg,jpeg,png,bmp|min:0.001|max:40960',
+            ]);
+        }catch(\Exception $e){
+            session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
+            
+            return redirect()->back();
+        }
+
+        if($request->hasFile('images')){
+            $images = $request->file('images');
+
+            foreach ($images as $image) {
+                if($image->isValid()){
+                    try{
+
+                        $name   = time(). rand(1,1000000) . '.' . $image->getClientOriginalExtension();
+                        
+                        $image_path         = $this->image_path . '/donated_items/images/' . $name;
+                        $banner_path        = $this->image_path . '/donated_items/banners/'. $name;
+                        $thumbnail_path     = $this->image_path . '/donated_items/thumbnails/' . $name;
+                        $slide_path         = $this->image_path . '/donated_items/slides/' . $name;
+                    
+                        Image::make($image)->orientate()->resize(800,null, function($constraint){
+                            return $constraint->aspectRatio();
+                        })->save($image_path);
+
+                        Image::make($image)->orientate()->fit(440,586)->save($banner_path);
+
+                        Image::make($image)->orientate()->fit(769,433)->save($slide_path);
+
+                        Image::make($image)->orientate()->resize(200,null, function($constraint){
+                            return $constraint->aspectRatio();
+                        })->save($thumbnail_path);
+
+                        $donated_item_image                     = new DonatedItemImage;
+                        $donated_item_image->image              = $name;
+                        $donated_item_image->banner             = $name;
+                        $donated_item_image->thumbnail          = $name;
+                        $donated_item_image->slide              = $name;
+                        $donated_item_image->donated_item_id    = $donated_item->id;
+                        $donated_item_image->user_id            = $user->id;
+                        $donated_item_image->save();
+
+                    } catch(\Exception $e){
+                        session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
+                    }
+                }
+            }
+        }
+
+        else{
+            session()->flash('error', 'Upload failed');
+        }
+
+        return redirect()->back();
+    }
+
+    public function deleteDonatedItemImage($slug,$id){
+        $image = DonatedItemImage::findOrFail($id);
+
+        $donated_item = $image->donated_item;
+
+        if(!$donated_item){
+            abort(404);
+        }
+
+        $user = auth()->user();
+
+        if($image->user_id != $user->id){
+            session()->flash('error', 'Forbidden');
+
+            return redirect()->back();
+        }
+
+        if($donated_item->bought){
+            session()->flash('error', 'The Item has already been bought, you can no longer delete images from it');
+            return redirect()->back();
+        }        
+
+        @unlink($this->image_path . '/donated_items/banners/' . $image->image);
+        @unlink($this->image_path . '/donated_items/images/' . $image->image);
+        @unlink($this->image_path . '/donated_items/slides/' . $image->image);
+        @unlink($this->image_path . '/donated_items/thumbnails/' . $image->image);
+
+        $image->delete();
+
+        session()->flash('success', 'Image Deleted');
 
         return redirect()->back();
     }
@@ -697,7 +938,6 @@ class UserController extends Controller
 
         $user = auth()->user();
         
-
         $good_deed                  = new GoodDeed;
         $good_deed->name            = $request->name;
         $good_deed->slug            = str_slug($request->name . '-' . rand(1,1000000));
@@ -741,12 +981,27 @@ class UserController extends Controller
             }
         }
 
+        if($this->settings->mail_enabled->value){
+            $title = 'Good Deed Reported |' . $good_deed->name;
+
+            try{
+                \Mail::send('emails.good-deed-reported-admin', ['title' => $title, 'good_deed' => $good_deed], function ($message) use($title, $good_deed){
+                    $message->subject($title);
+                    $message->to(config('app.system_email'));
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
 
         session()->flash('success', 'Good deed reported, please wait for approval by the admin');
 
         return redirect()->route('good-deed.show', ['slug' => $good_deed->slug]);
     }
-
 
     // **************************ABOUT ME ********************************************
 
@@ -776,7 +1031,6 @@ class UserController extends Controller
 
         return redirect()->back();
     }
-
     
     // **************************Quotes I Love ******************************************
 
@@ -1713,197 +1967,6 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    // **************************DONATED ITEMS ********************************************
-
-    public function updateDonatedItem(Request $request, $slug){
-        $this->validate($request, [
-            'name'              => 'required|max:191',
-            'type'              => 'required|max:191',
-            'condition'         => 'required|max:191',
-            'category_id'       => 'required|numeric',
-            'description'       => 'required',
-        ]);
-
-        $donated_item       = DonatedItem::where('slug', $slug)->firstOrFail();
-
-        $user               = auth()->user();
-        
-        if($user->id != $donated_item->donor_id){
-            session()->flash('error', 'Forbidden');
-            return redirect()->back();
-        }
-
-        if($donated_item->bought){
-            session()->flash('error', 'The Item has already been bought, no more ammendment allowed');
-            return redirect()->back();
-        }
-        
-        if($donated_item->name != $request->name){
-            $donated_item->slug         = str_slug($request->name . '-' . rand(1,1000000));
-        }
-
-        $donated_item->name             = $request->name;
-        
-        $donated_item->type             = $request->type;
-        $donated_item->condition        = $request->condition;
-        $donated_item->category_id      = $request->category_id;
-        $donated_item->description      = $request->description;
-        $donated_item->update();
-
-        session()->flash('success', 'Item Updated');
-
-        return redirect()->route('donated-item.show', ['slug' => $donated_item->slug]);
-    }
-
-    public function deleteDonatedItem(Request $request, $slug){
-        $this->validate($request, [
-            'reason' => 'required|max:800',
-        ]);
-
-        $item = DonatedItem::where('slug', $slug)->firstOrFail();
-        $user = auth()->user();
-
-        if($item->donor_id != $user->id){
-            session()->flash('error', 'Forbidden');
-
-            return redirect()->back();
-        }
-
-        if($item->bought){
-            session()->flash('error', 'The Item has already been bought, you cannot delete it');
-            return redirect()->back();
-        }
-
-        if(count($item->images)){
-            foreach ($item->images as $image) {
-                @unlink($this->image_path . '/donated_items/banners/' . $image->image);
-                @unlink($this->image_path . '/donated_items/images/' . $image->image);
-                @unlink($this->image_path . '/donated_items/slides/' . $image->image);
-                @unlink($this->image_path . '/donated_items/thumbnails/' . $image->image);
-            }
-        }
-
-        $timeline = $user->timeline()->where('type', 'item.donated')->where('model_id', $item->id)->first();
-
-        if($timeline){
-            $timeline->delete();
-        }
-
-        $item->deleted_by = $user->id;
-        $item->deleted_reason = $request->reason;
-        $item->update();
-
-        $item->delete();
-
-        session()->flash('success', 'Donated item removed from community shop');
-
-        return redirect()->route('community-shop');
-    }
-
-    public function addDonatedItemImage(Request $request, $slug){
-        $donated_item = DonatedItem::where('slug', $slug)->firstOrFail();
-
-        $user = auth()->user();
-
-        if($donated_item->donor_id != $user->id){
-            session()->flash('error', 'Forbidden');
-
-            return redirect()->back();
-        }
-
-        try{
-            $this->validate($request,[
-                'images.*' => 'mimes:jpg,jpeg,png,bmp|min:0.001|max:40960',
-            ]);
-        }catch(\Exception $e){
-            session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
-            
-            return redirect()->back();
-        }
-
-        if($request->hasFile('images')){
-            $images = $request->file('images');
-
-            foreach ($images as $image) {
-                if($image->isValid()){
-                    try{
-
-                        $name   = time(). rand(1,1000000) . '.' . $image->getClientOriginalExtension();
-                        
-                        $image_path         = $this->image_path . '/donated_items/images/' . $name;
-                        $banner_path        = $this->image_path . '/donated_items/banners/'. $name;
-                        $thumbnail_path     = $this->image_path . '/donated_items/thumbnails/' . $name;
-                        $slide_path         = $this->image_path . '/donated_items/slides/' . $name;
-                    
-                        Image::make($image)->orientate()->resize(800,null, function($constraint){
-                            return $constraint->aspectRatio();
-                        })->save($image_path);
-
-                        Image::make($image)->orientate()->fit(440,586)->save($banner_path);
-
-                        Image::make($image)->orientate()->fit(769,433)->save($slide_path);
-
-                        Image::make($image)->orientate()->resize(200,null, function($constraint){
-                            return $constraint->aspectRatio();
-                        })->save($thumbnail_path);
-
-                        $donated_item_image                     = new DonatedItemImage;
-                        $donated_item_image->image              = $name;
-                        $donated_item_image->banner             = $name;
-                        $donated_item_image->thumbnail          = $name;
-                        $donated_item_image->slide              = $name;
-                        $donated_item_image->donated_item_id    = $donated_item->id;
-                        $donated_item_image->user_id            = $user->id;
-                        $donated_item_image->save();
-
-                    } catch(\Exception $e){
-                        session()->flash('error', 'Image Upload failed. Reason: '. $e->getMessage());
-                    }
-                }
-            }
-        }
-
-        else{
-            session()->flash('error', 'Upload failed');
-        }
-
-        return redirect()->back();
-    }
-
-    public function deleteDonatedItemImage($slug,$id){
-        $image = DonatedItemImage::findOrFail($id);
-
-        $donated_item = $image->donated_item;
-
-        if(!$donated_item){
-            abort(404);
-        }
-
-        $user = auth()->user();
-
-        if($image->user_id != $user->id){
-            session()->flash('error', 'Forbidden');
-
-            return redirect()->back();
-        }
-
-        if($donated_item->bought){
-            session()->flash('error', 'The Item has already been bought, you can no longer delete images from it');
-            return redirect()->back();
-        }        
-
-        @unlink($this->image_path . '/donated_items/banners/' . $image->image);
-        @unlink($this->image_path . '/donated_items/images/' . $image->image);
-        @unlink($this->image_path . '/donated_items/slides/' . $image->image);
-        @unlink($this->image_path . '/donated_items/thumbnails/' . $image->image);
-
-        $image->delete();
-
-        session()->flash('success', 'Image Deleted');
-
-        return redirect()->back();
-    }
-
     // **************************PURCHASE COINS *******************************************
 
     public function postPurchaseCoins(Request $request){
@@ -1965,6 +2028,24 @@ class UserController extends Controller
         $notification->model_id             = $user_report->id;
         $notification->system_message       = 1;
         $notification->save();
+
+
+        if($this->settings->mail_enabled->value){
+            $title = "User\Item Reported by Member - Action needed";
+
+            try{
+                \Mail::send('emails.report-user-admin', ['title' => $title, 'user_report' => $user_report], function ($message) use($title){
+                    $message->subject($title);
+                    $message->to(config('app.system_email'));
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
 
 
         session()->flash('success', 'Report received, the admin will review and take the appropriate actions');
@@ -2163,6 +2244,23 @@ class UserController extends Controller
                 $notification->model_id             = $item->id;
                 $notification->save();
 
+                if($this->settings->mail_enabled->value){
+                    $title = config('app.name') . " | Your donated item " . $item->name . "  has been reviewed";
+
+                    try{
+                        \Mail::send('emails.review-donated-item', ['title' => $title, 'review' => $review, 'item' => $item], function ($message) use($title, $review, $item){
+                            $message->subject($title);
+                            $message->to($item->donor->email);
+                        });
+
+                    }catch(\Exception $e){
+
+                        $this->log_error($e);
+                        
+                        session()->flash('error', $e->getMessage());
+                    }
+                }
+
                 session()->flash('success', 'Item Reviewed');
             }else{
                 return $this->updateDonatedItemReview($request, $review->id);
@@ -2172,7 +2270,6 @@ class UserController extends Controller
         }
 
         return redirect()->back();
-
     }
 
     public function updateDonatedItemReview(Request $request, $id){
@@ -2259,6 +2356,23 @@ class UserController extends Controller
         $notification->notification_type    = 'user.reviewed';
         $notification->model_id             = $user->id;
         $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . " | Your profile was reviewed";
+
+            try{
+                \Mail::send('emails.review-user', ['title' => $title, 'review' => $review], function ($message) use($title, $review){
+                    $message->subject($title);
+                    $message->to($review->user->email);
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
 
         session()->flash('success', 'User reviewed');
 

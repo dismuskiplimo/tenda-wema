@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $transaction->user->name }},</p>
+	<p>Dear {{ $transaction->user->fname }},</p>
 
 	<p>
 		You have sent <strong>{{ $transaction->currency . ' ' . number_format($transaction->amount) }}</strong> via MPESA and received <strong>{{ number_format($transaction->coins) }}</strong> Simba Coins to your wallet. Below are the details:

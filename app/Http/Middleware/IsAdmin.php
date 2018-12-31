@@ -16,7 +16,10 @@ class IsAdmin
     public function handle($request, Closure $next)
     {
         if(!auth()->user()->is_admin()){
-            return redirect()->route('dashboard');
+            
+            auth()->logout();
+
+            return redirect()->route('auth.login');
         }
         return $next($request);
     }

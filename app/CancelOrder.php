@@ -33,11 +33,11 @@ class CancelOrder extends Model
     	}
 
     	elseif($this->approved && !$this->dismissed){
-    		$status = 'APPROVED';
+    		$status = 'ORDER CANCELLED';
     	}
 
     	elseif(!$this->approved && $this->dismissed){
-    		$status = 'DISMISSED';
+    		$status = 'REQUEST DISMISSED';
     	}
 
     	else{
