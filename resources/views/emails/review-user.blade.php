@@ -11,7 +11,7 @@
 	</p>
 
 	<p>
-		<a href="{{ route('user.reviews.show', ['slug' => $review->user->slug]) }}">Click here to view</a>
+		<a href="{{ route('user.reviews.show', ['username' => $review->user->username]) }}">Click here to view</a>
 	</p>
 
 	<p><small class="text-muted">This is a system generated message, please do not reply.</small></p> <br>
