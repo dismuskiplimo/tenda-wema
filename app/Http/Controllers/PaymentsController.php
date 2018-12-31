@@ -377,27 +377,24 @@ class PaymentsController extends Controller
     public function requestMpesaAccessToken(){
         $url = $this->mpesa_auth_url;
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        $credentials = base64_encode( $this->mpesa_consumer_key . ':' . $this->mpesa_consumer_secret);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Basic '.$credentials)); //setting a custom header
-        curl_setopt($curl, CURLOPT_HEADER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-        $response = curl_exec($curl);
-
         try {
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            $credentials = base64_encode( $this->mpesa_consumer_key . ':' . $this->mpesa_consumer_secret);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Basic '.$credentials)); //setting a custom header
+            curl_setopt($curl, CURLOPT_HEADER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($curl);
+
             list($header, $body) = explode("\r\n\r\n", $response, 2);
 
             $fields = json_decode($body);
             
             $this->mpesa_access_token = $fields->access_token;
         } catch (\Exception $e) {
-
-            $log = new AppLog;
-            $log->message = $e->getMessage();
-            $log->save();
 
             $this->log_error($e);
         }
@@ -430,7 +427,6 @@ class PaymentsController extends Controller
 
         $this->requestMpesaAccessToken();
         
-        
         if($this->mpesa_access_token){
             $url = $this->mpesa_request_url;
 
@@ -447,39 +443,45 @@ class PaymentsController extends Controller
             
             $password = base64_encode($shortcode.$passkey.$timestamp);
 
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization:Bearer ' . $this->mpesa_access_token ));
+            try{
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization:Bearer ' . $this->mpesa_access_token ));
 
-            $curl_post_data = [
-              'BusinessShortCode' => $shortcode,
-              'Password' => $password,
-              'Timestamp' => $timestamp,
-              'TransactionType' => 'CustomerPayBillOnline',
-              'Amount' => $amount,
-              'PartyA' => $phone,
-              'PartyB' => $shortcode,
-              'PhoneNumber' => $phone,
-              'CallBackURL' => $callback,
-              'AccountReference' => 'simbacoin',
-              'TransactionDesc' => 'Simba Coin Purchase', 
-            ];
+                $curl_post_data = [
+                  'BusinessShortCode' => $shortcode,
+                  'Password' => $password,
+                  'Timestamp' => $timestamp,
+                  'TransactionType' => 'CustomerPayBillOnline',
+                  'Amount' => $amount,
+                  'PartyA' => $phone,
+                  'PartyB' => $shortcode,
+                  'PhoneNumber' => $phone,
+                  'CallBackURL' => $callback,
+                  'AccountReference' => 'simbacoin',
+                  'TransactionDesc' => 'Simba Coin Purchase', 
+                ];
 
-            $data_string = json_encode($curl_post_data);
+                $data_string = json_encode($curl_post_data);
 
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_POST, true);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
 
-            $curl_response = curl_exec($curl);
+                $curl_response = curl_exec($curl);
+            }
+
+            catch(\Exception $e){
+                $this->log_error($e);
+
+                session()->flash('error', $e->getMessage());
+            }
 
             $response = json_decode($curl_response);
 
             if(isset($response->errorCode) && !empty($response->errorCode)){
                 session()->flash('error', $response->errorMessage);
-                return redirect()->back();
-
-                
+                return redirect()->back();   
             }else{
             
                 if(isset($response->ResponseCode) && $response->ResponseCode == 0){
@@ -497,6 +499,8 @@ class PaymentsController extends Controller
             }
                 
         }else{
+            session()->flash('error', 'Error, Please try again');
+            
             return redirect()->back();
         }     
     }
@@ -664,13 +668,7 @@ class PaymentsController extends Controller
                 $log->save();
             }           
         } catch(\Exception $e) {
-            $log = new AppLog;
-            $log->message = $e->getMessage();
-            $log->save();
-
             $this->log_error($e);
-
-            //echo $e->getMessage();
         }
     }
 }
