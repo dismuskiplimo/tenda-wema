@@ -23,10 +23,22 @@ class ModeratorController extends Controller
     }
 
     public function showMisconductsReported(){
+    	$user_reports = UserReport::where('approved', 0)->where('dismissed', 0)->paginate(50);
 
+    	return view('pages.user.misconducts-reported', [
+    		'title' 		=> 'Misconducts Reported',
+    		'nav'			=> 'moderator.misconducts-reported',
+    		'user_reports' 	=> $user_reports,
+    	]);
     }
 
     public function showMisconductReported($id){
-    	$user_report = UserReport::findOrFail($id);
+    	$report = UserReport::findOrFail($id);
+
+    	return view('pages.user.misconduct-reported', [
+    		'title' 		=> 'Misconduct Reported',
+    		'nav'			=> 'moderator.misconduct-reported',
+    		'report' 		=> $report,
+    	]);
     }
 }

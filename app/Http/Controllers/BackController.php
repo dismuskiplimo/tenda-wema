@@ -354,7 +354,11 @@ class BackController extends Controller
 
         session()->flash('success', 'Misconduct Confirmed. ' . $extras);
 
-        return redirect()->route('admin.users.reported-single', ['id' => $user_report->id]);
+        if($user->is_admin()){
+            return redirect()->route('admin.users.reported-single', ['id' => $user_report->id]);
+        }else{
+            return redirect()->back();
+        }       
     }
 
     public function dismissReport(Request $request, $id){
@@ -374,36 +378,40 @@ class BackController extends Controller
         
         $user_report->update();
 
-        $message = 'You reported ' . $user_report->user->name . ' on ' . simple_datetime($user_report->created_at) . '. However, we dismissed the request because ' . $request->reason;
+        if($user_report->reported_by != $user->id){
 
-        $notification                       = new Notification;
-        $notification->from_id              = auth()->user()->id;
-        $notification->to_id                = $user_report->reporter->id;
-        $notification->message              = $message;
-        $notification->notification_type    = 'user.reported.dismissed';
-        $notification->model_id             = $user_report->id;
-        $notification->system_message       = 1;
-        $notification->from_admin           = 1;
-        $notification->save();
+            $message = 'You reported ' . $user_report->user->name . ' on ' . simple_datetime($user_report->created_at) . '. However, we dismissed the request because ' . $request->reason;
 
-        if($this->settings->mail_enabled->value){
-            $title = config('app.name') . " | Your report was dismissed by the admin team";
+            $notification                       = new Notification;
+            $notification->from_id              = auth()->user()->id;
+            $notification->to_id                = $user_report->reporter->id;
+            $notification->message              = $message;
+            $notification->notification_type    = 'user.reported.dismissed';
+            $notification->model_id             = $user_report->id;
+            $notification->system_message       = 1;
+            $notification->from_admin           = 1;
+            $notification->save();
 
-            try{
-                \Mail::send('emails.report-user-dismissed', ['title' => $title, 'user_report' => $user_report], function ($message) use($title, $user_report){
-                    $message->subject($title);
-                    $message->to($user_report->reporter->email);
-                });
+            if($this->settings->mail_enabled->value){
+                $title = config('app.name') . " | Your report was dismissed by the admin team";
 
-            }catch(\Exception $e){
+                try{
+                    \Mail::send('emails.report-user-dismissed', ['title' => $title, 'user_report' => $user_report], function ($message) use($title, $user_report){
+                        $message->subject($title);
+                        $message->to($user_report->reporter->email);
+                    });
 
-                $this->log_error($e);
-                
-                session()->flash('error', $e->getMessage());
+                }catch(\Exception $e){
+
+                    $this->log_error($e);
+                    
+                    session()->flash('error', $e->getMessage());
+                }
             }
         }
 
         session()->flash('success', 'Misconduct dismissed.');
-         return redirect()->back();
+        
+        return redirect()->back();
     }
 }

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Carbon\Carbon;
 
+use Mail;
+
 class User extends Authenticatable
 {
     use Notifiable, SoftDeletes;
@@ -115,177 +117,6 @@ class User extends Authenticatable
 
     public function report_types(){
         return $this->hasMany('App\UserReportType', 'user_id');
-    }
-
-    public function check_social_level(){
-        $changes          = false;
-        $previous_balance = 0;
-        $current_balance  = 0;
-        $amount           = 0;
-
-        if($this->accumulated_coins < config('coins.social_levels.uungano') && $this->social_level != 'MWANZO'){
-            $this->social_level     = 'MWANZO';
-            $new_level              = $this->social_level;
-            $changes                = true;
-        }
-
-        elseif($this->accumulated_coins >= config('coins.social_levels.uungano') && $this->accumulated_coins < config('coins.social_levels.stahimili') && $this->social_level != 'UUNGANO'){
-            
-            $this->social_level      = 'UUNGANO';
-            
-            $previous_balance        = $this->coins;
-
-            $this->coins             += config('coins.earn.mwanzo_uungano');
-            $this->accumulated_coins += config('coins.earn.mwanzo_uungano');
-
-            $new_level                = $this->social_level;
-            $amount                   = config('coins.earn.mwanzo_uungano');
-
-            $current_balance         = $this->coins;
-            
-            $changes                  = true;
-
-        }
-
-        elseif($this->accumulated_coins >= config('coins.social_levels.stahimili') && $this->accumulated_coins < config('coins.social_levels.shupavu') && $this->social_level != 'STAHIMILI'){
-            
-            $this->social_level       = 'STAHIMILI';
-            
-            $previous_balance         = $this->coins;
-
-            $this->coins             += config('coins.earn.uungano_stahimili');
-            $this->accumulated_coins += config('coins.earn.uungano_stahimili');
-
-            $new_level                = $this->social_level;
-            $amount                   = config('coins.earn.uungano_stahimili');
-
-            $current_balance          = $this->coins;
-
-            $changes                  = true;
-
-        }
-
-        elseif($this->accumulated_coins >= config('coins.social_levels.shupavu') && $this->accumulated_coins < config('coins.social_levels.hodari') && $this->social_level != 'SHUPAVU'){
-            
-            $this->social_level       = 'SHUPAVU';
-            
-            $previous_balance         = $this->coins;
-            
-            $this->coins             += config('coins.earn.stahimili_shupavu');
-            $this->accumulated_coins += config('coins.earn.stahimili_shupavu');
-
-            $current_balance          = $this->coins;
-
-            $changes                  = true;
-
-            $new_level                = $this->social_level;
-            $amount                   = config('coins.earn.stahimili_shupavu');
-        }
-
-        elseif($this->accumulated_coins >= config('coins.social_levels.hodari') && $this->accumulated_coins < config('coins.social_levels.shujaa') && $this->social_level != 'HODARI'){
-            
-            $this->social_level       = 'HODARI';
-            
-            $previous_balance         = $this->coins;
-
-            $this->coins             += config('coins.earn.shupavu_hodari');
-            $this->accumulated_coins += config('coins.earn.shupavu_hodari');
-
-            $current_balance          = $this->coins;
-
-            $new_level                = $this->social_level;
-            $amount                   = config('coins.earn.shupavu_hodari');
-
-            $changes                  = true;
-        }
-
-        elseif($this->accumulated_coins >= config('coins.social_levels.shujaa') && $this->accumulated_coins < config('coins.social_levels.bingwa') && $this->social_level != 'SHUJAA'){
-            
-            $this->social_level       = 'SHUJAA';
-            
-            $previous_balance         = $this->coins;
-
-            $this->coins             += config('coins.earn.hodari_shujaa');
-            $this->accumulated_coins += config('coins.earn.hodari_shujaa');
-
-            $current_balance          = $this->coins;
-
-            $new_level                = $this->social_level;
-            $amount                   = config('coins.earn.hodari_shujaa');
-
-            $changes                  = true;
-        }
-
-        elseif($this->accumulated_coins >= config('coins.social_levels.bingwa') && $this->social_level != 'BINGWA'){
-            
-            $this->social_level       = 'BINGWA';
-
-            $previous_balance         = $this->coins;
-
-            $this->coins             += config('coins.earn.shujaa_bingwa');
-            $this->accumulated_coins += config('coins.earn.shujaa_bingwa');
-
-            $current_balance          = $this->coins;
-
-            $new_level                = $this->social_level;
-            $amount                   = config('coins.earn.shujaa_bingwa');
-
-            $changes                  = true;
-
-        }
-
-        if($changes){
-            $message = 'You have attained ' . strtolower($new_level) . ' social level.';
-
-            if($amount > 0){
-                $settings = Setting::get();
-
-                $set = new \stdClass();
-
-                foreach ($settings as $setting) {
-                    $set->{$setting->name} = $setting;
-                }
-
-                $set->available_balance->value       += $amount;
-                $set->available_balance->update();
-
-                $set->coins_in_circulation->value    += $amount;
-                $set->coins_in_circulation->update();
-
-                $simba_coin_log                        = new \App\SimbaCoinLog;
-                $simba_coin_log->user_id               = $this->id;
-                $simba_coin_log->message               = 'Simba Coins earned for advancing to ' . strtolower($new_level) . ' social level.';
-                $simba_coin_log->type                  = 'credit';
-                $simba_coin_log->coins                 = $amount;
-                $simba_coin_log->previous_balance      = $previous_balance;
-                $simba_coin_log->current_balance      += $current_balance;
-                $simba_coin_log->save();
-
-                $message .= ' You have been awarded ' . $amount . ' Simba Coins for advancing to ' . $new_level . ' Social Level';
-
-                $timeline           = new \App\Timeline;
-                $timeline->user_id  = $this->id;
-                $timeline->model_id = $this->id;
-                $timeline->message  = 'Advanced to  ' . strtolower($new_level) . ' social level';
-                $timeline->type     = 'social_level.upgraded';
-                $timeline->extra    = $new_level;
-                $timeline->save();
-
-                $notification                       = new \App\Notification;
-                $notification->from_id              = null;
-                $notification->to_id                = $this->id;
-                $notification->message              = $message;
-                $notification->notification_type    = 'social-level.updated';
-                $notification->model_id             = $this->id;
-                $notification->system_message       = 1;
-                $notification->save();
-            }
-
-            $this->social_level_attained_at = Carbon::now();
-            $this->update();
-            
-            //session()->flash('success', $message);
-        }   
     }
 
     public function check_profile(){
@@ -476,5 +307,191 @@ class User extends Authenticatable
 
     public function elements(){
         return 6;
+    }
+
+    public function check_social_level(){
+        $changes          = false;
+        $previous_balance = 0;
+        $current_balance  = 0;
+        $amount           = 0;
+
+        if($this->accumulated_coins < config('coins.social_levels.uungano') && $this->social_level != 'MWANZO'){
+            $this->social_level     = 'MWANZO';
+            $new_level              = $this->social_level;
+            $changes                = true;
+        }
+
+        elseif($this->accumulated_coins >= config('coins.social_levels.uungano') && $this->accumulated_coins < config('coins.social_levels.stahimili') && $this->social_level != 'UUNGANO'){
+            
+            $this->social_level      = 'UUNGANO';
+            
+            $previous_balance        = $this->coins;
+
+            $this->coins             += config('coins.earn.mwanzo_uungano');
+            $this->accumulated_coins += config('coins.earn.mwanzo_uungano');
+
+            $new_level                = $this->social_level;
+            $amount                   = config('coins.earn.mwanzo_uungano');
+
+            $current_balance         = $this->coins;
+            
+            $changes                  = true;
+
+        }
+
+        elseif($this->accumulated_coins >= config('coins.social_levels.stahimili') && $this->accumulated_coins < config('coins.social_levels.shupavu') && $this->social_level != 'STAHIMILI'){
+            
+            $this->social_level       = 'STAHIMILI';
+            
+            $previous_balance         = $this->coins;
+
+            $this->coins             += config('coins.earn.uungano_stahimili');
+            $this->accumulated_coins += config('coins.earn.uungano_stahimili');
+
+            $new_level                = $this->social_level;
+            $amount                   = config('coins.earn.uungano_stahimili');
+
+            $current_balance          = $this->coins;
+
+            $changes                  = true;
+
+        }
+
+        elseif($this->accumulated_coins >= config('coins.social_levels.shupavu') && $this->accumulated_coins < config('coins.social_levels.hodari') && $this->social_level != 'SHUPAVU'){
+            
+            $this->social_level       = 'SHUPAVU';
+            
+            $previous_balance         = $this->coins;
+            
+            $this->coins             += config('coins.earn.stahimili_shupavu');
+            $this->accumulated_coins += config('coins.earn.stahimili_shupavu');
+
+            $current_balance          = $this->coins;
+
+            $changes                  = true;
+
+            $new_level                = $this->social_level;
+            $amount                   = config('coins.earn.stahimili_shupavu');
+        }
+
+        elseif($this->accumulated_coins >= config('coins.social_levels.hodari') && $this->accumulated_coins < config('coins.social_levels.shujaa') && $this->social_level != 'HODARI'){
+            
+            $this->social_level       = 'HODARI';
+            
+            $previous_balance         = $this->coins;
+
+            $this->coins             += config('coins.earn.shupavu_hodari');
+            $this->accumulated_coins += config('coins.earn.shupavu_hodari');
+
+            $current_balance          = $this->coins;
+
+            $new_level                = $this->social_level;
+            $amount                   = config('coins.earn.shupavu_hodari');
+
+            $changes                  = true;
+        }
+
+        elseif($this->accumulated_coins >= config('coins.social_levels.shujaa') && $this->accumulated_coins < config('coins.social_levels.bingwa') && $this->social_level != 'SHUJAA'){
+            
+            $this->social_level       = 'SHUJAA';
+            
+            $previous_balance         = $this->coins;
+
+            $this->coins             += config('coins.earn.hodari_shujaa');
+            $this->accumulated_coins += config('coins.earn.hodari_shujaa');
+
+            $current_balance          = $this->coins;
+
+            $new_level                = $this->social_level;
+            $amount                   = config('coins.earn.hodari_shujaa');
+
+            $changes                  = true;
+        }
+
+        elseif($this->accumulated_coins >= config('coins.social_levels.bingwa') && $this->social_level != 'BINGWA'){
+            
+            $this->social_level       = 'BINGWA';
+
+            $previous_balance         = $this->coins;
+
+            $this->coins             += config('coins.earn.shujaa_bingwa');
+            $this->accumulated_coins += config('coins.earn.shujaa_bingwa');
+
+            $current_balance          = $this->coins;
+
+            $new_level                = $this->social_level;
+            $amount                   = config('coins.earn.shujaa_bingwa');
+
+            $changes                  = true;
+
+        }
+
+        if($changes){
+            $message = 'You have attained ' . strtolower($new_level) . ' social level.';
+
+            if($amount > 0){
+                $settings = Setting::get();
+
+                $set = new \stdClass();
+
+                foreach ($settings as $setting) {
+                    $set->{$setting->name} = $setting;
+                }
+
+                $set->available_balance->value       += $amount;
+                $set->available_balance->update();
+
+                $set->coins_in_circulation->value    += $amount;
+                $set->coins_in_circulation->update();
+
+                $simba_coin_log                        = new \App\SimbaCoinLog;
+                $simba_coin_log->user_id               = $this->id;
+                $simba_coin_log->message               = 'Simba Coins earned for advancing to ' . strtolower($new_level) . ' social level.';
+                $simba_coin_log->type                  = 'credit';
+                $simba_coin_log->coins                 = $amount;
+                $simba_coin_log->previous_balance      = $previous_balance;
+                $simba_coin_log->current_balance       = $current_balance;
+                $simba_coin_log->save();
+
+                $message .= ' You have been awarded ' . $amount . ' Simba Coins for advancing to ' . $new_level . ' Social Level';
+
+                $timeline           = new \App\Timeline;
+                $timeline->user_id  = $this->id;
+                $timeline->model_id = $this->id;
+                $timeline->message  = 'Advanced to  ' . strtolower($new_level) . ' social level';
+                $timeline->type     = 'social_level.upgraded';
+                $timeline->extra    = $new_level;
+                $timeline->save();
+
+                $notification                       = new \App\Notification;
+                $notification->from_id              = null;
+                $notification->to_id                = $this->id;
+                $notification->message              = $message;
+                $notification->notification_type    = 'social-level.updated';
+                $notification->model_id             = $this->id;
+                $notification->system_message       = 1;
+                $notification->save();
+
+                if($set->mail_enabled->value){
+                    $title = config('app.name') . " | You have advanced to " . ucfirst(strtolower($new_level)) . ' Social Level';
+
+                    try{
+                        \Mail::send('emails.social-level-advanced', ['title' => $title, 'user' => $this, 'amount' => $amount], function ($message) use($title){
+                            $message->subject($title);
+                            $message->to($this->email);
+                        });
+
+                    }catch(\Exception $e){
+                        
+                        session()->flash('error', $e->getMessage());
+                    }
+                }
+            }
+
+            $this->social_level_attained_at = Carbon::now();
+            $this->update();
+            
+            //session()->flash('success', $message);
+        }   
     }
 }
