@@ -8,6 +8,10 @@
 		return asset($asset);
 	}
 
+	function logo($type = 'full'){
+		return custom_asset('images/logo.png');
+	}
+
 	function word_count($string){
 		$words = explode(' ', $string);
 

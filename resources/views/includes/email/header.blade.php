@@ -9,7 +9,6 @@
 		@include('includes.email.bootstrap')
 		@include('includes.email.styles')
 		
-		
 	</head>
 	<body>
 		
