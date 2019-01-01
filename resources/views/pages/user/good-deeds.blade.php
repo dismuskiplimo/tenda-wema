@@ -42,8 +42,8 @@
 									</a>
 								</h4>
 
-								<h5 class="mb-0">{{ $deed->name }}</h5>
-								<p class="mb-0">{{ words($deed->description,30) }}</p>
+								<h5 class="nobottommargin">{{ $deed->name }}</h5>
+								<p class="nobottommargin">{{ words($deed->description,30) }}</p>
 								<p class="mb-10 text-right">
 									<small>{{ simple_datetime($deed->created_at) }}</small>
 								</p>

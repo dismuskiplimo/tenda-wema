@@ -66,6 +66,21 @@
 										<img src="{{ social_badge($event->extra) }}" alt="{{ $event->extra }} badge" class="size-20 mr-10p">
 										{{ $event->message }}
 									</p>
+								@elseif($event->type == 'deed.approved')
+									@php
+										$deed = $event->deed;
+									@endphp
+
+									<h4 class="mb-10">
+										
+										<a href="{{ route('good-deed.show', ['slug' => $deed->slug]) }}">Reported Good Deed</a>
+									</h4>
+
+									<h5 class="nobottommargin">{{ $deed->name }}</h5>
+									<p class="nobottommargin">{{ words($deed->description,30) }}</p>							
+							
+								@else
+									<p class="nobottommargin text-bold">{{ $event->message }}</p>
 								@endif
 
 								<p class="text-right nobottommargin">

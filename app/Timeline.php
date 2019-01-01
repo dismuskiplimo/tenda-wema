@@ -18,4 +18,8 @@ class Timeline extends Model
     public function user(){
     	return $this->belongsTo('App\DonatedItem', 'user_id');
     }
+
+    public function deed(){
+    	return $this->belongsTo('App\GoodDeed', 'model_id');
+    }
 }
