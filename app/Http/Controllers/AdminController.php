@@ -35,9 +35,12 @@ class AdminController extends Controller
     }
 
     public function showAccountSettings(){
-    	return view('pages.admin.account-settings', [
+    	$user = auth()->user();
+
+        return view('pages.admin.account-settings', [
     		'title' => 'Account Settings',
     		'nav'	=> 'admin.account-settings',
+            'user'  => $user,
     	]);
     }
 
@@ -1785,7 +1788,7 @@ class AdminController extends Controller
         $moderator_request->update();
 
         $moderator_request->user->moderator = 1;
-        
+
         $moderator_request->user->update();
 
         $notification           = new Notification;

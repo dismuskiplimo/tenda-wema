@@ -18,8 +18,8 @@ class BackController extends Controller
 
     public function updateUserPassword(Request $request){
         $this->validate($request,[
-            'old_password' => 'required|max:191',
-            'new_password' => 'required|max:191|confirmed',
+            'old_password'              => 'required|max:191',
+            'new_password'              => 'required|max:191|confirmed',
             'new_password_confirmation' => 'required|max:191',
         ]);
 
@@ -38,6 +38,7 @@ class BackController extends Controller
             }
 
             session()->flash('success', $message);
+
         }else{
             $message = 'Old password does not match the password in our database';
 

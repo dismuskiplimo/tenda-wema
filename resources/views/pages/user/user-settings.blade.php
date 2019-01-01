@@ -21,7 +21,7 @@
 					<div class="card-body">
 						<h4>ACCOUNT</h4>
 
-						<form action="{{ route('account.update') }}" class="" method="POST">
+						<form action="{{ route('user.account.update') }}" class="" method="POST">
 							@csrf
 							
 							<div class="row">
@@ -78,7 +78,7 @@
 					<div class="card-body">
 						<h4>PASSWORD</h4>
 
-						<form action="{{ route('password.update') }}" class="" method="POST">
+						<form action="{{ route('user.password.update') }}" class="" method="POST">
 							@csrf
 
 							<div class="form-group">

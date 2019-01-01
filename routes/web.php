@@ -92,8 +92,8 @@ Route::get('/account/inactive', 'FrontController@showInactiveAccount')->name('ac
 
 Route::get('/email/not-verified', 'FrontController@showEmailNotVerified')->name('email.not-verified');
 
-Route::post('/password/update', 'BackController@updateUserPassword')->name('password.update');
-Route::post('/account/update', 'BackController@updateUserProfile')->name('account.update');
+Route::post('/password/update', 'BackController@updateUserPassword')->name('user.password.update');
+Route::post('/account/update', 'BackController@updateUserProfile')->name('user.account.update');
 
 Route::get('/search', 'FrontController@showSearchPage')->name('user.search');
 
