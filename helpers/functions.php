@@ -12,6 +12,10 @@
 		return custom_asset('images/logo.png');
 	}
 
+	function logo_absolute($type = 'full'){
+		return base_path(config('app.public_path') . '/images/logo.png');
+	}
+
 	function word_count($string){
 		$words = explode(' ', $string);
 
@@ -53,38 +57,47 @@
 		return $diff;
 	}
 
-	function social_badge($level){
+	function social_badge($level, $type = 'web'){
+		$path = '';
+
 		if(strtolower($level) == strtolower('MWANZO')){
-			return custom_asset('images/badges/mwanzo.png');
+			$path = 'images/badges/mwanzo.png';
 		}
 
 		elseif(strtolower($level) == strtolower('UUNGANO')){
-			return custom_asset('images/badges/uungano.png');
+			$path = 'images/badges/uungano.png';
 		}
 
 		elseif(strtolower($level) == strtolower('STAHIMILI')){
-			return custom_asset('images/badges/stahimili.png');
+			$path = 'images/badges/stahimili.png';
 		}
 
 		elseif(strtolower($level) == strtolower('SHUPAVU')){
-			return custom_asset('images/badges/shupavu.png');
+			$path = 'images/badges/shupavu.png';
 		}
 
 		elseif(strtolower($level) == strtolower('HODARI')){
-			return custom_asset('images/badges/hodari.png');
+			$path = 'images/badges/hodari.png';
 		}
 
 		elseif(strtolower($level) == strtolower('SHUJAA')){
-			return custom_asset('images/badges/shujaa.png');
+			$path = 'images/badges/shujaa.png';
 		}
 
 		elseif(strtolower($level) == strtolower('BINGWA')){
-			return custom_asset('images/badges/bingwa.png');
+			$path = 'images/badges/bingwa.png';
 		}
 
 		else{
-			return custom_asset('images/badges/mwanzo.png');
+			$path = 'images/badges/mwanzo.png';
 		}
+
+		if($type == 'web'){
+			return custom_asset($path);
+		}else{
+			return base_path(config('app.public_path') . '/' . $path);
+		}
+		
 	}
 
 	function award($award){

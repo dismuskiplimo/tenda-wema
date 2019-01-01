@@ -8,7 +8,7 @@
 	</p> <br>
 
     <p class="text-center">
-        <img src="{{ $user->badge() }}" alt="" style="max-width: 250px; height: auto">
+        <img src="{{ $message->embed(social_badge($user->social_level, 'absolute')) }}" alt="" style="max-width: 250px; height: auto">
     </p>
 	
 	
