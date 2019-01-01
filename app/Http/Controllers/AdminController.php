@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, MpesaTransaction, Donation, ContactUs, Paypal_Transaction, ReportType, UserReport, UserReportType, DonatedItemReview, CancelOrder, ErrorLog, Currency};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, MpesaTransaction, Donation, ContactUs, Paypal_Transaction, ReportType, UserReport, UserReportType, DonatedItemReview, CancelOrder, ErrorLog, Currency, ModeratorRequest};
 
 use Image, Auth, Session, Mail;
 
@@ -1102,12 +1102,15 @@ class AdminController extends Controller
 
 		$stars = $stars == 5 ? 5 : floor($stars);
 
+        $moderator_request = $user->moderator_requests()->where('approved', 0)->where('dismissed', 0)->first();
+
     	return view('pages.admin.user', [
     		'title' => $user->name,
     		'nav'	=> 'admin.user',
     		'user'	=> $user,
     		'me'	=> $me,
     		'stars'	=> $stars,
+            'moderator_request' => $moderator_request,
     	]);
     }
 
@@ -1121,6 +1124,14 @@ class AdminController extends Controller
     	$user->verified_by = $admin->id;  	
 
     	$user->update();
+
+        $notification           = new Notification;
+        $notification->from_id  = null;
+        $notification->to_id    = $user->id;
+        $notification->message  = 'Your account has been verified';
+        $notification->notification_type = 'account.verified';
+        $notification->model_id = $user->id;
+        $notification->save();
 
         if($this->settings->mail_enabled->value){
             $title = config('app.name') . ' | Account Verified';
@@ -1743,5 +1754,117 @@ class AdminController extends Controller
     }
 
     // ************************ END OF USER REPORTS *********************************
+
+
+    // *************************MODERATOR REQUESTS **********************************
+
+    public function showModeratorRequests(){
+        $moderator_requests = ModeratorRequest::orderBy('created_at', 'DESC')->where('approved', 0)->where('dismissed', 0)->paginate(50);
+
+        return view('pages.admin.moderator-requests', [
+            'title'              => 'Members requesting to be moderators',
+            'nav'                => 'admin.moderator-requests',
+            'moderator_requests'  => $moderator_requests,
+        ]);
+    }
+
+    public function approveModeratorRequest($id){
+        $user = auth()->user();
+
+        $moderator_request = ModeratorRequest::findOrFail($id);
+
+        $moderator_request->approved            = 1;
+        $moderator_request->approved_at         = $this->date;
+        $moderator_request->approved_by         = $user->id;
+
+        $moderator_request->dismissed           = 0;
+        $moderator_request->dismissed_at        = null;
+        $moderator_request->dismissed_by        = null;
+        $moderator_request->dismissed_reason    = null;
+        
+        $moderator_request->update();
+
+        $moderator_request->user->moderator = 1;
+        
+        $moderator_request->user->update();
+
+        $notification           = new Notification;
+        $notification->from_id  = null;
+        $notification->to_id    = $moderator_request->user->id;
+        $notification->message  = 'Your request to be a moderator has been approved.';
+        $notification->model_id = $moderator_request->id;
+        $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Request to be a moderator declined';
+
+            try{
+                \Mail::send('emails.moderator-request-approved', ['title' => $title, 'moderator_request' => $moderator_request], function ($message) use($title, $moderator_request){
+                    $message->subject($title);
+                    $message->to($moderator_request->user->email);
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
+        session()->flash('success', 'Request approved');
+
+        return redirect()->back();
+    }
+
+    public function dismissModeratorRequest(Request $request, $id){
+        $this->validate($request, [
+            'reason' => 'required|max:50000',
+        ]);
+
+        $user = auth()->user();
+
+        $moderator_request = ModeratorRequest::findOrFail($id);
+
+        $moderator_request->approved            = 0;
+        $moderator_request->approved_at         = null;
+        $moderator_request->approved_by         = null;
+
+        $moderator_request->dismissed           = 1;
+        $moderator_request->dismissed_at        = $this->date;
+        $moderator_request->dismissed_by        = $user->id;
+        $moderator_request->dismissed_reason    = $request->reason;
+
+        $moderator_request->update();
+
+        $notification           = new Notification;
+        $notification->from_id  = null;
+        $notification->to_id    = $moderator_request->user->id;
+        $notification->message  = 'Your request to be a moderator has been declined. Reason: ' . $moderator_request->reason;
+        $notification->notification_type = 'moderator-request.declined';
+        $notification->model_id = $moderator_request->id;
+        $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Request to be a moderator declined';
+
+            try{
+                \Mail::send('emails.moderator-request-dismissed', ['title' => $title, 'moderator_request' => $moderator_request], function ($message) use($title, $moderator_request){
+                    $message->subject($title);
+                    $message->to($moderator_request->user->email);
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
+        session()->flash('success', 'Request dismissed');
+
+        return redirect()->back();
+    }
 
 }

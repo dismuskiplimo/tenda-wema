@@ -95,7 +95,10 @@ class User extends Authenticatable
     }
 
     public function can_be_moderator(){
-        return $this->accumulated_coins >= config('coins.social_levels.hodari') ? true : false;
+        if($this->accumulated_coins >= config('coins.social_levels.hodari') && !$this->is_moderator() && !$this->has_pending_moderator_request()){
+            
+            return true;
+        }
     }
 
     public function message_notifications(){
@@ -442,6 +445,22 @@ class User extends Authenticatable
                 $notification->system_message       = 1;
                 $notification->save();
             }
+        }
+    }
+
+    public function moderator_requests(){
+        return $this->hasMany('App\ModeratorRequest', 'user_id');
+    }
+
+    public function has_pending_moderator_request(){
+        $request = $this->moderator_requests()->where('approved', 0)->where('dismissed', 0)->first();
+
+        if($request){
+            return true;
+        }
+
+        else{
+            return false;
         }
     }
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement,QuotesILove, MyInterest, BooksYouShouldRead, WorldIDesire, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment, DonatedItemReview, CancelOrder, ErrorLog};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement,QuotesILove, MyInterest, BooksYouShouldRead, WorldIDesire, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, ReportType, UserReport, UserReportType, Post, Comment, DonatedItemReview, CancelOrder, ErrorLog, ModeratorRequest};
 
 use Image, Auth, Session, Mail;
 
@@ -2420,6 +2420,49 @@ class UserController extends Controller
         $review->update();
 
         session()->flash('success','Review Updated');
+        return redirect()->back();
+    }
+
+    // ****************************************REQUEST TO BE A MODERATOR *******************
+
+    public function requestToBeModerator(){
+        $user = auth()->user();
+
+        if(!$user->can_be_moderator()){
+            session()->flash('error', 'You need to be Hodari Social Level or higher in order to be eligible to be a moderator. You are currently ' . ucfirst(strtolower($user->social_level)) . ' Social Level.' );
+
+            return redirect()->back();
+        }
+
+        if($user->has_pending_moderator_request()){
+            session()->flash('error', 'You have already sent a request to become a moderator. Please wait for action from the admin team' );
+
+            return redirect()->back();
+        }
+
+        $moderator_request          = new ModeratorRequest;
+        $moderator_request->user_id = $user->id;
+        $moderator_request->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . " | " . $user->name . ' is requesting to be a moderator';
+
+            try{
+                \Mail::send('emails.moderator-request-admin', ['title' => $title, 'user' => $user], function ($message) use($title){
+                    $message->subject($title);
+                    $message->to(config('app.system_email'));
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
+        session()->flash('success', 'Request Sent, Please wait for feedback from the admin team');
+
         return redirect()->back();
     }
 }

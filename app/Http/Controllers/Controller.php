@@ -13,7 +13,7 @@ use Carbon\Carbon;
 
 use App\Setting;
 
-use Mail;
+use Mail, Config;
 
 class Controller extends BaseController
 {
@@ -35,6 +35,25 @@ class Controller extends BaseController
     	foreach ($settings as $setting) {
     		$this->settings->{$setting->name} = $setting;
     	}
+
+
+        if($this->settings->mail_db_preferred->value){
+            Config::set('mail.driver', $this->settings->mail_driver->value);
+            Config::set('mail.host', $this->settings->mail_host->value);
+            Config::set('mail.port', $this->settings->mail_port->value);
+            Config::set('mail.from.address', $this->settings->mail_from_address->value);
+            Config::set('mail.from.name', $this->settings->mail_from_name->value);
+            Config::set('mail.encryption', $this->settings->mail_encryption->value);
+            Config::set('mail.username', $this->settings->mail_username->value);
+            Config::set('mail.password', $this->settings->mail_password->value);
+
+            Config::set('services.sparkpost.secret', $this->settings->sparkpost_secret->value);
+            Config::set('services.sparkpost.options.endpoint', $this->settings->sparkpost_endpoint->value);
+
+            Config::set('services.mailgun.secret', $this->settings->mailgun_secret->value);
+            Config::set('services.mailgun.domain', $this->settings->mailgun_domain->value);
+            Config::set('services.mailgun.endpoint', $this->settings->mailgun_endpoint->value);
+        }
     }
 
     public function log_error(\Exception $e){

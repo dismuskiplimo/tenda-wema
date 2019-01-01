@@ -32,14 +32,68 @@
 								</a>
 							<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
 								@if(!auth()->user()->is_admin())
-								<li><a href="{{ route('user.donated-items.show', ['username' => auth()->user()->username]) }}">My Donated Items</a></li>
-								<li><a href="{{ route('user.good-deeds.show', ['username' => auth()->user()->username]) }}">My Good Deeds</a></li>
-								<li><a href="{{ route('user.show', ['username' => auth()->user()->username]) }}">My Profile</a></li>
-								<li><a href="{{ route('user.items-bought.show', ['username' => auth()->user()->username]) }}">Items Bought</a></li>
-								<li><a href="{{ route('user.settings') }}">Settings</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="{{ route('user.message', ['username' => auth()->user()->username, 'support' => 'true']) }}">Contact Admin</a></li>
-								<li role="separator" class="divider"></li>
+									<li>
+										<a href="{{ route('user.donated-items.show', ['username' => auth()->user()->username]) }}">
+											My Donated Items
+										</a>
+									</li>
+									
+									<li>
+										<a href="{{ route('user.good-deeds.show', ['username' => auth()->user()->username]) }}">
+											My Good Deeds
+										</a>
+									</li>
+									
+									<li>
+										<a href="{{ route('user.show', ['username' => auth()->user()->username]) }}">
+											My Profile
+										</a>
+									</li>
+									
+									<li>
+										<a href="{{ route('user.items-bought.show', ['username' => auth()->user()->username]) }}">
+											Items Bought
+										</a>
+									</li>
+									
+									<li>
+										<a href="{{ route('user.settings') }}">
+											Settings
+										</a>
+									</li>
+									
+									
+									<li role="separator" class="divider"></li>
+									
+									<li>
+										<a href="{{ route('user.message', ['username' => auth()->user()->username, 'support' => 'true']) }}">
+											Contact Admin
+										</a>
+									</li>
+
+									@if(auth()->user()->can_be_moderator())
+										
+										<li role="separator" class="divider"></li>
+									
+										<li>
+											<a href="{{ route('user.moderator.request') }}">
+												Request to be a moderator
+											</a>
+										</li>
+									@endif
+
+									@if(auth()->user()->is_moderator())
+										
+										<li role="separator" class="divider"></li>
+									
+										<li>
+											<a href="{{ route('user.moderator.misconducts-reported') }}">
+												View reported misconducts
+											</a>
+										</li>
+									@endif
+
+									<li role="separator" class="divider"></li>
 								@else
 									<li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
 								@endif

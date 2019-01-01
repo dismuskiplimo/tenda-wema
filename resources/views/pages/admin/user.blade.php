@@ -24,6 +24,17 @@
 
 	            @if(!$user->closed && !$me)
 		            <p class="text-right mb-0">
+		          		@if($user->has_pending_moderator_request())
+							<a href="" data-toggle = "modal" data-target = "#approve-moderator-request-{{ $moderator_request->id }}" class="btn btn-success btn-xs">
+								<i class="fa fa-check"></i> APPROVE TO BE A MODERATOR
+							</a> | 
+
+							<a href="" data-toggle = "modal" data-target = "#dismiss-moderator-request-{{ $moderator_request->id }}" class="btn btn-danger btn-xs">
+								<i class="fa fa-times"></i> DISMISS REQUEST TO BE MODERATOR
+							</a> | 
+
+						@endif
+
 		          		@if(!$user->verified)
 							<a href="" data-toggle="modal" data-target="#verify-user-{{ $user->id }}" class="btn btn-xs btn-success">
 			          			<i class="fa fa-certificate"></i> Verify User
@@ -105,6 +116,11 @@
 	            			</tr>
 
 	            			<tr>
+	            				<th>Moderator</th>
+	            				<td>{!! $user->moderator ? '<span class = "text-success">YES</span>' : '<span class ="text-danger">NO</span>' !!}</td>
+	            			</tr>
+
+	            			<tr>
 	            				<th>Date of Birth</th>
 	            				<td>{{ simple_date($user->dob) }}</td>
 	            			</tr>
@@ -137,18 +153,18 @@
 	            			</tr>
 
 	            			<tr>
-	            				<th>Email Confirmed</th>
-	            				<td>{!! $user->email_confirmed ? '<span class ="text-success">YES</span>' : '<span class ="text-danger">NO</span>' !!}</td>
+	            				<th>Email Verified</th>
+	            				<td>{!! $user->email_verified ? '<span class ="text-success">YES</span>' : '<span class ="text-danger">NO</span>' !!}</td>
 	            			</tr>
 
 	            			<tr>
 	            				<th>Simba Coins Balance</th>
-	            				<td>{{ $user->coins }}</td>
+	            				<td>{{ number_format($user->coins) }}</td>
 	            			</tr>
 
 	            			<tr>
 	            				<th>Accomulated Simba Coins</th>
-	            				<td>{{ $user->accumulated_coins }}</td>
+	            				<td>{{ number_format($user->accumulated_coins) }}</td>
 	            			</tr>
 
 	            			
@@ -545,6 +561,12 @@
 
 	    
 	</div>
+
+	@if($user->has_pending_moderator_request())
+		@include('pages.admin.modals.approve-moderator-request')
+
+		@include('pages.admin.modals.dismiss-moderator-request')
+	@endif
 
 
 	

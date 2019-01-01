@@ -164,6 +164,11 @@ Route::group(['prefix' => 'user'], function(){
 
 	Route::post('/report', 'UserController@postReport')->name('user.report');
 
+	Route::get('/request-to-become-moderator', 'UserController@requestToBeModerator')->name('user.moderator.request');
+
+	Route::get('/misconducts-reported', 'ModeratorController@showMisconductsReported')->name('user.moderator.misconducts-reported');
+	Route::get('/misconducts-reported/{id}/view', 'ModeratorController@showMisconductReported')->name('user.moderator.misconduct-reported');
+
 });
 
 Route::group(['prefix' => 'admin'], function(){
@@ -257,6 +262,12 @@ Route::group(['prefix' => 'admin'], function(){
 
 	Route::post('/reports/{id}/approve', 'BackController@approveReport')->name('admin.users.reported.approve');
 	Route::post('/reports/{id}/dismiss', 'BackController@dismissReport')->name('admin.users.reported.dismiss');
+
+	// Moderator Requests
+
+	Route::get('/moderator-requests', 'AdminController@showModeratorRequests')->name('admin.moderator-requests');
+	Route::post('/moderator-requests/{id}/approve', 'AdminController@approveModeratorRequest')->name('admin.moderator-request.approve');
+	Route::post('/moderator-requests/{id}/dismiss', 'AdminController@dismissModeratorRequest')->name('admin.moderator-request.dismiss');
 });
 
 Route::group(['prefix' => 'auth'], function(){

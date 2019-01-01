@@ -200,6 +200,15 @@
                 </ul>
             </li>
 
+
+             <li>
+                <a href="{{ route('admin.moderator-requests') }}" class="waves-effect">
+                    <i class="ti-user fa-fw"></i> 
+                    <span class="hide-menu">Moderator Requests</span>
+                </a> 
+            </li>
+
+
             <li> 
                 <a href="#" class="waves-effect">
                     <i class="ti-user fa-fw"></i> 

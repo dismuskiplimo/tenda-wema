@@ -16,7 +16,7 @@
 								<th>Username</th>
 								<th>Email</th>
 								<th>Coins</th>
-								<th>Email Confirmed</th>
+								<th>Email Verified</th>
 								<th>Last Seen</th>
 								<th></th>
 								
@@ -31,7 +31,7 @@
 									<td>{{ $user->username }}</td>
 									<td>{{ $user->email }}</td>
 									<td>{{ number_format($user->coins) }}</td>
-									<td>{{ $user->email_confirmed ? 'YES' : 'NO' }}</td>
+									<td>{{ $user->email_verified ? 'YES' : 'NO' }}</td>
 									<td>{{ simple_datetime($user->last_seen) }}</td>
 									<td><a href="{{ route('admin.user', ['id' => $user->id]) }}" class=""><i class="fa fa-eye"></i></a></td>
 									

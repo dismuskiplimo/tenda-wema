@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\User;
+use App\{User, Profile};
 
 use Carbon\Carbon;
 
@@ -72,8 +72,8 @@ class UserTableSeeder extends Seeder
         		'social_level' 					=> 'MWANZO',
         		'social_level_attained_at' 		=> $this->date,
         		'last_seen' 					=> $this->date,
-        		'coins' 						=> config('coins.earn.join_community'),
-        		'accumulated_coins' 			=> config('coins.earn.join_community'),
+        		'coins' 						=> config('coins.social_levels.hodari'),
+        		'accumulated_coins' 			=> config('coins.social_levels.hodari'),
         		'dob' 							=> '1992-07-10',
                 'email_verified'                => '1',
                 'email_verified_at'             => $this->date,
@@ -89,8 +89,8 @@ class UserTableSeeder extends Seeder
         		'social_level' 					=> 'MWANZO',
         		'social_level_attained_at' 		=> $this->date,
         		'last_seen' 					=> $this->date,
-        		'coins' 						=> config('coins.earn.join_community') + 300,
-        		'accumulated_coins' 			=> config('coins.earn.join_community') + 300,
+        		'coins' 						=> config('coins.social_levels.shujaa'),
+        		'accumulated_coins' 			=> config('coins.social_levels.shujaa'),
         		'dob' 							=> '1992-07-10',
                 'email_verified'                => '1',
                 'email_verified_at'             => $this->date,
@@ -106,8 +106,8 @@ class UserTableSeeder extends Seeder
         		'social_level' 					=> 'MWANZO',
         		'social_level_attained_at' 		=> $this->date,
         		'last_seen' 					=> $this->date,
-        		'coins' 						=> config('coins.earn.join_community'),
-        		'accumulated_coins' 			=> config('coins.earn.join_community'),
+        		'coins' 						=> config('coins.social_levels.bingwa'),
+        		'accumulated_coins' 			=> config('coins.social_levels.bingwa'),
         		'dob' 							=> '1992-07-10',
                 'email_verified'                => '1',
                 'email_verified_at'             => $this->date,
@@ -116,5 +116,13 @@ class UserTableSeeder extends Seeder
 
         User::insert($admins);
         User::insert($users);
+
+        $users = User::get();
+
+        foreach ($users as $user) {
+            $profile = new Profile;
+            $profile->user_id = $user->id;
+            $profile->save();
+        }
     }
 }
