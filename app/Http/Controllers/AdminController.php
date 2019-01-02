@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, MpesaTransaction, Donation, ContactUs, Paypal_Transaction, ReportType, UserReport, UserReportType, DonatedItemReview, CancelOrder, ErrorLog, Currency, ModeratorRequest};
+use App\{User, DonatedItem, DonatedItemImage, Profile, Timeline, UserReview, SimbaCoinLog, Notification, GoodDeed, GoodDeedImage, Membership, Education, WorkExperience, Skill, Award, Hobby, Achievement, Escrow, CoinPurchaseHistory, Conversation, Message, MessageNotification, MpesaTransaction, Donation, ContactUs, Paypal_Transaction, ReportType, UserReport, UserReportType, DonatedItemReview, CancelOrder, ErrorLog, Currency, ModeratorRequest, CommunityMemberAward, MostActiveMemberAward};
 
 use Image, Auth, Session, Mail;
 
@@ -89,11 +89,13 @@ class AdminController extends Controller
     }
 
     public function updateSiteSettings(Request $request){
+        
+
         foreach ($request->all() as $field => $value) {
             
             if($field != '_token'){
                 if(isset($this->settings->{ $field }) ){
-                    if(empty($value)){
+                    if(empty($value) || is_null($value)){
                         $this->settings->{ $field }->value = null;
                     }else{
 
@@ -1107,6 +1109,9 @@ class AdminController extends Controller
 
         $moderator_request = $user->moderator_requests()->where('approved', 0)->where('dismissed', 0)->first();
 
+        $last_community_member_award = $user->community_member_awards()->where('revoked', 0)->orderBy('award_year', 'desc')->first();
+        $last_most_active_member_award = $user->most_active_member_awards()->where('revoked', 0)->orderBy('award_year', 'desc')->first();
+
     	return view('pages.admin.user', [
     		'title' => $user->name,
     		'nav'	=> 'admin.user',
@@ -1114,6 +1119,9 @@ class AdminController extends Controller
     		'me'	=> $me,
     		'stars'	=> $stars,
             'moderator_request' => $moderator_request,
+            'date'  => $this->date,
+            'last_community_member_award'       => $last_community_member_award,
+            'last_most_active_member_award'     => $last_most_active_member_award,
     	]);
     }
 
@@ -1866,6 +1874,213 @@ class AdminController extends Controller
         }
 
         session()->flash('success', 'Request dismissed');
+
+        return redirect()->back();
+    }
+
+    // *********************************MOST ACTIVE MEMBER AWARDS *******************************
+
+    public function awardMostActiveMemberAward(Request $request, $id){
+        $this->validate($request, [
+            'year'  => 'required|numeric',
+        ]);
+
+        $user       = User::findOrFail($id);
+
+        if(!$user->gte_shujaa()){
+            session()->flash('error', 'User Must be Shujaa Social Level or Higher to be eligible for the Most Active Member Award');
+            
+            return redirect()->back();
+        }
+
+        $most_active_member_award = MostActiveMemberAward::where('award_year', $request->year)->where('revoked', 0)->first();
+
+        if($most_active_member_award){
+            session()->flash('error', $request->year . ' Already has a Most Active Member Award');
+            
+            return redirect()->back();
+        }
+
+        $date       = $this->date;
+
+        $most_active_member_award                = new MostActiveMemberAward;
+        $most_active_member_award->award_year    = $request->year;
+        $most_active_member_award->valid_until   = $date->addYear();
+        $most_active_member_award->user_id       = $user->id;
+        $most_active_member_award->awarded_by    = auth()->user()->id;
+        $most_active_member_award->save();
+
+        $notification           = new Notification;
+        $notification->from_id  = null;
+        $notification->to_id    = $user->id;
+        $notification->message  = 'You have been awarded the Most Active Member of ' . $request->year;
+        $notification->model_id = $most_active_member_award->id;
+        $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | You have been awarded the Most Active Member of ' . $request->year;
+
+            try{
+                \Mail::send('emails.most-active-member-award', ['title' => $title, 'user' => $user, 'most_active_member_award' => $most_active_member_award], function ($message) use($title, $user){
+                    $message->subject($title);
+                    $message->to($user->email);
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
+        session()->flash('success', 'Awarded Most Active Member Award');
+
+        return redirect()->back();
+    }
+
+    public function revokeMostActiveMemberAward(Request $request, $id){
+        $this->validate($request, [
+            'reason'  => 'required|max:50000',
+        ]);
+
+        $most_active_member_award       = MostActiveMemberAward::findOrFail($id);
+
+        $most_active_member_award->revoked          = 1;
+        $most_active_member_award->revoked_by       = auth()->user()->id;
+        $most_active_member_award->revoked_reason   = $request->reason;
+        $most_active_member_award->revoked_at       = $this->date;
+        $most_active_member_award->update();
+
+        $notification           = new Notification;
+        $notification->from_id  = null;
+        $notification->to_id    = $most_active_member_award->user->id;
+        $notification->message  = 'Your Most Active Member Award of ' . $request->year . ' has been revoked';
+        $notification->model_id = $most_active_member_award->id;
+        $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Your Most Active Member Award of ' . $request->year . ' has been revoked';
+
+            try{
+                \Mail::send('emails.most-active-member-award-revoked', ['title' => $title, 'user' => $most_active_member_award->user, 'most_active_member_award' => $most_active_member_award], function ($message) use($title, $most_active_member_award){
+                    $message->subject($title);
+                    $message->to($most_active_member_award->user->email);
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
+        session()->flash('success', 'Revoked Most Active Member Award');
+
+        return redirect()->back();
+    }
+
+    // ************************COMMUNITY MEMBER AWARDS ******************************************
+
+    public function awardCommunityMemberAward(Request $request, $id){
+        $this->validate($request, [
+            'year'  => 'required|numeric',
+        ]);
+
+         $user       = User::findOrFail($id);
+
+        if(!$user->gte_bingwa()){
+            session()->flash('error', 'User Must be Bingwa Social Level or Higher to be eligible for the Community Member Award');
+            
+            return redirect()->back();
+        }
+
+        $community_member_award = CommunityMemberAward::where('award_year', $request->year)->where('revoked', 0)->first();
+
+        if($community_member_award){
+            session()->flash('error', $request->year . ' Already has a Community Member Award');
+            
+            return redirect()->back();
+        }
+
+        $date       = $this->date;
+        
+
+        $community_member_award                = new CommunityMemberAward;
+        $community_member_award->award_year    = $request->year;
+        $community_member_award->valid_until   = $date->addYear();
+        $community_member_award->user_id       = $user->id;
+        $community_member_award->awarded_by    = auth()->user()->id;
+        $community_member_award->save();
+
+        $notification           = new Notification;
+        $notification->from_id  = null;
+        $notification->to_id    = $user->id;
+        $notification->message  = 'You have been awarded the Community Member Award of ' . $request->year;
+        $notification->model_id = $community_member_award->id;
+        $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | You have been awarded the Community Member Award of ' . $request->year;
+
+            try{
+                \Mail::send('emails.community-member-award', ['title' => $title, 'user' => $user, 'community_member_award' => $community_member_award], function ($message) use($title, $user){
+                    $message->subject($title);
+                    $message->to($user->email);
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
+        session()->flash('success', 'Awarded Community Member Award');
+
+        return redirect()->back();
+    }
+
+    public function revokeCommunityMemberAward(Request $request, $id){
+        $this->validate($request, [
+            'reason'  => 'required|max:50000',
+        ]);
+
+        $community_member_award       = CommunityMemberAward::findOrFail($id);        
+        
+        $community_member_award->revoked        = 1;
+        $community_member_award->revoked_by     = auth()->user()->id;
+        $community_member_award->revoked_at     = $this->date;
+        $community_member_award->revoked_reason = $request->reason;
+        $community_member_award->update();
+
+        $notification           = new Notification;
+        $notification->from_id  = null;
+        $notification->to_id    = $community_member_award->user->id;
+        $notification->message  = 'Your Community Member Award of ' . $request->year .' Has been revoked';
+        $notification->model_id = $community_member_award->id;
+        $notification->save();
+
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | Your Community Member Award of ' . $request->year .' Has been revoked';
+
+            try{
+                \Mail::send('emails.community-member-award-revoked', ['title' => $title, 'user' => $community_member_award->user, 'community_member_award' => $community_member_award], function ($message) use($title, $community_member_award){
+                    $message->subject($title);
+                    $message->to($community_member_award->user->email);
+                });
+
+            }catch(\Exception $e){
+
+                $this->log_error($e);
+                
+                session()->flash('error', $e->getMessage());
+            }
+        }
+
+        session()->flash('success', 'Revoked Community Member Award');
 
         return redirect()->back();
     }

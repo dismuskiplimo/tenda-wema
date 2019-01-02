@@ -223,7 +223,14 @@ Route::group(['prefix' => 'admin'], function(){
 	Route::get('/users/{id}/reviews', 'AdminController@showUserReviews')->name('admin.user.reviews');
 	Route::get('/users/{id}/photos', 'AdminController@showUserPhotos')->name('admin.user.photos');
 	Route::get('/users/{id}/good-deeds', 'AdminController@showUserGoodDeeds')->name('admin.user.good-deeds');
+
 	Route::get('/users/{id}/simba-coin-logs', 'AdminController@showUserSimbaCoinLogs')->name('admin.user.simba-coin-logs');
+	
+	Route::post('/users/{id}/award-most-active-member', 'AdminController@awardMostActiveMemberAward')->name('admin.user.award-most-active-member');
+	Route::post('/users/{id}/award-most-active-member/revoke', 'AdminController@revokeMostActiveMemberAward')->name('admin.user.award-most-active-member.revoke');
+
+	Route::post('/users/{id}/award-community-member', 'AdminController@awardCommunityMemberAward')->name('admin.user.award-community-member');
+	Route::post('/users/{id}/award-community-member/revoke', 'AdminController@revokeCommunityMemberAward')->name('admin.user.award-community-member.revoke');
 
 	// Transactions
 	Route::get('/transactions/{type}', 'AdminController@showTransactions')->name('admin.transactions');

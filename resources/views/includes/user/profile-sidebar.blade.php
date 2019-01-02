@@ -42,16 +42,58 @@
 			$profile_percent = ($profile_sum / $profile_elements) * 100;
 
 			$profile_percent = floor($profile_percent);
+
+			$last_community_member_award = $user->community_member_awards()->where('revoked', 0)->orderBy('award_year', 'desc')->first();
+        	
+        	$last_most_active_member_award = $user->most_active_member_awards()->where('revoked', 0)->orderBy('award_year', 'desc')->first();
+
+        	$date = \Carbon\Carbon::now();
 		@endphp
 
 		<p class="text-center">
 			{!! $user->stars() !!}
 		</p>
 		
-		<p class="text-center nobottommargin">
-			<img src="{{ $user->badge() }}" alt="{{ $user->name }} Badge" class="size-30"> <br>
-			{{ $user->social_status() }}
-		</p>
+		<div class="row">
+			<div class="col-sm-4 text-center">
+				<img src="{{ $user->badge() }}" alt="{{ $user->name }} Badge" class="h-75"> <br>
+				<small class="tiny nobottommargin">{{ strtoupper($user->social_status()) }}</small>
+			</div>
+
+			
+			@if($last_most_active_member_award)
+				@if($date->lte($last_most_active_member_award->valid_until))
+					
+					<div class="col-sm-4 text-center">
+						
+						<img src="{{ most_active_member_award_badge() }}" alt="" class="h-75">
+
+						<small class="tiny nobottommargin">MOST ACTIVE MEMBER {{ $last_most_active_member_award->award_year }}</small>
+
+					</div>
+
+				@endif
+			@endif
+
+
+			@if($last_community_member_award)
+				@if($date->lte($last_community_member_award->valid_until))
+					<div class="col-sm-4 text-center">
+
+						<img src="{{ community_member_award_badge() }}" alt="" class="h-75">
+
+						
+						
+						<small class="tiny nobottommargin">COMMUNITY MEMBER {{ $last_community_member_award->award_year }}</small>
+
+					</div>
+					
+				@endif
+			@endif
+			
+		</div>
+
+		
 
 		<div class="progress my-20">
 		  <div class="progress-bar" role="progressbar" aria-valuenow="{{ $profile_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $profile_percent }}%;">

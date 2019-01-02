@@ -70,8 +70,10 @@
 
 		    			<select name="mail_driver" class="form-control">
 		    				<option value="smtp" {{ $settings->mail_driver->value == 'smtp' ? 'selected' : '' }}>SMTP</option>
+		    				
 		    				<option value="sparkpost" {{ $settings->mail_driver->value == 'sparkpost' ? 'selected' : '' }}>SPARKPOST</option>
-		    				<option value="mailgun" {{ $settings->mail_driver->value == 'mailgun' ? 'selected' : '' }}>NO, MAILGUN</option>
+
+		    				<option value="mailgun" {{ $settings->mail_driver->value == 'mailgun' ? 'selected' : '' }}>MAILGUN</option>
 		    			</select>
 		    			
 		    		</div>
@@ -99,7 +101,7 @@
 		    		<div class="form-group">
 		    			<label for="">Email Encryption</label>
 
-		    			<select name="mail_driver" class="form-control">
+		    			<select name="mail_encryption" class="form-control">
 		    				<option value="" {{ $settings->mail_encryption->value == null ? 'selected' : '' }}>NONE</option>
 		    				<option value="tls" {{ $settings->mail_encryption->value == 'tls' ? 'selected' : '' }}>TLS</option>
 		    				<option value="ssl" {{ $settings->mail_encryption->value == 'ssl' ? 'selected' : '' }}>SSL</option>

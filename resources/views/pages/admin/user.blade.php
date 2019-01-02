@@ -39,12 +39,51 @@
 							<a href="" data-toggle="modal" data-target="#verify-user-{{ $user->id }}" class="btn btn-xs btn-success">
 			          			<i class="fa fa-certificate"></i> Verify User
 			          		</a>
-		          		@endif
+		          		@endif	          		
 
 		          		<a href="" data-toggle="modal" data-target="#close-account-{{ $user->id }}" class="btn btn-xs btn-danger">
 		          			<i class="fa fa-times"></i> Close Account
 		          		</a>
 		            </p>
+
+		            @if($user->gte_shujaa())
+						<p class="text-right">
+							@php
+			          			$first_user = \App\User::where('usertype', 'USER')->where('is_admin', 0)->orderBy('created_at', 'ASC')->first();
+
+			                    $end_year = $date->year;
+
+			                    if($first_user){
+			                        $start_year = $first_user->created_at->year;
+			                    }                     
+
+			                    
+		                      
+		                    @endphp
+			          		
+							<a href="" data-toggle="modal" data-target="#award-most-active-member-{{ $user->id }}" class="btn btn-xs btn-success">
+			          			<i class="fa fa-child"></i> Give Most Active Member Award
+			          		</a>
+
+			          		@if($user->gte_bingwa())
+								
+
+								<a href="" data-toggle="modal" data-target="#award-community-member-{{ $user->id }}" class="btn btn-xs btn-success">
+				          			<i class="fa fa-child"></i> Give Community Member Award
+				          		</a>
+
+				      		@endif
+
+			          		
+						</p>
+						
+						@include('pages.admin.modals.award-most-active-member')
+
+						@if($user->gte_bingwa())
+							@include('pages.admin.modals.award-community-member')
+						@endif
+
+		            @endif
 
 		            @include('pages.admin.modals.close-account')
 
@@ -79,6 +118,43 @@
 						<img src="{{ $user->badge() }}" alt="" class="size-100 mt-20">
 
 						<p>{{ $user->social_level }}</p>
+
+						@if($last_community_member_award)
+							@if($date->lte($last_community_member_award->valid_until))
+								<hr>
+
+								<p>COMMUNITY MEMBER AWARD</p>
+
+								<img src="{{ community_member_award_badge() }}" alt="" class="size-100 mt-20">
+
+								<p><small>Valid Until {{ simple_datetime($last_community_member_award->valid_until) }}</small></p>
+
+								<p class="text-center">
+									<a href="" data-toggle="modal" data-target="#revoke-community-member-award-{{ $last_community_member_award->id }}" class="btn btn-danger btn-xs">Revoke Award</a>
+								</p>
+
+								@include('pages.admin.modals.revoke-community-member-award')
+							@endif
+						@endif
+
+						@if($last_most_active_member_award)
+							@if($date->lte($last_most_active_member_award->valid_until))
+								<hr>
+
+								<p>MOST ACTIVE MEMBER AWARD</p>
+
+								<img src="{{ most_active_member_award_badge() }}" alt="" class="size-100 mt-20">
+
+								<p><small>Valid Until {{ simple_datetime($last_most_active_member_award->valid_until) }}</small></p>
+
+								<p class="text-center">
+									<a href="" data-toggle="modal" data-target="#revoke-most-active-member-award-{{ $last_most_active_member_award->id }}" class="btn btn-danger btn-xs">Revoke Award</a>
+								</p>
+
+								@include('pages.admin.modals.revoke-most-active-member-award')
+
+							@endif
+						@endif
 
 
 	            	</div>

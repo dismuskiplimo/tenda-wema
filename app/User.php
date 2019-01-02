@@ -33,7 +33,7 @@ class User extends Authenticatable
     ];
 
     protected $dates = [
-        'email_confirmed_at', 'last_seen', 'closed_at', 'suspended_from', 'suspended_until', 'social_level_attained_at', 'verified_at', 'deleted_at',
+        'email_confirmed_at', 'last_seen', 'closed_at', 'suspended_from', 'suspended_until', 'social_level_attained_at', 'verified_at', 'deleted_at', 'created_at',
     ];
 
     public function is_admin(){
@@ -62,6 +62,34 @@ class User extends Authenticatable
     
     public function is_email_verified(){
         return $this->email_verified ? true : false;
+    }
+
+    public function gte_mwanzo(){
+        return $this->accumulated_coins >= config('coins.social_levels.mwanzo') ? true : false;
+    }
+
+    public function gte_uungano(){
+        return $this->accumulated_coins >= config('coins.social_levels.uungano') ? true : false;
+    }
+
+    public function gte_stahimili(){
+        return $this->accumulated_coins >= config('coins.social_levels.stahimili') ? true : false;
+    }
+
+    public function gte_shupavu(){
+        return $this->accumulated_coins >= config('coins.social_levels.shupavu') ? true : false;
+    }
+
+    public function gte_hodari(){
+        return $this->accumulated_coins >= config('coins.social_levels.hodari') ? true : false;
+    }
+
+    public function gte_shujaa(){
+        return $this->accumulated_coins >= config('coins.social_levels.shujaa') ? true : false;
+    }
+
+    public function gte_bingwa(){
+        return $this->accumulated_coins >= config('coins.social_levels.bingwa') ? true : false;
     }
 
     public function profile_picture(){
@@ -94,6 +122,14 @@ class User extends Authenticatable
 
     public function simba_coin_logs(){
         return $this->hasMany('App\SimbaCoinLog', 'user_id');
+    }
+
+    public function most_active_member_awards(){
+        return $this->hasMany('App\MostActiveMemberAward', 'user_id');
+    }
+
+    public function community_member_awards(){
+        return $this->hasMany('App\CommunityMemberAward', 'user_id');
     }
 
     public function can_be_moderator(){

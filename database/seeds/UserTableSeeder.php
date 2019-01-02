@@ -39,6 +39,9 @@ class UserTableSeeder extends Seeder
                 'is_admin'                      => '1',
                 'email_verified'                => '1',
         		'email_verified_at'   			=> $this->date,
+                
+                'created_at'                    => $this->date,
+                'updated_at'                    => $this->date,
         	],
 
             [
@@ -58,6 +61,9 @@ class UserTableSeeder extends Seeder
                 'is_admin'                      => '1',
                 'email_verified'                => '1',
                 'email_verified_at'             => $this->date,
+                
+                'created_at'                    => $this->date,
+                'updated_at'                    => $this->date,
             ],
         ];
 
@@ -77,6 +83,9 @@ class UserTableSeeder extends Seeder
         		'dob' 							=> '1992-07-10',
                 'email_verified'                => '1',
                 'email_verified_at'             => $this->date,
+
+                'created_at'                    => $this->date,
+                'updated_at'                    => $this->date,
         	],
 
         	[
@@ -94,6 +103,9 @@ class UserTableSeeder extends Seeder
         		'dob' 							=> '1992-07-10',
                 'email_verified'                => '1',
                 'email_verified_at'             => $this->date,
+
+                'created_at'                    => $this->date,
+                'updated_at'                    => $this->date,
         	],
 
         	[
@@ -111,6 +123,9 @@ class UserTableSeeder extends Seeder
         		'dob' 							=> '1992-07-10',
                 'email_verified'                => '1',
                 'email_verified_at'             => $this->date,
+
+                'created_at'                    => $this->date,
+                'updated_at'                    => $this->date,
         	],
         ];
 

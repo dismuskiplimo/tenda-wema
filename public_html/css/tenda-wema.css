@@ -1,9 +1,14 @@
-body, #wrapper{
+#wrapper{
 	background-color: #f6f6f6 !important;
 }
 
 ul{
 	list-style: none;
+}
+
+
+.tiny{
+  font-size:0.6em;
 }
 
 .text-theme{

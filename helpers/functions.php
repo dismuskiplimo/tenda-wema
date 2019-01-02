@@ -100,6 +100,26 @@
 		
 	}
 
+	function community_member_award_badge($type = 'web'){
+		$path = 'images/badges/community-member-award.png';
+
+		if($type == 'web'){
+			return custom_asset($path);
+		}else{
+			return base_path(config('app.public_path') . '/' . $path);
+		}
+	}
+
+	function most_active_member_award_badge($type = 'web'){
+		$path = 'images/badges/most-active-member.png';
+
+		if($type == 'web'){
+			return custom_asset($path);
+		}else{
+			return base_path(config('app.public_path') . '/' . $path);
+		}
+	}
+
 	function award($award){
 		if(strtolower($award) == strtolower('most-active')){
 			return custom_asset('images/badges/most-active-member.png');
