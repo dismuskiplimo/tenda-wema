@@ -349,7 +349,7 @@ class BackController extends Controller
 
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -406,7 +406,7 @@ class BackController extends Controller
 
                     $this->log_error($e);
                     
-                    session()->flash('error', $e->getMessage());
+                    // session()->flash('error', $e->getMessage());
                 }
             }
         }

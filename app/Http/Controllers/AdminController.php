@@ -267,7 +267,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -318,7 +318,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -444,7 +444,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -522,7 +522,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -619,7 +619,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -734,7 +734,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -768,7 +768,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -851,7 +851,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -969,7 +969,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -1024,7 +1024,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -1158,7 +1158,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -1213,7 +1213,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -1634,7 +1634,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -1677,7 +1677,7 @@ class AdminController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -1819,7 +1819,7 @@ class AdminController extends Controller
 
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -1869,7 +1869,7 @@ class AdminController extends Controller
 
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -1930,7 +1930,7 @@ class AdminController extends Controller
 
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -1972,7 +1972,7 @@ class AdminController extends Controller
 
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -2034,7 +2034,7 @@ class AdminController extends Controller
 
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -2076,7 +2076,7 @@ class AdminController extends Controller
 
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 

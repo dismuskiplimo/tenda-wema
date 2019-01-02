@@ -358,7 +358,7 @@ class PaymentsController extends Controller
                     }catch(\Exception $e){
                         $this->log_error($e);
 
-                        session()->flash('error', $e->getMessage());
+                        // session()->flash('error', $e->getMessage());
                     }
                 }
 
@@ -644,7 +644,7 @@ class PaymentsController extends Controller
                         }catch(\Exception $e){
                             $this->log_error($e);
 
-                            session()->flash('error', $e->getMessage());
+                            // session()->flash('error', $e->getMessage());
                         }
                     }
                 }   

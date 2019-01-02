@@ -146,7 +146,7 @@ class AuthController extends Controller
                 });
 
             }catch(\Exception $e){
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -198,7 +198,7 @@ class AuthController extends Controller
                     });
 
                 }catch(\Exception $e){
-                    session()->flash('error', $e->getMessage());
+                    // session()->flash('error', $e->getMessage());
                 }
             }
 
@@ -246,7 +246,7 @@ class AuthController extends Controller
                 });
 
             }catch(\Exception $e){
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -411,7 +411,7 @@ class AuthController extends Controller
                 });
 
             }catch(\Exception $e){
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 

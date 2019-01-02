@@ -560,7 +560,7 @@ class UserController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -621,7 +621,7 @@ class UserController extends Controller
                 }catch(\Exception $e){
                     $this->log_error($e);
 
-                    session()->flash('error', $e->getMessage());
+                    // session()->flash('error', $e->getMessage());
                 }
             }
 
@@ -720,7 +720,7 @@ class UserController extends Controller
                 }catch(\Exception $e){
                     $this->log_error($e);
 
-                    session()->flash('error', $e->getMessage());
+                    // session()->flash('error', $e->getMessage());
                 }
             }
         }
@@ -1016,7 +1016,7 @@ class UserController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -2065,7 +2065,7 @@ class UserController extends Controller
             }catch(\Exception $e){
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -2279,7 +2279,7 @@ class UserController extends Controller
 
                         $this->log_error($e);
                         
-                        session()->flash('error', $e->getMessage());
+                        // session()->flash('error', $e->getMessage());
                     }
                 }
 
@@ -2392,7 +2392,7 @@ class UserController extends Controller
 
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
@@ -2457,7 +2457,7 @@ class UserController extends Controller
 
                 $this->log_error($e);
                 
-                session()->flash('error', $e->getMessage());
+                // session()->flash('error', $e->getMessage());
             }
         }
 
