@@ -1,1 +1,3 @@
-#Tenda Wema Project
+# Tenda Wema Project
+
+tendawema.com is a social group where members earn Simba Coins for doing good deeds that positively impact their own local communities. Members can then use the Simba Coins (virtual social currency) earned to buy items donated by members to the Community instead of money. Members advance social levels and maintain their social status in the Community by accumulating Simba Coins earned for performing even more good deeds.
