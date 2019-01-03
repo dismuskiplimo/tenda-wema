@@ -25,11 +25,11 @@
               </div>
 
               <div class="form-group">
-                <label for="">Amount You Wish To Deposit (KES)</label>
-                <input type="number" min="10" value="" name="amount" placeholder="amount in KES" class="form-control" required="">
+                <label for="">Simba Coins You Wish to Purchase</label>
+                <input type="number" min="1" value="" name="amount" placeholder="simba coins you wish to purchase" class="form-control" required="">
               </div>
 
-              <h5><b>N/B: {{ $settings->coin_value->value }} {{ $settings->system_currency->value }} = 1 Simba Coin</b></h5>
+              <h5><b>N/B: {{ $settings->system_currency->value }} {{ $settings->coin_value->value }} = 1 Simba Coin</b></h5>
             </div>
 
           </div>

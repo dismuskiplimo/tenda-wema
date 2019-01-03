@@ -20,8 +20,8 @@
               </p>
             
               <div class="form-group">
-                <label for="">Amount You Wish To Deposit (USD)</label>
-                <input type="number" min="1" value="" name="amount" placeholder="amount in USD" class="form-control" required="">
+                <label for="">Simba Coins You Wish to Purchase</label>
+                <input type="number" min="1" value="" name="amount" placeholder="simba coins you wish to purchase" class="form-control" required="">
               </div>
 
               <h5><b>N/B: 1 {{ $settings->paypal_currency->value }} = {{ $settings->coin_value->value }} Simba Coins </b></h5>

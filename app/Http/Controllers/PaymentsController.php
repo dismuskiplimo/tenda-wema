@@ -125,9 +125,9 @@ class PaymentsController extends Controller
 
         $user           = auth()->user();
 
-        $amount_to_pay  = $request->amount;
+        $coins          = ceil($request->amount);
 
-        $coins          = ceil($amount_to_pay * $this->settings->coin_value->value);
+        $amount_to_pay  = ($coins / $this->settings->coin_value->value);
 
         if($this->paypal_mode == 'test'){
 
@@ -419,8 +419,9 @@ class PaymentsController extends Controller
             $amount = 1;
             $coins  = 10;
         }else{
-            $amount = (int)ceil($request->amount);
-            $coins  = ceil($amount / $this->settings->coin_value->value);
+            $coins   = (int)ceil($request->amount);
+
+            $amount  = ($coins * $this->settings->coin_value->value);
         }
         
         $phone = $request->phone;
