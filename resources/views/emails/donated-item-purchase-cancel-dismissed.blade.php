@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $cancel_request->user->fname }},</p>
+	<p>{{ $cancel_request->user->fname }},</p>
 
 	<p>
 		Your request to cancel donated item purchase <strong>{{ $cancel_request->donated_item->name }}</strong> was dismissed.

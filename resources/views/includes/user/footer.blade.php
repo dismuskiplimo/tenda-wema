@@ -35,6 +35,28 @@
 									<abbr title="Email Address"><strong>email:</strong></abbr> <a href="mailto:{{ config('app.contact_email') }}">{{ config('app.contact_email') }}</a>
 								</div>
 
+								<div class="col-md-12 bottommargin-sm">
+									<hr>
+
+									<small>
+										<ul>
+											<li>
+												<a href="https://www.facebook.com/tendawemacommunity/"  target="_blank"><i class="fa fa-facebook" style="margin-right: 9px"></i> Like us on Facebook</a>
+											</li>
+
+											<li>
+												<a href="https://twitter.com/tendawema_com"  target="_blank"><i class="fa fa-twitter mr-5"></i> Follow us on Twitter</a>
+											</li>
+
+											<li>
+												<a href="https://www.instagram.com/tendawema_com"  target="_blank"><i class="fa fa-instagram mr-5"></i> Follow us on Instagram</a>
+											</li>
+										</ul>
+
+
+									</small>
+								</div>
+
 							</div>
 
 						</div>
@@ -96,8 +118,24 @@
 
 								<div class="col-md-12 bottommargin-sm">
 									<div class="counter counter-small"><span data-from="0" data-to="{{ App\GoodDeed::where('approved', 1)->count() }}" data-refresh-interval="80" data-speed="3000" data-comma="true"></span></div>
+
 									<h5 class="nobottommargin">Good Deeds</h5>
+
+									<hr>
+									
+
+									<div class="counter counter-small"><span data-from="0" data-to="{{ App\DonatedItem::count() }}" data-refresh-interval="80" data-speed="3000" data-comma="true"></span></div>
+									<h5 class="nobottommargin">Items Donated</h5>
+
+									<hr>
+
+									<div class="counter counter-small"><span data-from="0" data-to="{{ App\User::where('usertype', 'USER')->count() }}" data-refresh-interval="50" data-speed="2000" data-comma="true"></span></div>
+									<h5 class="nobottommargin">Registered Users</h5>
 								</div>
+
+
+
+								
 
 								
 							</div>
@@ -112,15 +150,13 @@
 
 							<div class="row">
 
-								<div class="col-md-6 bottommargin-sm">
-									<div class="counter counter-small"><span data-from="0" data-to="{{ App\DonatedItem::count() }}" data-refresh-interval="80" data-speed="3000" data-comma="true"></span></div>
-									<h5 class="nobottommargin">Items Donated</h5>
+								<div class="col-md-12 h-400 overflow-y-scroll">
+									<a class="twitter-timeline" href="https://twitter.com/tendawema_com?ref_src=twsrc%5Etfw">Tweets by tendawema_com</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 								</div>
 
-								<div class="col-md-6 bottommargin-sm">
-									<div class="counter counter-small"><span data-from="0" data-to="{{ App\User::where('usertype', 'USER')->count() }}" data-refresh-interval="50" data-speed="2000" data-comma="true"></span></div>
-									<h5 class="nobottommargin">Registered Users</h5>
-								</div>
+								
+
+
 
 							</div>
 
@@ -128,40 +164,7 @@
 
 						
 
-						<div class="widget clearfix" style="margin-bottom: -20px;">
-
-							<div class="row">
-
-								<div class="col-md-6 clearfix bottommargin-sm">
-									<small>
-										<ul>
-											<li>
-												<a href="https://www.facebook.com/tendawemacommunity/"  target="_blank"><i class="fa fa-facebook" style="margin-right: 9px"></i> Like us on Facebook</a>
-											</li>
-
-											<li>
-												<a href="https://twitter.com/tendawema_com"  target="_blank"><i class="fa fa-twitter mr-5"></i> Follow us on Twitter</a>
-											</li>
-
-											<li>
-												<a href="https://www.instagram.com/tendawema_com"  target="_blank"><i class="fa fa-instagram mr-5"></i> Follow us on Instagram</a>
-											</li>
-										</ul>
-
-
-									</small>
-
-
-
-									
-
-
-								</div>
-								
-
-							</div>
-
-						</div>
+						
 
 					</div>
 

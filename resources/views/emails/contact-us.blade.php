@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear Admin,</p>
+	<p>Admin,</p>
 
 	<p>
 		{{ $contact_us->name}} has sent a message through the contact form. Details Below:

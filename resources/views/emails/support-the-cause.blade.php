@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear Admin,</p>
+	<p>Admin,</p>
 
 	<p>
 		{{ $donation->fname .' '. $donation->lname}} is requesting to support the cause. Below are the details.

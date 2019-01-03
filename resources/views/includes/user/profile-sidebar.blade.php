@@ -2,13 +2,13 @@
 	<div class="card-body">
 
 		@if(auth()->check() && auth()->user()->id == $user->id)
-			<a href="" data-toggle = "modal" data-target="#edit-profile-pic">
-				<img src="{{ $user->profile_picture() }}" alt="" class="img-responsive mb-30 profile-picture- img-circle" title="Click to update">
-			</a>
+			{{-- <a href="" data-toggle = "modal" data-target="#edit-profile-pic"> --}}
+				<img src="{{ $user->profile_picture() }}" alt="" class="img-responsive mb-30 profile-picture img-circle" title="Click to update">
+			{{-- </a> --}}
 
 
 
-			@include('pages.user.modals.edit-profile-pic')
+			{{-- @include('pages.user.modals.edit-profile-pic') --}}
 			
 
 			<form action="{{ route('user.profile-picture.update') }}" class="hidden profile-picture-form" method="POST" enctype="multipart/form-data">

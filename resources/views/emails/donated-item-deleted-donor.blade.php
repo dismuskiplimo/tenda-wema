@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $donated_item->donor->fname }},</p>
+	<p>{{ $donated_item->donor->fname }},</p>
 
 	<p>
 		<strong>{{  $donated_item->name }}</strong> has been removed from the community shop by the admin staff.

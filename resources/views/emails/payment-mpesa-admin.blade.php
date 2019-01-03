@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear Admin,</p>
+	<p>Admin,</p>
 
 	<p>
 		{{ $transaction->user->name}} has sent <strong>{{ $transaction->currency . ' ' . number_format($transaction->amount) }}</strong> via MPESA and received <strong>{{ number_format($transaction->coins) }}</strong> Simba Coins. Details Below:

@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $donated_item->buyer->fname }},</p>
+	<p>{{ $donated_item->buyer->fname }},</p>
 
 	<p>
 		<strong>{{  $donated_item->name }}</strong> purchased was disputed. You have been refunded the Simba Coins deducted upon purchase.

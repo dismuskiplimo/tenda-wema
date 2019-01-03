@@ -112,7 +112,7 @@ class AuthController extends Controller
         $user->social_level               = 'MWANZO';
         $user->social_level_attained_at   = $this->date;
         $user->last_seen                  = $this->date;
-    	$user->email_token	              = $generateRandomString(191);
+    	$user->email_token	              = generateRandomString(191);
     	
     	$user->save();
 

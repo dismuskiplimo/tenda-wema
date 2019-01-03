@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $user->fname }},</p>
+	<p>{{ $user->fname }},</p>
 
 	<p>
 		You received The Most Active Member Award ({{ $most_active_member_award->award_year }}). You will retain this badge until <strong>{{ simple_datetime($most_active_member_award->valid_until) }}</strong>.

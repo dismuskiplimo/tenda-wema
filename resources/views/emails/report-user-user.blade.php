@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $user_report->user->fname }},</p>
+	<p>{{ $user_report->user->fname }},</p>
 
 	@php
 		if($user_report->section == 'user'){

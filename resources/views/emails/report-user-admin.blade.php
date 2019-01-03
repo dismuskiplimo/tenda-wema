@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear Admin,</p>
+	<p>Admin,</p>
 
 	@php
 		if($user_report->section == 'user'){
@@ -37,6 +37,6 @@
 		Your attention is required to verify and approve or dismiss the report.
 	</p>
 
-	<p><a href="{{ route('admin.users.reported-single', ['id' => $user_report->id]) }}">Click here to view</a></p>
+	<p><a href="{{ route('admin.users.reported-single', ['id' => $user_report->id]) }}">View Misconduct</a></p>
 
 @endsection

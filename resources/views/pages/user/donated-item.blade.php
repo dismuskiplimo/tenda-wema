@@ -324,7 +324,11 @@
 						@if($item->disputed)
 							<button class="btn btn-disabled btn-block btn-lg" disabled="">DISPUTED</button>
 						@else
-							<button class="btn btn-disabled btn-block btn-lg" disabled="">PURCHASED</button>
+							@if(auth()->check() && $item->buyer_id == $user->id)
+								<button class="btn btn-disabled btn-block btn-lg" disabled="">PURCHASED</button>
+							@else
+							
+							<button class="btn btn-disabled btn-block btn-lg" disabled="">SOLD</button>
 						@endif
 					@endif
 

@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $user->fname }},</p>
+	<p>{{ $user->fname }},</p>
 
 	<p>
 		Your {{ config('app.name') }} account was closed. You can no longer log in to your account. All your remaining Simba Coins were returned to the community.

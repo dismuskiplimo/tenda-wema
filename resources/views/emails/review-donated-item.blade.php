@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $item->donor->fname }},</p>
+	<p>{{ $item->donor->fname }},</p>
 
 	<p>{{ $review->user->name }} reviewed your donated item <strong>{{ $item->name }}</strong>.</p>
 
@@ -11,7 +11,7 @@
 	</p>
 
 	<p>
-		<a href="{{ route('donated-item.show', ['slug' => $item->slug]) }}">Click here to view</a>
+		<a href="{{ route('donated-item.show', ['slug' => $item->slug]) }}">View Item</a>
 	</p>
 
 

@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $review->user->fname }},</p>
+	<p>{{ $review->user->fname }},</p>
 
 	<p>{{ $review->rater->name }} reviewed your profile.</p>
 
@@ -11,7 +11,7 @@
 	</p>
 
 	<p>
-		<a href="{{ route('user.reviews.show', ['username' => $review->user->username]) }}">Click here to view</a>
+		<a href="{{ route('user.reviews.show', ['username' => $review->user->username]) }}">View Review</a>
 	</p>
 
 @endsection

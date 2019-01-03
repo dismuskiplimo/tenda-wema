@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-	<p>Dear {{ $donation->fname }},</p>
+	<p>{{ $donation->fname }},</p>
 
 	<p>Thank you for your donation request. We however have dismissed the request.</p>
 
