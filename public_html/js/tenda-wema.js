@@ -296,4 +296,42 @@ $(document).ready(function(){
 		});
 	}
 
+	if($('.paypal-input').length){
+
+		$('.paypal-input').on('change keyup keydown', function(e){
+			var coins = $(this).val();
+
+			if(coins > 0){
+				var amount = coins / 10;
+
+				$('.paypal-amount').html(amount);
+
+				$('.paypal-coins').html(coins);
+			}else{
+				$('.paypal-amount').html('0');
+
+				$('.paypal-coins').html('0');
+			}
+			
+		});
+
+		$('.mpesa-input').on('change keyup keydown', function(e){
+			var coins = $(this).val();
+
+			if(coins > 0){
+				var amount = coins * 10;
+
+				$('.mpesa-amount').html(amount);
+
+				$('.mpesa-coins').html(coins);
+			}else{
+				$('.mpesa-amount').html('0');
+
+				$('.mpesa-coins').html('0');
+			}
+			
+		});
+
+	}
+
 });

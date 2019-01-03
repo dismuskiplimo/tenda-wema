@@ -406,7 +406,7 @@ class PaymentsController extends Controller
         
         $this->validate($request,[
             'phone'     => 'numeric|required',
-            'amount'    => 'numeric|required|min:10',
+            'amount'    => 'numeric|required|min:1',
         ]);
 
         if(!$this->settings->mpesa_enabled->value){

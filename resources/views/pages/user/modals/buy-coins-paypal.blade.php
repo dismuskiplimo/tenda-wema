@@ -21,10 +21,14 @@
             
               <div class="form-group">
                 <label for="">Simba Coins You Wish to Purchase</label>
-                <input type="number" min="1" value="" name="amount" placeholder="simba coins you wish to purchase" class="form-control" required="">
+                <input type="number" min="1" value="" name="amount" placeholder="simba coins you wish to purchase" class="form-control paypal-input" required="">
               </div>
 
               <h5><b>N/B: 1 {{ $settings->paypal_currency->value }} = {{ $settings->coin_value->value }} Simba Coins </b></h5>
+
+              <hr>
+
+              <p class="nobottomborder"><strong> <span class="paypal-coins">0</span> Simba Coins =  <span class="paypal-amount">0</span> {{ $settings->paypal_currency->value }} </strong></p>
             </div>
 
           </div>

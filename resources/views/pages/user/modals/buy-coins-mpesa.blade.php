@@ -26,10 +26,14 @@
 
               <div class="form-group">
                 <label for="">Simba Coins You Wish to Purchase</label>
-                <input type="number" min="1" value="" name="amount" placeholder="simba coins you wish to purchase" class="form-control" required="">
+                <input type="number" min="1" value="" name="amount" placeholder="simba coins you wish to purchase" class="form-control mpesa-input" required="">
               </div>
 
               <h5><b>N/B: {{ $settings->system_currency->value }} {{ $settings->coin_value->value }} = 1 Simba Coin</b></h5>
+
+              <hr>
+
+              <p class="nobottomborder"><strong> <span class="mpesa-coins">0</span> Simba Coins =  <span class="mpesa-amount">0</span> {{ $settings->system_currency->value }} </strong></p>
             </div>
 
           </div>
