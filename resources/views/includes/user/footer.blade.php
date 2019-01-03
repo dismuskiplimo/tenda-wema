@@ -35,27 +35,27 @@
 									<abbr title="Email Address"><strong>email:</strong></abbr> <a href="mailto:{{ config('app.contact_email') }}">{{ config('app.contact_email') }}</a>
 								</div>
 
-								<div class="col-md-12 bottommargin-sm">
-									<hr>
+								
+								<hr>
 
-									<small>
-										<ul>
-											<li>
-												<a href="https://www.facebook.com/tendawemacommunity/"  target="_blank"><i class="fa fa-facebook" style="margin-right: 9px"></i> Like us on Facebook</a>
-											</li>
+								<small>
+									<ul>
+										<li>
+											<a href="https://www.facebook.com/tendawemacommunity/"  target="_blank"><i class="fa fa-facebook" style="margin-right: 9px"></i> Like us on Facebook</a>
+										</li>
 
-											<li>
-												<a href="https://twitter.com/tendawema_com"  target="_blank"><i class="fa fa-twitter mr-5"></i> Follow us on Twitter</a>
-											</li>
+										<li>
+											<a href="https://twitter.com/tendawema_com"  target="_blank"><i class="fa fa-twitter mr-5"></i> Follow us on Twitter</a>
+										</li>
 
-											<li>
-												<a href="https://www.instagram.com/tendawema_com"  target="_blank"><i class="fa fa-instagram mr-5"></i> Follow us on Instagram</a>
-											</li>
-										</ul>
+										<li>
+											<a href="https://www.instagram.com/tendawema_com"  target="_blank"><i class="fa fa-instagram mr-5"></i> Follow us on Instagram</a>
+										</li>
+									</ul>
 
 
-									</small>
-								</div>
+								</small>
+								
 
 							</div>
 
