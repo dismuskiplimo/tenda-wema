@@ -20,6 +20,8 @@ class CreateUserActivitiesTable extends Migration
             $table->integer('donated_items')->default(0);
             $table->integer('posts')->default(0);
             $table->integer('comments')->default(0);
+            $table->integer('item_reviews')->default(0);
+            $table->integer('user_reviews')->default(0);
             $table->integer('user_id')->default(0);
             $table->timestamps();
             $table->softDeletes();

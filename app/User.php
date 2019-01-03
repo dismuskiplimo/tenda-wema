@@ -331,6 +331,27 @@ class User extends Authenticatable
         }
     }
 
+    public function activity($year = ''){
+        if(empty($year)){
+            $year = Carbon::now()->year;
+        }
+
+        $activity = $this->activities()->where('year', $year)->first();
+
+        if(!$activity){
+            $activity = new UserActivity;
+            $activity->user_id = $this->id;
+            $activity->year = $year;
+            $activity->save();
+        }
+
+        return $activity;
+    }
+
+    public function activities(){
+        return $this->hasMany('App\UserActivity', 'user_id');
+    }
+
     public function sections_complete(){
         $this->check_profile();
 

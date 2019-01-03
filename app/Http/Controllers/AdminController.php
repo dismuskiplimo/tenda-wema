@@ -255,6 +255,10 @@ class AdminController extends Controller
         $notification->model_id             = $deed->id;
         $notification->save();
 
+        $activity               = $deed->user->activity();
+        $activity->good_deeds  += 1;
+        $activity->update();
+
         if($this->settings->mail_enabled->value){
             $title = config('app.name') . ' | Good Deed Approved';
 
@@ -771,6 +775,10 @@ class AdminController extends Controller
                 // session()->flash('error', $e->getMessage());
             }
         }
+
+        $activity                 = $donated_item->donor->user->activity($donated_item->created_at->year);
+        $activity->donated_items -= 1;
+        $activity->update();
 
         $donated_item->delete();
 

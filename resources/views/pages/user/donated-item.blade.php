@@ -329,6 +329,8 @@
 							@else
 							
 							<button class="btn btn-disabled btn-block btn-lg" disabled="">SOLD</button>
+
+							@endif
 						@endif
 					@endif
 

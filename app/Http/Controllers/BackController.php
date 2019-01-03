@@ -307,6 +307,11 @@ class BackController extends Controller
             $donated_item->deleted_by = $user->id;
             $donated_item->deleted_reason = $message;
             $donated_item->update();
+
+            $activity                 = $donated_item->donor->activity($donated_item->created_at->year);
+            $activity->donated_items -= 1;
+            $activity->update();
+
             $donated_item->delete();
         }
 
@@ -322,13 +327,23 @@ class BackController extends Controller
                 }
             }
 
+            $activity            = $post->user->activity($post->created_at->year);
+            $activity->posts    -= 1;
+            $activity->update();
+
             $post->delete();
+
+
 
             $extras .= 'Post Deleted';
         }
 
         if($user_report->section == 'comment'){
             $comment = Comment::findOrFail($user_report->comment_model->id);
+
+            $activity            = $comment->user->activity($comment->created_at->year);
+            $activity->comments -= 1;
+            $activity->update();
 
             $comment->delete();
 

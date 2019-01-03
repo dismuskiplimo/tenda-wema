@@ -497,6 +497,10 @@ class UserController extends Controller
         $timeline->type     = 'item.donated';
         $timeline->save();
 
+        $activity = $user->activity();
+        $activity->donated_items += 1;
+        $activity->update();
+
 
         session()->flash('success', 'Item donated to the community');
 
@@ -815,6 +819,10 @@ class UserController extends Controller
         if($timeline){
             $timeline->delete();
         }
+
+        $activity                   = $user->activity($item->created_at->year);
+        $activity->donated_items    -= 1;
+        $activity->update();
 
         $item->delete();
 
@@ -2092,6 +2100,10 @@ class UserController extends Controller
         $post->user_id  = $user->id;
         $post->save();
 
+        $activity           = $user->activity();
+        $activity->posts    += 1;
+        $activity->update();
+
         session()->flash('success', 'Post Created');
 
         return redirect()->back();
@@ -2140,6 +2152,10 @@ class UserController extends Controller
             }
         }
 
+        $activity           = $user->activity($post->created_at->year);
+        $activity->posts   -= 1;
+        $activity->update();
+
         $post->delete();
 
         session()->flash('success', 'Post Deleted');
@@ -2175,7 +2191,9 @@ class UserController extends Controller
             $notification->save();
         }
 
-
+        $activity            = $user->activity();
+        $activity->comments += 1;
+        $activity->update();
 
         session()->flash('success', 'Comment Added');
 
@@ -2213,6 +2231,10 @@ class UserController extends Controller
             session()->flash('error', 'Forbidden');
             return redirect()->back();
         }
+
+        $activity               = $user->activity($comment->created_at->year);
+        $activity->comments    -= 1;
+        $activity->update();
 
         $comment->delete();
 
@@ -2265,6 +2287,10 @@ class UserController extends Controller
                 $notification->notification_type    = 'item.reviewed';
                 $notification->model_id             = $item->id;
                 $notification->save();
+
+                $activity                = $user->activity();
+                $activity->item_reviews += 1;
+                $activity->update();
 
                 if($this->settings->mail_enabled->value){
                     $title = config('app.name') . " | Your donated item " . $item->name . "  has been reviewed";
@@ -2325,6 +2351,7 @@ class UserController extends Controller
         ]);
 
         $user = User::where('username', $username)->firstOrFail();
+        
         $auth = auth()->user();
 
         if($user->id == $auth->id){
@@ -2378,6 +2405,10 @@ class UserController extends Controller
         $notification->notification_type    = 'user.reviewed';
         $notification->model_id             = $user->id;
         $notification->save();
+
+        $activity                = $auth->activity();
+        $activity->user_reviews += 1;
+        $activity->update();
 
         if($this->settings->mail_enabled->value){
             $title = config('app.name') . " | Your profile was reviewed";
