@@ -49,10 +49,11 @@
                             <div class="line line-sm"></div>
 
                             <div class="center">
-                                <h4 style="margin-bottom: 15px;">or Login with:</h4>
-                                <a href="{{ route('auth.facebook.login') }}" class="button button-rounded si-facebook si-colored"><i class="fa fa-facebook"></i> Facebook</a> <br>
+                                <h4 style="margin-bottom: 15px;">or</h4>
+                                <a href="{{ route('auth.facebook.login') }}" class="button button-rounded si-facebook si-colored" style="text-transform: initial;"><i class="fa fa-facebook"></i> Sign in with Facebook</a> <br>
                                 
-                                <a href="{{ route('auth.google.login') }}" class="button button-rounded si-google si-colored"> <i class="fa fa-google"></i> Google</a>
+                                <a href="{{ route('auth.google.login') }}" class="google-image-dark"></a>
+                               
                             </div>
                         </div>
                     </div>

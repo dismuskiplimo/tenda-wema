@@ -6,6 +6,58 @@ ul{
 	list-style: none;
 }
 
+.google-icon-dark{
+	background-image: url('images/google/vector/btn_google_dark_normal_ios.svg');
+	background-position: center center ;
+	font-family: 'Roboto', 'Lato';
+	background-size: 50px 50px;
+	height: 50px;
+	width: 50px;	
+	float: left; 
+}
+
+.google-icon-dark:focus{
+	background-image: url('images/google/vector/btn_google_dark_focus_ios.svg');	
+}
+
+.google-icon-dark:active{
+	background-image: url('images/google/vector/btn_google_dark_pressed_ios.svg');	
+}
+
+.google-text-dark{
+	background-color: #4285F4;
+	color: #fff;
+	float: left;
+	padding: 11.3px 10px 11.3px 10px;
+	margin-top: 3.2px;
+	margin-left: -5px;
+	border-radius-:0px 2px 2px 0px;
+	text-transform: uppercase;
+	font-family: 'Roboto', 'Lato';
+
+}
+
+.google-image-dark{
+	background-image: url('images/google/2x/btn_google_signin_dark_normal_web@2x.png');
+	background-position: top left;
+	font-family: 'Roboto', 'Lato';
+	background-size: 191px 46px;
+	height: 46px;
+	width: 191px;
+	display: inline-block;
+
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.google-image-dark:focus{
+	background-image: url('images/google/2x/btn_google_signin_dark_focus_web@2x.png');
+}
+
+.google-image-dark:active{
+	background-image: url('images/google/2x/btn_google_signin_dark_pressed_web@2x.png');
+}
+
 
 .tiny{
   font-size:0.6em;

@@ -29,8 +29,10 @@ return [
     'sparkpost' => [
         'secret' => env('SPARKPOST_SECRET'),
         'options' => [
-            'endpoint' => env('SPARKPOST_ENDPOINT'),
-        ]
+            'endpoint'          => env('SPARKPOST_ENDPOINT'),
+            'open_tracking'     => false,
+            'click_tracking'    => false,
+        ],
     ],
 
     'stripe' => [

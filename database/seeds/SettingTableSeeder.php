@@ -108,7 +108,7 @@ class SettingTableSeeder extends Seeder
 
             [
                 'name'          => 'sparkpost_secret',
-                'value'         => '',
+                'value'         => '28b0336902591c2fb5dd86204c553631bacbc6ce',
                 'created_at'    => $this->date,
                 'updated_at'    => $this->date,
             ], 
