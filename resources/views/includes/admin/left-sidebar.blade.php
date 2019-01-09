@@ -113,11 +113,11 @@
                         </a>
                     </li>
 
-                    <li>
-                        <a href="{{ route('admin.donated-items', ['type' => 'approved']) }}">Approved
+                     <li>
+                        <a href="{{ route('admin.donated-items', ['type' => 'pending-delivery']) }}">Pending Delivery
                             <span class="label label-rouded label-purple pull-right">{{-- {{ $closed_events_count }} --}}</span>
                         </a>
-                    </li>                    
+                    </li>             
 
                     <li>
                         <a href="{{ route('admin.donated-items', ['type' => 'delivered']) }}">Delivered
@@ -126,7 +126,7 @@
                     </li> 
 
                     <li>
-                        <a href="{{ route('admin.donated-items', ['type' => 'disapproved']) }}">Disapproved
+                        <a href="{{ route('admin.donated-items', ['type' => 'disapproved']) }}">Rejected
                             <span class="label label-rouded label-purple pull-right">{{-- {{ $past_events_count }} --}}</span>
                         </a>
                     </li>
@@ -262,33 +262,6 @@
                     </li>
 
                     
-                    
-                </ul>
-            </li>
-
-            <li> 
-                <a href="#" class="waves-effect">
-                    <i class="fa fa-building fa-fw"></i> 
-                    <span class="hide-menu">Escrow
-                        <span class="fa arrow"></span>
-                    </span>
-                </a>
-                
-                <ul class="nav nav-second-level">
-                   
-
-                    <li> 
-                        <a href="{{ route('admin.escrow', ['type' => 'pending']) }}">Pending 
-                            <span class="label label-rouded label-purple pull-right">{{-- {{ $suspended_users }} --}}</span>
-                        </a> 
-
-                    </li>
-
-                    <li> 
-                        <a href="{{ route('admin.escrow', ['type' => 'settled']) }}">Settled 
-                            <span class="label label-rouded label-purple pull-right">{{-- {{ $adm }} --}}</span>
-                        </a>
-                    </li>
                     
                 </ul>
             </li>

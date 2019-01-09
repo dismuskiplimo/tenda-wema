@@ -124,7 +124,7 @@
 									<hr>
 									
 
-									<div class="counter counter-small"><span data-from="0" data-to="{{ App\DonatedItem::count() }}" data-refresh-interval="80" data-speed="3000" data-comma="true"></span></div>
+									<div class="counter counter-small"><span data-from="0" data-to="{{ App\DonatedItem::where('approved', 1)->count() }}" data-refresh-interval="80" data-speed="3000" data-comma="true"></span></div>
 									<h5 class="nobottommargin">Items Donated</h5>
 
 									<hr>

@@ -19,7 +19,7 @@
 			<div class="col-sm-3 text-center">
 				<div class="card">
 					<div class="card-body">
-						<h4>AVALIABLE BALANCE</h4>
+						<h4>AVAILABLE BALANCE</h4>
 						<h2>
 							<img src="{{ simba_coin() }}" alt="Simba Coin" class="size-30">
 							{{ number_format($user->coins) }}

@@ -31,6 +31,15 @@ class DonatedItem extends Model
     public function disapprover(){
         return $this->belongsTo('App\User', 'disapproved_by');
     }
+    
+    public function disputer(){
+        return $this->belongsTo('App\User', 'disputed_by');
+    }
+
+    public function deletor(){
+        return $this->belongsTo('App\User', 'deleted_by');
+    }
+
 
     public function escrow(){
         return $this->hasOne('App\Escrow', 'donated_item_id');
@@ -62,24 +71,24 @@ class DonatedItem extends Model
 
     public function status(){
         
-        if($this->bought == 1 && $this->approved == 0 && $this->disputed == 0 && !$this->deleted_at){
+        if($this->bought == 0 && $this->approved == 0 && $this->disputed == 0 && $this->disapproved == 0 && !$this->deleted_at){
             return 'PENDING APPROVAL';
         }
 
-        elseif($this->bought == 0 && $this->approved == 0 && $this->disputed == 0 && $this->disapproved == 0 && !$this->deleted_at){
+        elseif($this->bought == 0 && $this->approved == 1 && $this->disputed == 0 && $this->disapproved == 0 && !$this->deleted_at){
             return 'COMMUNITY SHOP';
         }
 
         elseif($this->bought == 1 && $this->approved == 1 && $this->disputed == 0 && $this->disapproved == 0 && $this->received == 0 && !$this->deleted_at){
-            return 'APPROVED BUT NOT DELIVERED YET';
+            return 'BOUGHT BUT NOT DELIVERED YET';
         }
 
         elseif($this->bought == 1 && $this->approved == 1 && $this->disputed == 0 && $this->disapproved == 0 && $this->received == 1 && !$this->deleted_at){
-            return 'APPROVED AND DELIVERED';
+            return 'BOUGHT AND DELIVERED';
         }
 
         elseif($this->approved == 0 && $this->disputed == 0 && $this->disapproved == 1 && !$this->deleted_at){
-            return 'DISAPPROVED';
+            return 'REJECTED';
         }
 
         elseif($this->disputed == 1 && is_null($this->deleted_at) && !$this->deleted_at){
@@ -91,7 +100,7 @@ class DonatedItem extends Model
         }
 
         else{
-            return 'STATE UNKNOWN';
+            return 'UNKNOWN';
         }
     }
 }

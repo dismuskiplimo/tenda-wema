@@ -272,7 +272,7 @@ class FrontController extends Controller
     }
 
     public function showCommunityShopPage(){
-    	$donated_items = DonatedItem::where('bought', 0)->where('disputed', 0)->orderBy('created_at','DESC')->paginate($this->pagination);
+    	$donated_items = DonatedItem::where('bought', 0)->where('disputed', 0)->where('approved', 1)->orderBy('created_at','DESC')->paginate($this->pagination);
 
         return view('pages.user.community-shop',[
     		'title' 	      => 'Community Shop',
@@ -421,15 +421,27 @@ class FrontController extends Controller
     }
 
     public function showUserDonatedItems($username){
-        $user = User::where('username', $username)->firstOrFail();
+        $me     = false;
+        $user   = User::where('username', $username)->firstOrFail();
 
-        $donated_items = $user->donated_items()->orderBy('created_at', 'DESC')->paginate(15);
+        if(auth()->check()){
+            if(auth()->user()->id == $user->id){
+                $me = true;
+            }
+        }
+
+        if($me){
+            $donated_items = $user->donated_items()->orderBy('created_at', 'DESC')->paginate(15);
+        }else{
+            $donated_items = $user->donated_items()->where('approved', 1)->orderBy('created_at', 'DESC')->paginate(15);
+        }
 
         return view('pages.user.user-donated-items',[
             'title'           => $user->name . ' | Donated Items',
             'nav'             => 'user-donated-items',
             'user'            => $user,
             'donated_items'   => $donated_items,
+            'me'              => $me,
 
         ]);
     }
@@ -437,7 +449,7 @@ class FrontController extends Controller
     public function showUserItemsBought($username){
         $user = User::where('username', $username)->firstOrFail();
 
-        $donated_items = $user->bought_items()->orderBy('created_at', 'DESC')->paginate(15);
+        $donated_items = $user->bought_items()->where('disputed', 0)->where('disapproved', 0)->orderBy('created_at', 'DESC')->paginate(15);
 
         return view('pages.user.user-items-bought',[
             'title'           => $user->name . ' | Bought Items',

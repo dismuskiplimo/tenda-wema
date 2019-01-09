@@ -21,7 +21,14 @@
 			</div>
 
 			<div class="col-sm-9">
-				<h4>DONATED ITEMS ({{ number_format($donated_items->total()) }})</h4>
+				<h4>
+					DONATED ITEMS ({{ number_format($donated_items->total()) }})
+
+					@if($me)
+						<a href="{{ route('donate-item') }}" class="button button-black pull-right mtn-10">DONATE ITEM</a>
+					@endif
+
+				</h4>
 				
 				@if($donated_items->total())
 					<div class="row">

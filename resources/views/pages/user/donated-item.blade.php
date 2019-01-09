@@ -177,7 +177,7 @@
 
 				<div class="card">
 					<div class="card-body">
-						<h3> <img src="{{ simba_coin() }}" alt="" class="size-30"> {{ $item->price }} <small>Simba Coins</small></h3>
+						<h3> <img src="{{ simba_coin() }}" alt="" class="size-30"> {{ number_format($item->price) }} <small>Simba Coins</small></h3>
 						<h4 class="mb-0 mtn-25">{{ $item->name }}</h4>
 					</div>
 				</div>
@@ -265,7 +265,7 @@
 				</div>
 				
 				<div class="">
-					@if(!$item->bought)
+					@if(!$item->bought && $item->approved)
 						@if(auth()->check())
 							@if(!$mine)
 								@if($item->price > $user->coins)
@@ -274,7 +274,7 @@
 											COIN PURCHASE REQUESTED,  <br> PLEASE WAIT FOR FEEDBACK FROM ADMIN
 										</a>
 									@else
-										<a href="{{ route('user.purchase-coins') }}" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#purchase-coins">
+										<a href="" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#purchase-coins">
 											<img src="{{ simba_coin() }}" alt="" class="size-30"> 
 											PURCHASE EXTRA COINS
 										</a>
@@ -292,7 +292,7 @@
 								@endif
 							@else
 								@if(!$item->disputed)
-									<div class="btn-group btn-group-justified">
+									{{-- <div class="btn-group btn-group-justified">
 										<a href="" data-toggle="modal" data-target="#edit-donated-item-{{ $item->id }}" class="btn btn-info"><i class="fa fa-edit"></i> EDIT</a>
 
 										<a href="" data-toggle="modal" data-target="#delete-donated-item-{{ $item->id }}" class="btn btn-danger"><i class="fa fa-trash"></i> REMOVE FROM SHOP</a>
@@ -308,7 +308,7 @@
 									@include('pages.user.modals.edit-donated-item')
 									@include('pages.user.modals.delete-donated-item')
 									@include('pages.user.modals.add-donated-item-image')
-									@include('pages.user.modals.delete-donated-item-image')
+									@include('pages.user.modals.delete-donated-item-image') --}}
 								@else
 									<button class="btn btn-disabled btn-block btn-lg" disabled="">DISPUTED</button>
 								@endif
@@ -320,18 +320,23 @@
 
 							@include('pages.user.modals.login')
 						@endif
-					@else
+					@elseif($item->bought && $item->approved)
 						@if($item->disputed)
 							<button class="btn btn-disabled btn-block btn-lg" disabled="">DISPUTED</button>
 						@else
 							@if(auth()->check() && $item->buyer_id == $user->id)
-								<button class="btn btn-disabled btn-block btn-lg" disabled="">PURCHASED</button>
-							@else
+								<button class="btn btn-disabled btn-block btn-lg" disabled="">PURCHASED BY ME</button>
+							@elseif($item->approved)
 							
-							<button class="btn btn-disabled btn-block btn-lg" disabled="">SOLD</button>
+								<button class="btn btn-disabled btn-block btn-lg" disabled="">SOLD</button>
 
 							@endif
 						@endif
+
+					@elseif(!$item->bought && !$item->approved && !$item->dismissed)
+						<button class="btn btn-disabled btn-block btn-lg" disabled="">PENDING APPROVAL BY ADMIN</button>
+					@elseif(!$item->bought && !$item->approved && $item->dismissed)
+						<button class="btn btn-disabled btn-block btn-lg" disabled="">REJECTED BY ADMIN</button>
 					@endif
 
 				</div>

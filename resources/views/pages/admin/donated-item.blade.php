@@ -13,38 +13,42 @@
 	            			<h3 class="box-title">{{ $title }}</h3>
 				            <p class="text-right">
 				            	@if($donated_item->bought)
-				            		@if(!$donated_item->approved)
-										<a href="" data-toggle="modal" data-target="#purchase-approve-{{ $donated_item->id }}" class="btn btn-xs btn-success"><i class="fa fa-check"></i> APPROVE PURCHASE</a>	
-										<a href="" data-toggle="modal" data-target="#purchase-disapprove-{{ $donated_item->id }}" class="btn btn-xs btn-danger"><i class="fa fa-times"></i> DISAPPROVE PURCHASE</a>	
+				            												
+									@if(!$donated_item->received)
+										<a href="" data-toggle="modal" data-target="#item-receive-{{ $donated_item->id }}" class="btn btn-xs btn-success"><i class="fa fa-check"></i> MARK AS RECEIVED</a>
+										
+									@endif
+
+									@if(!$donated_item->disputed)
+										<a href="" data-toggle="modal" data-target="#item-dispute-{{ $donated_item->id }}" class="btn btn-xs btn-warning"><i class="fa fa-bullhorn"></i> DISPUTE</a>
+
+										
+										
+									@endif
+
+									<div class="text-left">
+										@include('pages.admin.modals.receive-item')
+										@include('pages.admin.modals.dispute-item')
+									</div>
+										
+														
+				            	@else
+									@if(!$donated_item->approved && !$donated_item->disapproved && is_null($donated_item->deleted_at))
+										<p>
+											
+										
+										<a href="" data-toggle="modal" data-target="#purchase-approve-{{ $donated_item->id }}" class="btn btn-xs btn-success"><i class="fa fa-check"></i> APPROVE DONATED ITEM</a>	
+										<a href="" data-toggle="modal" data-target="#purchase-disapprove-{{ $donated_item->id }}" class="btn btn-xs btn-danger"><i class="fa fa-times"></i> REJECT DONATED ITEM</a>	
 
 										<div class="text-left">
 											@include('pages.admin.modals.approve-purchase')
 											@include('pages.admin.modals.disapprove-purchase')
 										</div>
-				            		@else
-										
-										
-										@if(!$donated_item->received)
-											<a href="" data-toggle="modal" data-target="#item-receive-{{ $donated_item->id }}" class="btn btn-xs btn-success"><i class="fa fa-check"></i> MARK AS RECEIVED</a>
-											
-											
-											
-										@endif
 
-										@if(!$donated_item->disputed)
-											<a href="" data-toggle="modal" data-target="#item-dispute-{{ $donated_item->id }}" class="btn btn-xs btn-warning"><i class="fa fa-bullhorn"></i> DISPUTE</a>
+										</p>
+				            		@endif
 
-											
-											
-										@endif
 
-										<div class="text-left">
-											@include('pages.admin.modals.receive-item')
-											@include('pages.admin.modals.dispute-item')
-										</div>
-										
-									@endif						
-				            	@else
 									@if(!$donated_item->deleted_at)
 										<a href="" data-toggle="modal" data-target="#item-remove-form-market-{{ $donated_item->id }}" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> REMOVE FROM MARKET</a>
 
@@ -111,6 +115,73 @@
 							<h4>Description</h4>
 
 							<p class="">{!! nl2br(clean($item->description)) !!}</p>
+
+							<hr>
+
+							@if($item->approved)
+								<h4>APPROVED: YES</h4>
+
+								<p class="nobottommargin">Approved by <strong>{{ $item->approver->name }}</strong></p>
+								<p class="nobottommargin">Date Approved <strong>{{ simple_datetime($item->approved_at) }}</strong></p>
+
+								<hr>
+								
+							@endif
+
+							@if($item->disapproved)
+								<h4>REJECTED: YES</h4>
+
+								<p class="nobottommargin">Rejected by <strong>{{ $item->disapprover->name }}</strong></p>
+								<p class="nobottommargin">Date Approved <strong>{{ simple_datetime($item->approved_at) }}</strong></p>
+								<p class="nobottommargin">Reason for Rejecting <strong>{{ $item->disapproved_reason }}</strong></p>
+
+								<hr>
+								
+							@endif
+
+							@if($item->bought)
+								<h4>PURCHASED: YES</h4>
+
+								<p class="nobottommargin">Purchased by <strong>{{ $item->buyer->name }}</strong></p>
+								<p class="nobottommargin">Date Purchased <strong>{{ simple_datetime($item->bought_at) }}</strong></p>
+
+								<hr>
+								
+							@endif
+
+
+							
+
+							@if($item->received)
+								<h4>DELIVERED: YES</h4>
+
+								
+								<p class="nobottommargin">Date Delivered <strong>{{ simple_datetime($item->received_at) }}</strong></p>
+
+								<hr>
+								
+							@endif
+
+							@if($item->disputed)
+								<h4>DISPUTED: YES</h4>
+
+								<p class="nobottommargin">Disputed by <strong>{{ $item->disputer->name }}</strong></p>
+								<p class="nobottommargin">Date Disputed <strong>{{ simple_datetime($item->disputed_at) }}</strong></p>
+								<p class="nobottommargin">Reason for Disputing <strong>{{ $item->disputed_reason }}</strong></p>
+
+								<hr>
+								
+							@endif
+
+							@if(!is_null($item->deleted_at))
+								<h4>TRASHED: YES</h4>
+
+								<p class="nobottommargin">Trashed by <strong>{{ $item->deletor->name }}</strong></p>
+								<p class="nobottommargin">Date Trashed <strong>{{ simple_datetime($item->deleted_at) }}</strong></p>
+
+								<hr>
+								
+							@endif
 							
 						</div>
 	            	</div>

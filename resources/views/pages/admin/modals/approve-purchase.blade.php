@@ -6,13 +6,18 @@
         
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Approve Donated Item Purchase?</h4>
+          <h4 class="modal-title">Approve Donated Item?</h4>
         </div>
         
         <div class="modal-body">
           <div class="row">
             <div class="col-sm-12">
-              	Approve <strong>{{ $donated_item->name }} </strong> Purchase ?
+              	Approve <strong>{{ $donated_item->name }} </strong> to the Community Shop ? <br> <br>
+
+                <div class="form-group">
+                  <label for="">Approximate Value in Simba Coins</label>
+                  <input type="number" class="form-control" value="{{ $donated_item->price }}" required="" name="price" placeholder="value in simba coins">
+                </div>
             </div>   
           </div>
         </div>

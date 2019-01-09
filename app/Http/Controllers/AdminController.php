@@ -340,17 +340,17 @@ class AdminController extends Controller
     	$pagination = 20;
 
     	if($type == 'pending-approval'){
-    		$title 			= 'Bought Items Pending Approval';
-    		$donated_items 	= DonatedItem::where('bought', 1)->where('approved', 0)->where('disputed', 0)->orderBy('created_at', 'DESC')->paginate($pagination);
+    		$title 			= 'Donated Items Pending Approval';
+    		$donated_items 	= DonatedItem::where('approved', 0)->where('disputed', 0)->where('disapproved', 0)->orderBy('created_at', 'DESC')->paginate($pagination);
     	}
 
     	elseif($type == 'community-shop'){
     		$title 			= 'Donated Items in the Community Shop';
-    		$donated_items 	= DonatedItem::where('bought', 0)->where('approved', 0)->where('disapproved', 0)->where('disputed', 0)->orderBy('created_at', 'DESC')->paginate($pagination);
+    		$donated_items 	= DonatedItem::where('bought', 0)->where('approved', 1)->where('disapproved', 0)->where('disputed', 0)->orderBy('created_at', 'DESC')->paginate($pagination);
     	}
 
-    	elseif($type == 'approved'){
-    		$title 			= 'Bought Goods Approved by Admin';
+    	elseif($type == 'pending-delivery'){
+    		$title 			= 'Bought Goods Pending Delivery';
     		$donated_items 	= DonatedItem::where('bought', 1)->where('approved', 1)->where('disapproved', 0)->where('disputed', 0)->where('received', 0)->orderBy('created_at', 'DESC')->paginate($pagination);
     	}
 
@@ -361,7 +361,7 @@ class AdminController extends Controller
     	}
 
     	elseif($type == 'disapproved'){
-    		$title 			= 'Bought Goods Disapproved by Admin';
+    		$title 			= 'Donated Items Rejected by Admin';
     		$donated_items 	= DonatedItem::where('disapproved', 1)->where('approved', 0)->where('disputed', 0)->orderBy('created_at', 'DESC')->paginate($pagination);
     	}
 
@@ -405,14 +405,20 @@ class AdminController extends Controller
     	]);
     }
 
-    public function approveDonatedItemPurchase(Request $request, $id){
-    	$donated_item = DonatedItem::findOrFail($id);
+    public function approveDonatedItemDonation(Request $request, $id){
+    	$this->validate($request, [
+            'price' => 'numeric|required',
+        ]);
+
+
+        $donated_item = DonatedItem::findOrFail($id);
 
     	$user = auth()->user();
 
     	$donated_item->approved = 1;
     	$donated_item->approved_by = $user->id;
     	$donated_item->approved_at = $this->date;
+        $donated_item->price       = $request->price;
 
     	$donated_item->disapproved 			= 0;
     	$donated_item->disapproved_at 		= null;
@@ -423,22 +429,33 @@ class AdminController extends Controller
 
     	$notification                       = new Notification;
         $notification->from_id              = $user->id;
-        $notification->to_id                = $donated_item->buyer->id;
+        $notification->to_id                = $donated_item->donor->id;
         $notification->system_message       = 1;
         $notification->from_admin       	= 1;
-        $notification->message              = 'Your Donated Item Purchase Was Approved. (' . $donated_item->name .')';
+        $notification->message              = 'Your Donated Item Was Verified. (' . $donated_item->name .'). It is now available in the Community Shop';
         $notification->notification_type    = 'donated-item.purchase.approved';
         $notification->model_id             = $donated_item->id;
         $notification->save();
 
+        $timeline           = new Timeline;
+        $timeline->user_id  = $donated_item->donor->id;
+        $timeline->model_id = $donated_item->id;
+        $timeline->message  = 'Donated ' . $donated_item->name . ' to the Community';
+        $timeline->type     = 'item.donated';
+        $timeline->save();
+
+        $activity = $donated_item->donor->activity();
+        $activity->donated_items += 1;
+        $activity->update();
+
         if($this->settings->mail_enabled->value){
-            $title = config('app.name') . ' | Donated Item Purchase Approved';
+            $title = config('app.name') . ' | Item Donation Approved';
 
             try{
-                \Mail::send('emails.donated-item-purchase-approved-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
-                    $message->subject($title);
-                    $message->to($donated_item->buyer->email);
-                });
+                // \Mail::send('emails.donated-item-purchase-approved-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                //     $message->subject($title);
+                //     $message->to($donated_item->buyer->email);
+                // });
 
                 \Mail::send('emails.donated-item-purchase-approved-seller', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
                     $message->subject($title);
@@ -452,12 +469,12 @@ class AdminController extends Controller
             }
         }
 
-        session()->flash('success', 'Purchase Approved');
+        session()->flash('success', 'Donation Approved');
 
         return redirect()->back();
     }
 
-    public function disapproveDonatedItemPurchase(Request $request, $id){
+    public function disapproveDonatedItemDonation(Request $request, $id){
     	$this->validate($request, [
     		'reason' => 'required|max:800',
     	]);
@@ -477,10 +494,10 @@ class AdminController extends Controller
 
     	$notification                       = new Notification;
         $notification->from_id              = $user->id;
-        $notification->to_id                = $donated_item->buyer->id;
+        $notification->to_id                = $donated_item->donor->id;
         $notification->system_message       = 1;
         $notification->from_admin       	= 1;
-        $notification->message              = 'Your Donated Item Purchase Was Not Approved. REASON' . $donated_item->disapproved_reason;
+        $notification->message              = 'Your Donation Was Not Approved. REASON' . $donated_item->disapproved_reason;
         $notification->notification_type    = 'donated-item.purchase.disapproved';
         $notification->model_id             = $donated_item->id;
         $notification->save();
@@ -491,32 +508,15 @@ class AdminController extends Controller
 
     	$donated_item->update();
 
-    	$escrow = $donated_item->escrow;
-
-    	$buyer = $donated_item->buyer;
-
-    	$buyer->coins += $escrow->amount;
-    	$buyer->update();
-
-    	$simba_coin_log                        = new SimbaCoinLog;
-        $simba_coin_log->user_id               = $buyer->id;
-        $simba_coin_log->message               = 'Reversal - Payment for Donated item bought.  (' . $donated_item->name . ')';
-        $simba_coin_log->type                  = 'credit';
-        $simba_coin_log->coins                 = $escrow->amount;
-        $simba_coin_log->previous_balance      = $buyer->coins - $escrow->amount ;
-        $simba_coin_log->current_balance       = $buyer->coins;
-        $simba_coin_log->save();
-
-    	$escrow->delete();
 
         if($this->settings->mail_enabled->value){
-            $title = config('app.name') . ' | Donated Item Purchase Not Approved';
+            $title = config('app.name') . ' | Item Donation Not Approved';
 
             try{
-                \Mail::send('emails.donated-item-purchase-disapproved-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
-                    $message->subject($title);
-                    $message->to($donated_item->buyer->email);
-                });
+                // \Mail::send('emails.donated-item-purchase-disapproved-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                //     $message->subject($title);
+                //     $message->to($donated_item->buyer->email);
+                // });
 
                 \Mail::send('emails.donated-item-purchase-disapproved-seller', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
                     $message->subject($title);
@@ -531,7 +531,7 @@ class AdminController extends Controller
         }
 
 
-        session()->flash('success', 'Purchase Disapproved');
+        session()->flash('success', 'Donation Rejected');
 
         return redirect()->back();
     }
@@ -556,19 +556,15 @@ class AdminController extends Controller
 
     	$donated_item->update();
 
-    	$escrow 					= $donated_item->escrow;
     	$donor 						= $donated_item->donor;
 
-    	$donor->coins 				+= $escrow->amount;
-    	$donor->accumulated_coins 	+= $escrow->amount;
+    	$donor->coins 				+= $donated_item->price;
+    	$donor->accumulated_coins 	+= $donated_item->price;
     	$donor->update();
 
     	$donor->check_social_level();
 
-    	$escrow->released 		= 1;
-    	$escrow->released_at 	= $this->date;
-    	$escrow->released_by 	= $user->id;
-    	$escrow->update();
+    	
 
     	$timeline           = new \App\Timeline;
         $timeline->user_id  = $donated_item->buyer->id;
@@ -582,8 +578,8 @@ class AdminController extends Controller
         $simba_coin_log->user_id               = $donor->id;
         $simba_coin_log->message               = 'Payment for Donated item sold. (' . $donated_item->name . ')';
         $simba_coin_log->type                  = 'credit';
-        $simba_coin_log->coins                 = $escrow->amount;
-        $simba_coin_log->previous_balance      = $donor->coins - $escrow->amount ;
+        $simba_coin_log->coins                 = $donated_item->price;
+        $simba_coin_log->previous_balance      = $donor->coins - $donated_item->price;
         $simba_coin_log->current_balance       = $donor->coins;
         $simba_coin_log->save();
 
@@ -641,41 +637,35 @@ class AdminController extends Controller
 
     	$user = auth()->user();
 
-    	$donated_item->approved = 0;
-    	$donated_item->approved_at = null;
-    	$donated_item->approved_by = null;
+    	// $donated_item->approved = 0;
+    	// $donated_item->approved_at = null;
+    	// $donated_item->approved_by = null;
 
     	$donated_item->disapproved 			= 0;
     	$donated_item->disapproved_at 		= null;
     	$donated_item->disapproved_by 		= null;
     	$donated_item->disapproved_reason 	= null;
 
-    	$donated_item->disputed = 1;
-    	$donated_item->disputed_at = $this->date;
-    	$donated_item->disputed_by = $user->id;
-    	$donated_item->disputed_reason = $request->reason;
-
     	$donated_item->received = 0;
     	$donated_item->received_at = null;
     	$donated_item->received_message = null;
-
-     	$escrow = $donated_item->escrow;
-    	$donor = $donated_item->donor;
+    	
+        $donor = $donated_item->donor;
     	$buyer = $donated_item->buyer;
 
-    	if($escrow->released){
-    		$buyer->coins += $escrow->amount;
+    	if(!$donated_item->disputed){
+    		$buyer->coins += $donated_item->price;
     		$buyer->update();
 
-    		$donor->coins -= $escrow->amount;
+    		$donor->coins -= $donated_item->price;
     		$donor->update();
 
     		$simba_coin_log                        = new SimbaCoinLog;
 	        $simba_coin_log->user_id               = $donor->id;
 	        $simba_coin_log->message               = 'Reversal - Payment for Donated item sold. (' . $donated_item->name . ')';
 	        $simba_coin_log->type                  = 'debit';
-	        $simba_coin_log->coins                 = $escrow->amount;
-	        $simba_coin_log->previous_balance      = $donor->coins + $escrow->amount ;
+	        $simba_coin_log->coins                 = $donated_item->price;
+	        $simba_coin_log->previous_balance      = $donor->coins + $donated_item->price;;
 	        $simba_coin_log->current_balance       = $donor->coins;
 	        $simba_coin_log->save();
 
@@ -689,14 +679,16 @@ class AdminController extends Controller
 	        $notification->model_id             = $donated_item->id;
 	        $notification->save();
 
-    	}else{
-    		$buyer->coins += $escrow->amount;
-    		$buyer->update();
     	}
 
     	$donated_item->bought 		= 0;
     	$donated_item->buyer_id 	= null;
     	$donated_item->bought_at 	= null;
+
+        $donated_item->disputed = 1;
+        $donated_item->disputed_at = $this->date;
+        $donated_item->disputed_by = $user->id;
+        $donated_item->disputed_reason = $request->reason;
 
     	$donated_item->update();
 
@@ -704,8 +696,8 @@ class AdminController extends Controller
         $simba_coin_log->user_id               = $buyer->id;
         $simba_coin_log->message               = 'Refund - Payment for Donated item purchase. (' . $donated_item->name . ')';
         $simba_coin_log->type                  = 'credit';
-        $simba_coin_log->coins                 = $escrow->amount;
-        $simba_coin_log->previous_balance      = $buyer->coins - $escrow->amount ;
+        $simba_coin_log->coins                 = $donated_item->price;
+        $simba_coin_log->previous_balance      = $buyer->coins - $donated_item->price;
         $simba_coin_log->current_balance       = $buyer->coins;
         $simba_coin_log->save();
 
@@ -718,8 +710,6 @@ class AdminController extends Controller
         $notification->notification_type    = 'donated-item.disputed';
         $notification->model_id             = $donated_item->id;
         $notification->save();
-
-    	$escrow->delete();
 
         if($this->settings->mail_enabled->value){
             $title = config('app.name') . ' | Donated Item Purchase Disputed';
@@ -776,7 +766,7 @@ class AdminController extends Controller
             }
         }
 
-        $activity                 = $donated_item->donor->user->activity($donated_item->created_at->year);
+        $activity                 = $donated_item->donor->activity($donated_item->created_at->year);
         $activity->donated_items -= 1;
         $activity->update();
 
@@ -798,9 +788,9 @@ class AdminController extends Controller
         $donated_item->disapproved_by       = null;
         $donated_item->disapproved_reason   = null;
 
-        $donated_item->approved             = 0;
-        $donated_item->approved_by          = null;
-        $donated_item->approved_at          = null;
+        // $donated_item->approved             = 0;
+        // $donated_item->approved_by          = null;
+        // $donated_item->approved_at          = null;
 
         $notification                       = new Notification;
         $notification->from_id              = $user->id;
@@ -823,9 +813,8 @@ class AdminController extends Controller
         $notification->save();
         $notification->save();
 
-        $escrow                             = $donated_item->escrow;
         $buyer                              = $donated_item->buyer;
-        $buyer->coins                       += $escrow->amount;
+        $buyer->coins                       += $donated_item->price;;
         
         $buyer->update();
 
@@ -833,8 +822,8 @@ class AdminController extends Controller
         $simba_coin_log->user_id            = $buyer->id;
         $simba_coin_log->message            = 'Reversal - Payment for Donated item bought.  (' . $donated_item->name . ')';
         $simba_coin_log->type               = 'credit';
-        $simba_coin_log->coins              = $escrow->amount;
-        $simba_coin_log->previous_balance   = $buyer->coins - $escrow->amount ;
+        $simba_coin_log->coins              = $donated_item->price;
+        $simba_coin_log->previous_balance   = $buyer->coins - $donated_item->price;
         $simba_coin_log->current_balance    = $buyer->coins;
         $simba_coin_log->save();
 
@@ -864,8 +853,6 @@ class AdminController extends Controller
         }
 
         $donated_item->update();
-
-        $escrow->delete();
 
 
         session()->flash('success', 'Purchase Cancelled');
@@ -908,9 +895,9 @@ class AdminController extends Controller
         $user           = auth()->user();
         $donated_item   = $cancel_request->donated_item;
 
-        $donated_item->approved     = 0;
-        $donated_item->approved_by  = null;
-        $donated_item->approved_at  = null;
+        // $donated_item->approved     = 0;
+        // $donated_item->approved_by  = null;
+        // $donated_item->approved_at  = null;
 
         $donated_item->disapproved          = 0;
         $donated_item->disapproved_at       = null;
@@ -942,11 +929,9 @@ class AdminController extends Controller
         $notification->model_id             = $donated_item->id;
         $notification->save();
 
-        $escrow                     = $donated_item->escrow;
-
         $buyer                      = $donated_item->buyer;
 
-        $buyer->coins               += $escrow->amount;
+        $buyer->coins               += $donated_item->price;
         
         $buyer->update();
 
@@ -954,8 +939,8 @@ class AdminController extends Controller
         $simba_coin_log->user_id               = $buyer->id;
         $simba_coin_log->message               = 'Reversal - Payment for Donated item bought.  (' . $donated_item->name . ')';
         $simba_coin_log->type                  = 'credit';
-        $simba_coin_log->coins                 = $escrow->amount;
-        $simba_coin_log->previous_balance      = $buyer->coins - $escrow->amount ;
+        $simba_coin_log->coins                 = $donated_item->price;
+        $simba_coin_log->previous_balance      = $buyer->coins - $donated_item->price;
         $simba_coin_log->current_balance       = $buyer->coins;
         $simba_coin_log->save();
 
@@ -986,8 +971,6 @@ class AdminController extends Controller
         $donated_item->buyer_id     = null;
         $donated_item->bought_at    = null;
         $donated_item->update();
-
-        $escrow->delete();
 
         session()->flash('success', 'Purchase cancelled');
 

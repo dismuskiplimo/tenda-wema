@@ -196,8 +196,9 @@ Route::group(['prefix' => 'admin'], function(){
 	Route::get('/donated-items/{type}', 'AdminController@showDonatedItems')->name('admin.donated-items');
 	Route::get('/donated-items/{id}/view', 'AdminController@showDonatedItem')->name('admin.donated-item');
 
-	Route::post('/donated-items/{id}/approve-purchase', 'AdminController@approveDonatedItemPurchase')->name('admin.donated-item.approve');
-	Route::post('/donated-items/{id}/disapprove-purchase', 'AdminController@disapproveDonatedItemPurchase')->name('admin.donated-item.disapprove');
+	Route::post('/donated-items/{id}/approve-purchase', 'AdminController@approveDonatedItemDonation')->name('admin.donated-item.approve');
+	Route::post('/donated-items/{id}/disapprove-purchase', 'AdminController@disapproveDonatedItemDonation')->name('admin.donated-item.disapprove');
+	
 	Route::post('/donated-items/{id}/delete', 'AdminController@deleteDonatedItem')->name('admin.donated-item.delete');
 	Route::get('/donated-items/{id}/delete', 'AdminController@deleteDonatedItem')
 	;

@@ -490,19 +490,24 @@ class UserController extends Controller
             }
         }
 
-        $timeline           = new Timeline;
-        $timeline->user_id  = $user->id;
-        $timeline->model_id = $donated_item->id;
-        $timeline->message  = 'Donated ' . $donated_item->name . ' to the Community';
-        $timeline->type     = 'item.donated';
-        $timeline->save();
+        if($this->settings->mail_enabled->value){
+            $title = "Donated Item by " . $donated_item->donor->fname;
 
-        $activity = $user->activity();
-        $activity->donated_items += 1;
-        $activity->update();
+            try{
+                \Mail::send('emails.donated-item-admin', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title){
+                    $message->subject($title);
+                    $message->to(config('app.system_email'));
+                });
+
+            }catch(\Exception $e){
+                $this->log_error($e);
+
+                // session()->flash('error', $e->getMessage());
+            }
+        }
 
 
-        session()->flash('success', 'Item donated to the community');
+        session()->flash('success', 'Item donated, please wait for the admin to review and provide feedback');
 
         return redirect()->route('donated-item.show', ['slug' => $donated_item->slug]);
     }
@@ -511,6 +516,7 @@ class UserController extends Controller
 
     public function purchaseDonatedItem($slug){
         $donated_item   = DonatedItem::where('slug', $slug)->firstOrFail();
+        
         $user           = auth()->user();
 
         if($donated_item->donor_id == $user->id){
@@ -523,6 +529,11 @@ class UserController extends Controller
             return redirect()->back();
         }
 
+        if(!$donated_item->approved){
+            session()->flash('error', 'Sorry, the item has not been approved yet');
+            return redirect()->back();
+        }
+
         if($user->coins < $donated_item->price){
             session()->flash('error', 'You don not have sufficient simba coins to purchase this item');
             return redirect()->back();
@@ -530,12 +541,6 @@ class UserController extends Controller
 
         $user->coins -= $donated_item->price;
         $user->update();
-
-        $escrow                     = new Escrow;
-        $escrow->user_id            = $user->id;
-        $escrow->donated_item_id    = $donated_item->id;
-        $escrow->amount             = $donated_item->price;
-        $escrow->save();
 
         $simba_coin_log                        = new SimbaCoinLog;
         $simba_coin_log->user_id               = $user->id;
@@ -549,7 +554,7 @@ class UserController extends Controller
         $donated_item->bought       = 1;
         $donated_item->bought_at    = $this->date;
         $donated_item->buyer_id     = $user->id;
-        $donated_item->escrow_id    = $escrow->id;
+        
         $donated_item->update();
 
         if($this->settings->mail_enabled->value){
@@ -647,10 +652,13 @@ class UserController extends Controller
             'reason' => 'max:50000',
         ]);
 
-        $donated_item = DonatedItem::where('slug',$slug)->firstOrFail();
+        $donated_item = DonatedItem::where('slug', $slug)->firstOrFail();
+        
         $user = auth()->user();
 
-        if($user->id != $donated_item->buyer_id){
+        $buyer = $donated_item->buyer;
+
+        if($user->id != $buyer->id){
             session()->flash('error','403: Forbidden');
             return redirect()->back();
         }
@@ -666,68 +674,62 @@ class UserController extends Controller
 
         $donated_item->update();
 
-        $escrow                     = $donated_item->escrow;
         $donor                      = $donated_item->donor;
 
-        if(!$escrow->released){
-            $donor->coins               += $escrow->amount;
-            $donor->accumulated_coins   += $escrow->amount;
-            $donor->update();
         
-            $donor->check_social_level();
+        $donor->coins               += $donated_item->price;
+        $donor->accumulated_coins   += $donated_item->price;
+        $donor->update();
+    
+        $donor->check_social_level();
 
-            $escrow->released       = 1;
-            $escrow->released_at    = $this->date;
-            $escrow->released_by    = $user->id;
-            $escrow->update();
+        $timeline           = new \App\Timeline;
+        $timeline->user_id  = $donated_item->buyer->id;
+        $timeline->model_id = $donated_item->id;
+        $timeline->message  = 'Purchased Donated Item:  ' . $donated_item->name;
+        $timeline->type     = 'donated-item.delivery.approved';
+        $timeline->extra    = '';
+        $timeline->save();
 
-            $timeline           = new \App\Timeline;
-            $timeline->user_id  = $donated_item->buyer->id;
-            $timeline->model_id = $donated_item->id;
-            $timeline->message  = 'Purchased Donated Item:  ' . $donated_item->name;
-            $timeline->type     = 'donated-item.delivery.approved';
-            $timeline->extra    = '';
-            $timeline->save();
+        $simba_coin_log                        = new SimbaCoinLog;
+        $simba_coin_log->user_id               = $donor->id;
+        $simba_coin_log->message               = 'Payment for Donated item sold. (' . $donated_item->name .')';
+        $simba_coin_log->type                  = 'credit';
+        $simba_coin_log->coins                 = $donated_item->price;
+        $simba_coin_log->previous_balance      = $donor->coins - $donated_item->price ;
+        $simba_coin_log->current_balance       = $donor->coins;
+        $simba_coin_log->save();
 
-            $simba_coin_log                        = new SimbaCoinLog;
-            $simba_coin_log->user_id               = $donor->id;
-            $simba_coin_log->message               = 'Payment for Donated item sold. (' . $donated_item->name .')';
-            $simba_coin_log->type                  = 'credit';
-            $simba_coin_log->coins                 = $escrow->amount;
-            $simba_coin_log->previous_balance      = $donor->coins - $escrow->amount ;
-            $simba_coin_log->current_balance       = $donor->coins;
-            $simba_coin_log->save();
+        $notification                       = new Notification;
+        $notification->from_id              = $user->id;
+        $notification->to_id                = $donated_item->donor->id;
+        $notification->system_message       = 0;
+        $notification->message              = 'The Item Purchased by '. $donated_item->buyer->name .' Was marked as received. The funds have been released to your account.';
+        $notification->notification_type    = 'donated-item.delivery.approved';
+        $notification->model_id             = $donated_item->id;
+        $notification->save();
 
-            $notification                       = new Notification;
-            $notification->from_id              = $user->id;
-            $notification->to_id                = $donated_item->donor->id;
-            $notification->system_message       = 0;
-            $notification->message              = 'The Item Purchased by '. $donated_item->buyer->name .' Was marked as received. The funds have been released to your account.';
-            $notification->notification_type    = 'donated-item.delivery.approved';
-            $notification->model_id             = $donated_item->id;
-            $notification->save();
+        if($this->settings->mail_enabled->value){
+            $title = config('app.name') . ' | '. $donated_item->name ." Marked as Received";
 
-            if($this->settings->mail_enabled->value){
-                $title = config('app.name') . ' | '. $donated_item->name ." Marked as Received by the buyer";
+            try{
+                // \Mail::send('emails.donated-item-received-donor', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                //     $message->subject($title);
+                //     $message->to($donated_item->donor->email);
+                // });
 
-                try{
-                    \Mail::send('emails.donated-item-received-donor', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
-                        $message->subject($title);
-                        $message->to($donated_item->donor->email);
-                    });
+                \Mail::send('emails.donated-item-received-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
+                    $message->subject($title);
+                    $message->to($donated_item->buyer->email);
+                });
 
-                    \Mail::send('emails.donated-item-received-buyer', ['title' => $title, 'donated_item' => $donated_item], function ($message) use($title, $donated_item){
-                        $message->subject($title);
-                        $message->to($donated_item->buyer->email);
-                    });
+            }catch(\Exception $e){
+                $this->log_error($e);
 
-                }catch(\Exception $e){
-                    $this->log_error($e);
-
-                    // session()->flash('error', $e->getMessage());
-                }
+                // session()->flash('error', $e->getMessage());
             }
         }
+        
 
         session()->flash('success', 'Item Marked as Received');
 

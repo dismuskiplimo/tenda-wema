@@ -4,7 +4,7 @@
 	<p>{{ $donated_item->donor->fname }},</p>
 
 	<p>
-		<strong>{{  $donated_item->name }}</strong> purchased was not approved for delivery.
+		<strong>{{  $donated_item->name }}</strong> donation was not approved.
 	</p>
 
 	<p><strong>Resaon for not approving</strong></p>

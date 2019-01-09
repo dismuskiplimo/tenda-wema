@@ -47,8 +47,8 @@
 											</td>
 											<td>{{ $log->message }}</td>
 											
-											<td>{{ $log->previous_balance }}</td>
-											<td>{{ $log->current_balance }}</td>
+											<td>{{ number_format($log->previous_balance) }}</td>
+											<td>{{ number_format($log->current_balance) }}</td>
 											
 										</tr>
 
