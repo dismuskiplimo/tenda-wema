@@ -175,12 +175,19 @@
 					
 				@endif
 
-				<div class="card">
-					<div class="card-body">
-						<h3> <img src="{{ simba_coin() }}" alt="" class="size-30"> {{ number_format($item->price) }} <small>Simba Coins</small></h3>
-						<h4 class="mb-0 mtn-25">{{ $item->name }}</h4>
+				
+				@if($item->approved)
+					<div class="card">
+						<div class="card-body">
+							
+								<h3> <img src="{{ simba_coin() }}" alt="" class="size-30"> {{ number_format($item->price) }} <small>Simba Coins</small></h3>
+								<h4 class="nobottommargin mtn-25">{{ $item->name }}</h4>
+							
+							
+						</div>
 					</div>
-				</div>
+				@endif
+				
 
 				<div class="card">
 					<div class="card-body">
