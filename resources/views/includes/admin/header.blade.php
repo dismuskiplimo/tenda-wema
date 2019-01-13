@@ -33,7 +33,9 @@
     <link href="{{ custom_asset('css/admin/colors/megna.css') }}" id="theme" rel="stylesheet">
 
     <script src="{{ custom_asset('js/jquery-2.1.4.min.js') }}"></script>
+
     <script src="{{ custom_asset('js/admin/raphael.min.js') }}"></script>
+    
     <script src="{{ custom_asset('js/admin/morris.min.js') }}"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
