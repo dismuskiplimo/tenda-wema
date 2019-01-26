@@ -119,9 +119,9 @@
 
 						<div class="nobottommargin">
 							<ul class="iconlist iconlist-color nobottommargin">
-								<li><i class="icon-caret-right"></i> To give users a chance to donate their less frequently used items</li>
-								<li><i class="icon-caret-right"></i> To give users ability to access  donated items</li>
-								<li><i class="icon-caret-right"></i> To give users the ability to state the good deeds they have done that have positively impacted the society</li>
+								<li><i class="icon-caret-right"></i> To give members a chance to donate their less frequently used items</li>
+								<li><i class="icon-caret-right"></i> To give members ability to access  donated items</li>
+								<li><i class="icon-caret-right"></i> To give members the ability to state the good deeds they have done that have positively impacted the society</li>
 								<li><i class="icon-caret-right"></i> To provide a platform where well wishers can communicate</li>
 								<li><i class="icon-caret-right"></i> To create a community for social good.</li>
 							</ul>
