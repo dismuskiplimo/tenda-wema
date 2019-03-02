@@ -13,7 +13,9 @@ return [
     |
     */
 
-    'name'              => env('APP_NAME', 'Temda Wema'),
+    'name'              => env('APP_NAME', 'tendawema.com'),
+
+    'company'           => env('APP_COMPANY', 'Tim Maber Limited'),
 
     'https'             => env('HTTPS', false),
     

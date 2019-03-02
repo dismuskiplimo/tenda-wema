@@ -4,7 +4,7 @@
 	<section id="page-title">
 
 		<div class="container clearfix">
-			<h1>{{ $title }} ({{ number_format($deeds->total()) }})</h1>
+			<h1>{{ $title }}</h1>
 			<span>Caring has the gift of making the ordinary special - <i>George R. Bach</i></span>
 			<ol class="breadcrumb">
 				<li><a href="{{ route('homepage') }}">Home</a></li>
@@ -31,30 +31,32 @@
 
 				</div>
 				@if($deeds->total())
-					@foreach($deeds as $deed)
-						<div class="card">
-							<div class="card-body">
-								<h4 class="mb-10">
-									
-									<a href="{{ route('user.show', ['username' => $deed->user ? $deed->user->username : '']) }}">
-										<img src="{{ $deed->user ? $deed->user->thumbnail() : '' }}" alt="{{ $deed->user ? $deed->user->thumbnail() : '' }}" class="size-30 mr-10 img-circle">
-										{{ $deed->user->name }}
-									</a>
-								</h4>
-
-								<h5 class="nobottommargin">{{ $deed->name }}</h5>
-								<p class="nobottommargin">{{ words($deed->description,30) }}</p>
-								<p class="mb-10 text-right">
-									<small>{{ simple_datetime($deed->created_at) }}</small>
-								</p>
-
-								<p class="nobottommargin text-right">
-									<a href="{{ route('good-deed.show', ['slug' => $deed->slug]) }}" class="btn btn-sm btn-info">See More</a>
-								</p>
+					<div class="row">
+				
+						@foreach($deeds as $deed)
+							
+							@if(count($deed->images))
 								
-							</div>
-						</div>
-					@endforeach
+									<div class="col-sm-12"><h4>GALLERY</h4></div>
+									
+									@foreach($deed->images()->orderBy('created_at', 'DESC')->get() as $image)
+										
+										<div class="col-sm-4 mb-20">
+											<a data-fancybox="gallery" data-caption="{{$deed->user->name}} : {{ $deed->name }}" href="{{ $image->image() }}">
+												<img src="{{ $image->thumbnail() }}" alt="{{ $image->user ? $image->user->name : '' }}" class="img-responsive">
+											</a>
+										</div>
+
+										
+									@endforeach	
+								
+								
+							
+							@endif
+							
+						@endforeach
+
+					</div>
 
 					{{ $deeds->links() }}
 				@else

@@ -82,7 +82,7 @@
 
 						<p>
 							<strong><i class="fa fa-envelope"></i> Postal Address:</strong> <br>
-							{{ config('app.name') }} <br>
+							{{ config('app.company') }} <br>
 							P. O. Box 24721-00100 <br> 
 							Nairobi, Kenya
 

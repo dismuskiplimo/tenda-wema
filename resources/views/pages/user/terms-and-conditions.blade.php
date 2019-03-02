@@ -18,8 +18,8 @@
 		<div class="row  my-50">
 			<div class="col-sm-10 col-sm-offset-1">
 				<h2>Welcome to {{ config('app.name') }}</h2>
-				<p>These terms and conditions outline the rules and regulations for the use of {{ config('app.name') }}'s Website.</p> <br /> 
-				<span style="text-transform: capitalize;"> {{ config('app.name') }}</span> is located at:<br /> 
+				<p>These terms and conditions outline the rules and regulations for the use of {{ config('app.company') }}'s Website.</p> <br /> 
+				<span style="text-transform: capitalize;"> {{ config('app.company') }}</span> is located at:<br /> 
 				<address>View Park Towers, Utalii Street, Nairobi, Kenya <br >P.o Box 24721-00100 Nairobi, Kenya <br />
 				</address>
 				<p>By accessing this website we assume you accept these terms and conditions in full. Do not continue to use {{ config('app.name') }}'s website 
@@ -74,7 +74,7 @@
 								or unlawful activity.</li>
 							</ol>
 						</li>
-					<li>You hereby grant to <strong>{{ config('app.name') }}</strong> a non-exclusive royalty-free license to use, reproduce,
+					<li>You hereby grant to <strong>{{ config('app.company') }}</strong> a non-exclusive royalty-free license to use, reproduce,
 					edit and authorize others to use, reproduce and edit any of your Comments in any and all forms, formats
 					or media.</li>
 				</ol>
@@ -176,7 +176,7 @@
 				<p>To the extent that the website and the information and services on the website are provided free of charge,
 				we will not be liable for any loss or damage of any nature.</p>
 			<h2>Simba Coins Purchase via MPESA</h2>
-				<p>{{ config('app.name') }} only sells Simba Coin to members wishing to increase their Simba Coin balance so as to purchase an item in the Community Shop. Simba Coins SHALL not be sold to members to accelerate their movement through social levels within the Community</p>
+				<p>{{ config('app.company') }} only sells Simba Coin to members wishing to increase their Simba Coin balance so as to purchase an item in the Community Shop. Simba Coins SHALL not be sold to members to accelerate their movement through social levels within the Community</p>
 			<h2>Charges</h2>
 				<p>{{ config('app.name') }} is a social community that is free to use for individuals, families, businesses and organizations.</p>
 			<h2>Simba Coin Value</h2>

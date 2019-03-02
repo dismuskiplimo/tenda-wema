@@ -19,10 +19,10 @@
 				<h1>Privacy Policy</h1>
 
 
-				<p>Effective date: December 27, 2018</p>
+				<p>Effective date: January 1, 2019</p>
 
 
-				<p>{{ config('app.name') }} ("us", "we", or "our") operates the {{ config('app.url') }} website (the "Service").</p>
+				<p>{{ config('app.company') }} ("us", "we", or "our") operates the {{ config('app.url') }} website (the "Service").</p>
 
 				<p>This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.</p>
 

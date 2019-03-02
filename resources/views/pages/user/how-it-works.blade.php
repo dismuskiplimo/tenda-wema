@@ -19,7 +19,7 @@
 				<h4>THE COMMUNITY</h4>
 
 				<p>
-					<strong>{{ config('app.domain') }}</strong> is the Simba Coin Community of good deeds. It’s an online social community where members earn Simba Coins for doing good deeds that positively impact their own local communities and for participating in social programmes and community projects.  <strong>{{ config('app.domain') }}</strong> seeks to harness the power and benefits of acting positively and helping others in our communities. 
+					<strong>{{ config('app.domain') }}</strong> is the Simba Coin Community of good deeds. It’s an online social community where members earn Simba Coins for doing good deeds that positively impact their own local communities and for participating in social programmes and community projects.  <strong>{{ config('app.company') }}</strong> seeks to harness the power and benefits of acting positively and helping others in our communities. 
 				</p>
 
 				<h4>HOW THE COMMUNITY WORKS</h4>
@@ -46,7 +46,12 @@
 
 				<h4>SIMBA COINS</h4>
 				<p>
-					A member earns Simba Coins increasing their spending power and advancing social levels as indicated below: 
+					Simba Coins are rewards that members receive for donating items to {{ config('app.name') }}, for doing good deeds and for participating in social programmes and community projects. Simba Coins can be used by members to acquire items donated to the Community. By accumulating Simba Coins, members can advance social levels within the Community, unlocking more Simba Coins and benefits along the way. Members can also lose Simba Coins by engaging in prohibited behavior.
+	
+				</p>
+
+				<p>
+					Simba Coin is valuable only because all members of {{ config('app.name') }} agree to accept it as a reward for doing good deeds and for purchases within the Community. Simba Coin has no inherent value and is not convertible into real money or pegged to any real currency or commodity. Simba Coin does not exist in paper or coin form. A member earns Simba Coins increasing their spending power and advancing social levels as indicated below: 
 				</p>
 
 				<table class="table table-striped">
@@ -180,8 +185,10 @@
 
 				<h4>CHARGES</h4>
 				<p>
-					<strong>{{ config('app.domain') }}</strong> is free to use for individuals, families, businesses and organizations. <strong>{{ config('app.domain') }}</strong> only sells Simba Coin (Kshs. 10 for each Simba Coin bought) to members wishing to increase their Simba Coin balance so as to purchase an item in the Community Shop.  Simba Coins SHALL not be sold to members to accelerate their movement through social levels within the Community. <strong>{{ config('app.domain') }}</strong> relies on funds received from donors and well-wishers to meet its administrative and operational costs. 
+					<strong>{{ config('app.domain') }}</strong> is free to use for individuals, families, businesses and organizations. <strong>{{ config('app.company') }}</strong> only sells Simba Coin (Kshs. 10 for each Simba Coin bought) to members wishing to increase their Simba Coin balance so as to purchase an item in the Community Shop.  Simba Coins SHALL not be sold to members to accelerate their movement through social levels within the Community. <strong>{{ config('app.company') }}</strong> relies on funds received from donors and well-wishers to meet its administrative and operational costs. 
 				</p>
+
+
 
 			</div>
 		</div>

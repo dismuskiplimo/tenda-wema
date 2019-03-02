@@ -19,7 +19,7 @@
 			<div class="col-sm-10 col-sm-offset-1 py-50">
 
 				<p>
-					Help tendawema.com deliver the most robust social platform that engage, inspire and empower people to uplift their lives and improve the community they live in by making a gift today.
+					Help {{ config('app.company') }} deliver the most robust social platform that engage, inspire and empower people to uplift their lives and improve the community they live in by making a gift today.
 				</p>
 
 				<p>
@@ -137,11 +137,11 @@
 
 						<h4>Mail</h4>
 						<p>
-							We welcome donations by cheque. Please use the following address for donations and correspondence:
+							We welcome donations by cheque drawn out in favour of {{ config('app.company') }}. Please send your cheques or correspondence to:
 						</p>
 
 						<p>
-							{{ config('app.name') }} <br>
+							{{ config('app.company') }} <br>
 							P. O. Box 24721-00100 Nairobi
 
 						</p>

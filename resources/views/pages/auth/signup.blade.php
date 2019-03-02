@@ -59,7 +59,7 @@
                     <div class="clear"></div>
                     
                     <div class="checkbox mb-20">
-                        <label for="accepted" class="checkbox-inline"> <input type="checkbox" name="accepted" id="accepted"> I accept the <a href="{{ route('terms-and-conditions') }}">terms and conditions</a> set by {{ config('app.name') }} </label>
+                        <label for="accepted" class="checkbox-inline"> <input type="checkbox" name="accepted" id="accepted"> I accept the <a href="{{ route('terms-and-conditions') }}">terms and conditions</a> set by {{ config('app.company') }} </label>
                     </div>
 
                     <div class="clear"></div>

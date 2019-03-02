@@ -16,7 +16,7 @@
 
 								<div class="text-center">
 									<a href="{{ route('homepage') }}">
-										<img src="{{ custom_asset('images/og-logo.png') }}" alt="" class="footer-logo">	
+										<img src="{{ tim_maber_logo() }}" alt="" class="footer-logo">	
 									</a>
 									
 								</div>
@@ -26,7 +26,7 @@
 
 								<div style="background: url({{ custom_asset('images/world-map.png') }}) no-repeat center center; background-size: 100%;">
 									<address>
-										<strong>{{ config('app.name') }}</strong><br>
+										<strong>{{ config('app.company') }}</strong><br>
 										View Park Towers, Utalii Street <br><br>
 										P.o Box 24721-00100<br>
 										Nairobi, Kenya<br>
@@ -179,7 +179,7 @@
 				<div class="container clearfix">
 
 					<div class="col_half">
-						Copyright &copy; {{ date('Y') }} All Rights Reserved by {{ config('app.domain') }}<br>
+						Copyright &copy; {{ date('Y') }} All Rights Reserved by {{ config('app.company') }}<br>
 						<div class="copyright-links"><a href="{{ route('terms-and-conditions') }}">Terms and Conditions</a> / <a href="{{ route('privacy-policy') }}">Privacy Policy</a></div>
 					</div>
 

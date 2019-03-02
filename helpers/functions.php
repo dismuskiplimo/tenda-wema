@@ -12,6 +12,10 @@
 		return custom_asset('images/logo.png');
 	}
 
+	function tim_maber_logo($type = 'full'){
+		return custom_asset('images/tim-maber-logo.jpg');
+	}
+
 	function logo_absolute($type = 'full'){
 		return base_path(config('app.public_path') . '/images/logo.png');
 	}
