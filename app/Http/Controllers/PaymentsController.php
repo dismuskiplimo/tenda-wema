@@ -445,6 +445,10 @@ class PaymentsController extends Controller
             $password = base64_encode($shortcode.$passkey.$timestamp);
 
             try{
+                $account_reference = 'simbacoin';
+                
+                $transaction_desc = 'Simba Coin Purchase';
+
                 $curl = curl_init();
                 curl_setopt($curl, CURLOPT_URL, $url);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization:Bearer ' . $this->mpesa_access_token ));
@@ -459,8 +463,8 @@ class PaymentsController extends Controller
                   'PartyB' => $shortcode,
                   'PhoneNumber' => $phone,
                   'CallBackURL' => $callback,
-                  'AccountReference' => 'simbacoin',
-                  'TransactionDesc' => 'Simba Coin Purchase', 
+                  'AccountReference' => $account_reference,
+                  'TransactionDesc' => $transaction_desc, 
                 ];
 
                 $data_string = json_encode($curl_post_data);

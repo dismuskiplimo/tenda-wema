@@ -14,7 +14,7 @@
             
             <div class="col-sm-12">
               <div class="form-group">
-                <label for="about-me-control">About Me (Must be at least 200 words long)</label>
+                <label for="about-me-control">About Me (Must be at least 50 words long)</label>
                 <textarea name="about_me" id="about-me-control" required=""  class="form-control" placeholder="about me" rows="8">{{ old('about_me') ? : $user->about_me }}</textarea>
 
                 <p class="nobottomborder">Word Count (<span id="word-count"></span> Words)</p>

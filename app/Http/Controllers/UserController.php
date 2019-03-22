@@ -1039,12 +1039,14 @@ class UserController extends Controller
     // **************************ABOUT ME ********************************************
 
     public function updateAboutMe(Request $request){
+        $min_words = 50;
+
         $this->validate($request, [
             'about_me' => 'required',
         ]);
 
-        if(str_word_count($request->about_me) < 200){
-            session()->flash('error', 'Sorry, you need a minimum of 200 words for your bio');
+        if(str_word_count($request->about_me) < $min_words){
+            session()->flash('error', 'Sorry, you need a minimum of ' . $min_words . ' words for your bio');
 
             return redirect()->back()->withInput();
         }
