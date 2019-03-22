@@ -244,9 +244,9 @@ $(document).ready(function(){
 		var about_me 	= $.trim($('#about-me-control').val());
 		var length 		= about_me.split(" ").length;
 
-		if(length < 200){
+		if(length < 50){
 			$('#about-me-control').focus();
-			Swal('Sorry','Bio must be at least 200 words long', 'error');
+			Swal('Sorry','Bio must be at least 50 words long', 'error');
 			e.preventDefault();
 			
 		}

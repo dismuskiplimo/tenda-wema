@@ -400,7 +400,9 @@ class PaymentsController extends Controller
         }
     }
 
-    public function makeMpesaPayment(Request $request, $type){
+    public function makeMpesaPayment(Request $request){
+
+        $type = $request->type;
 
         $user = auth()->user();
         
@@ -446,7 +448,7 @@ class PaymentsController extends Controller
 
             try{
                 $account_reference = 'simbacoin';
-                
+
                 $transaction_desc = 'Simba Coin Purchase';
 
                 $curl = curl_init();
@@ -510,7 +512,11 @@ class PaymentsController extends Controller
         }     
     }
 
-    public function saveMpesaRequest(Request $request, $id , $type){
+    public function saveMpesaRequest(Request $request){
+        $id = $request->id;
+        
+        $type = $request->type;
+        
         $user   = User::find($id);
 
         try{
