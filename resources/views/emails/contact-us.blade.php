@@ -28,13 +28,13 @@
     		<td>{{ $contact_us->phone }}</td>
     	</tr>
 
-    	<tr>
+    	<tr style="margin-bottom:10px">
     		<th>Subject</th>
-    		<td>{{ $contact_us->subject }}</td>
+    		<th>{{ $contact_us->subject }}</th>
     	</tr>
 
     	<tr>
-    		<th>Message</th>
+    		<th></th>
     		<td>{{ $contact_us->message }}</td>
     	</tr>
 

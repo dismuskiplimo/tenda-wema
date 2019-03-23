@@ -8,7 +8,7 @@ use Auth, Session, Config, Mail;
 
 use Carbon\Carbon;
 
-use App\{Paypal_Transaction, Transaction, MpesaTransaction, Setting, Currency, Notification, MpesaRequest, AppLog, SimbaCoinLog, User, MpesaRaw, ErrorLog};
+use App\{Paypal_Transaction, Transaction, MpesaTransaction, Setting, Currency, Notification, MpesaRequest, AppLog, SimbaCoinLog, User, MpesaRaw, MpesaResponse, ErrorLog};
 
 use \PayPal\Rest\ApiContext;
 
@@ -513,6 +513,10 @@ class PaymentsController extends Controller
     }
 
     public function saveMpesaRequest(Request $request){
+        $mpesa_response = new MpesaResponse;
+        $mpesa_response->message = $request;
+        $mpesa_response->save();
+
         $id = $request->id;
         
         $type = $request->type;
@@ -529,11 +533,11 @@ class PaymentsController extends Controller
         $raw->contents = $b;
         $raw->save();
 
-        if(!$user){
+        if(!$user){           
             $log = new AppLog;
             $log->message = $request;
             $log->save();
-            
+
             return response()->json(['code' => 1]);   
         }
 
