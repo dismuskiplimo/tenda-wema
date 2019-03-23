@@ -8,7 +8,7 @@ use Auth, Session, Config, Mail;
 
 use Carbon\Carbon;
 
-use App\{Paypal_Transaction, Transaction, MpesaTransaction, Setting, Currency, Notification, MpesaRequest, AppLog, SimbaCoinLog, User, MpesaRaw, MpesaResponse, ErrorLog};
+use App\{Paypal_Transaction, Transaction, MpesaTransaction, Setting, Currency, Notification, MpesaRequest, AppLog, SimbaCoinLog, User, MpesaRaw, MpesaResponse, ErrorLog, PaymentValidation};
 
 use \PayPal\Rest\ApiContext;
 
@@ -112,7 +112,7 @@ class PaymentsController extends Controller
         }
     }
 
-    public function makePaypalPayment(Request $request, $type){
+    public function makePaypalPayment(Request $request){
     	$this->validate($request, [
             'amount' => 'required|numeric|min:1',
         ]);
@@ -128,6 +128,10 @@ class PaymentsController extends Controller
         $coins          = ceil($request->amount);
 
         $amount_to_pay  = ($coins / $this->settings->coin_value->value);
+
+        $token          = $this->generateToken($user->id);
+
+        $type           = $request->type;
 
         if($this->paypal_mode == 'test'){
 
@@ -234,7 +238,7 @@ class PaymentsController extends Controller
         }    
     }
 
-    public function verifyPaypalPayment(Request $request, $type){
+    public function verifyPaypalPayment(Request $request){
         
         $credential = new OAuthTokenCredential($this->paypal_client_id,$this->paypal_secret);
 
@@ -242,11 +246,12 @@ class PaymentsController extends Controller
 
         $paypal->setConfig($this->paypal_config);
 
-        $user = auth()->user();
+        $user       = auth()->user();
 
-        $medium = $this->settings->paypal_mode->value == 'live' ? 'Paypal' : 'Paypal Sandbox';
+        $type       = $request->type;
+
+        $medium     = $this->settings->paypal_mode->value == 'live' ? 'Paypal' : 'Paypal Sandbox';
         
-
         if($request->has('success') && (bool)$request->success == true){
             if($request->has('paymentId') && $request->has('PayerID') && $request->has('token') && $request->has('amount') && $request->has('coins')){
 
@@ -433,12 +438,13 @@ class PaymentsController extends Controller
         if($this->mpesa_access_token){
             $url = $this->mpesa_request_url;
 
-            
             $shortcode = $this->settings->mpesa_shortcode->value;
             $passkey = $this->settings->mpesa_passkey->value;
             $timestamp = $this->date->format('YmdHis');
 
-            $route_params = ['user_id' => $user->id, 'type' => $type, 'coins' => $coins];
+            $token = $this->generateToken($user->id);
+
+            $route_params = ['user_id' => $user->id, 'type' => $type, 'coins' => $coins, 'token' => $token];
             
             if($this->settings->mpesa_callback_url->value){
                 $callback = $this->settings->mpesa_callback_url->value . route('mpesa.save', $route_params, false);
@@ -519,175 +525,208 @@ class PaymentsController extends Controller
         $mpesa_response->message = $request;
         $mpesa_response->save();
 
-        $user_id = $request->user_id;
-        
-        $type = $request->type;
-        
-        $user   = User::find($user_id);
+        $user_id    = $request->user_id;
+        $type       = $request->type;
+        $token      = $request->token;
 
-        try{
-            list($h, $b) = explode("\r\n\r\n", $request, 2);
-        }catch(\Exception $e){
-            $b = $request;
-        }
+        $user       = User::find($user_id);
 
-        $raw = new MpesaRaw;
-        $raw->contents = $b;
-        $raw->save();
+        if($this->verifyToken($token, $user_id)){
 
-        if(!$user){           
-            $log = new AppLog;
-            $log->message = $request;
-            $log->save();
+            $this->expireToken($token, $user_id);
 
-            return response()->json(['status' => 200]);   
-        }
+            try{
+                list($h, $b) = explode("\r\n\r\n", $request, 2);
+            }catch(\Exception $e){
+                $b = $request;
+            }
 
-        $coins  = $request->coins;
+            $raw = new MpesaRaw;
+            $raw->contents = $b;
+            $raw->save();
 
-        $medium = $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA Sandbox';
+            if(!$user){           
+                $log = new AppLog;
+                $log->message = $request;
+                $log->save();
 
-        try {
-            list($header, $body) = explode("\r\n\r\n", $request, 2);
+                return response()->json(['status' => 200, 'message' => 'OK']); 
+            }
 
-            $fields = json_decode($body);
+            $coins  = $request->coins;
 
-            $response = $fields->Body->stkCallback;  
+            $medium = $this->settings->mpesa_mode->value == 'live' ? 'MPESA' : 'MPESA Sandbox';
 
-            $mpesa_request                      = new MpesaRequest;
-            $mpesa_request->user_id             = $user->id;  
-            
-            $mpesa_request->MerchantRequestID   = $response->MerchantRequestID; 
-            $mpesa_request->CheckoutRequestID   = $response->CheckoutRequestID; 
-            $mpesa_request->ResultDesc          = $response->ResultDesc;    
-            $mpesa_request->ResultCode          = $response->ResultCode;    
-            $mpesa_request->save();     
-            
+            try {
+                list($header, $body) = explode("\r\n\r\n", $request, 2);
 
-            if($response->ResultCode == 0){
+                $fields = json_decode($body);
 
-                $items = $response->CallbackMetadata->Item;
+                $response = $fields->Body->stkCallback;  
 
-                $details = [];
+                $mpesa_request                      = new MpesaRequest;
+                $mpesa_request->user_id             = $user->id;  
+                
+                $mpesa_request->MerchantRequestID   = $response->MerchantRequestID; 
+                $mpesa_request->CheckoutRequestID   = $response->CheckoutRequestID; 
+                $mpesa_request->ResultDesc          = $response->ResultDesc;    
+                $mpesa_request->ResultCode          = $response->ResultCode;    
+                $mpesa_request->save();     
+                
 
-                foreach ($items as $item) {
-                    $details[$item->Name] = isset($item->Value) ? $item->Value : null;
-                }
+                if($response->ResultCode == 0){
 
-                if($mpesa_request->ResultCode == 0){
-                    $transaction                    = new Transaction;
-                    $transaction->user_id           = $user->id;
-                    $transaction->coins             = $coins;
-                    $transaction->transaction_code  = $details['MpesaReceiptNumber'];; 
-                    $transaction->amount            = (float)$details['Amount'];
-                    $transaction->medium            = $medium;
-                    $transaction->status            = 'COMPLETE';
-                    $transaction->currency          = $this->settings->system_currency->value;
-                    $transaction->type              = 'INCOMING';
-                    $transaction->description       = number_format($coins) . ' Simba Coin(s) Purchase via ' . $medium;
-                    $transaction->completed_at      = $this->date;
-                    $transaction->save();
+                    $items = $response->CallbackMetadata->Item;
 
-                    $mpesa_transaction                      = new MpesaTransaction;
-                    $mpesa_transaction->Amount              = $details['Amount'];
-                    $mpesa_transaction->MpesaReceiptNumber  = $details['MpesaReceiptNumber'];
-                    $mpesa_transaction->Balance             = $details['Balance'];
-                    $mpesa_transaction->TransactionDate     = $details['TransactionDate'];
-                    $mpesa_transaction->PhoneNumber         = $details['PhoneNumber'];
-                    $mpesa_transaction->user_id             = $user->id;
-                    $mpesa_transaction->coins               = $coins;
-                    $mpesa_transaction->mpesa_request_id    = $mpesa_request->id;
-                    $mpesa_transaction->transaction_id      = $transaction->id;
-                    $mpesa_transaction->save();
+                    $details = [];
 
-                    $user->coins += $coins;
-                    $user->update();
+                    foreach ($items as $item) {
+                        $details[$item->Name] = isset($item->Value) ? $item->Value : null;
+                    }
 
-                    $this->settings->available_balance->value += $coins;
-                    $this->settings->available_balance->update();
+                    if($mpesa_request->ResultCode == 0){
+                        $transaction                    = new Transaction;
+                        $transaction->user_id           = $user->id;
+                        $transaction->coins             = $coins;
+                        $transaction->transaction_code  = $details['MpesaReceiptNumber'];; 
+                        $transaction->amount            = (float)$details['Amount'];
+                        $transaction->medium            = $medium;
+                        $transaction->status            = 'COMPLETE';
+                        $transaction->currency          = $this->settings->system_currency->value;
+                        $transaction->type              = 'INCOMING';
+                        $transaction->description       = number_format($coins) . ' Simba Coin(s) Purchase via ' . $medium;
+                        $transaction->completed_at      = $this->date;
+                        $transaction->save();
 
-                    $this->settings->coins_in_circulation->value += $coins;
-                    $this->settings->coins_in_circulation->update();
+                        $mpesa_transaction                      = new MpesaTransaction;
+                        $mpesa_transaction->Amount              = $details['Amount'];
+                        $mpesa_transaction->MpesaReceiptNumber  = $details['MpesaReceiptNumber'];
+                        $mpesa_transaction->Balance             = $details['Balance'];
+                        $mpesa_transaction->TransactionDate     = $details['TransactionDate'];
+                        $mpesa_transaction->PhoneNumber         = $details['PhoneNumber'];
+                        $mpesa_transaction->user_id             = $user->id;
+                        $mpesa_transaction->coins               = $coins;
+                        $mpesa_transaction->mpesa_request_id    = $mpesa_request->id;
+                        $mpesa_transaction->transaction_id      = $transaction->id;
+                        $mpesa_transaction->save();
 
-                    $simba_coin_log                        = new SimbaCoinLog;
-                    $simba_coin_log->user_id               = $user->id;
-                    $simba_coin_log->message               = $coins . ' Simba Coins Purchased using ' . $medium;
-                    $simba_coin_log->type                  = 'credit';
-                    $simba_coin_log->coins                 = $coins;
-                    $simba_coin_log->previous_balance      = $user->coins - $coins ;
-                    $simba_coin_log->current_balance       = $user->coins;
-                    $simba_coin_log->save();
+                        $user->coins += $coins;
+                        $user->update();
+
+                        $this->settings->available_balance->value += $coins;
+                        $this->settings->available_balance->update();
+
+                        $this->settings->coins_in_circulation->value += $coins;
+                        $this->settings->coins_in_circulation->update();
+
+                        $simba_coin_log                        = new SimbaCoinLog;
+                        $simba_coin_log->user_id               = $user->id;
+                        $simba_coin_log->message               = $coins . ' Simba Coins Purchased using ' . $medium;
+                        $simba_coin_log->type                  = 'credit';
+                        $simba_coin_log->coins                 = $coins;
+                        $simba_coin_log->previous_balance      = $user->coins - $coins ;
+                        $simba_coin_log->current_balance       = $user->coins;
+                        $simba_coin_log->save();
+                        
+                        $message = 'MPESA ' . $this->settings->system_currency . ' '. number_format($transaction->amount) .' received from ' . $user->id;
+                        
+                        $notification                       = new Notification;
+                        $notification->to_id                = null;
+                        $notification->from_id              = $user->id;
+                        $notification->model_id             = null;
+                        $notification->notification_type    = 'coins.purchased';
+                        $notification->system_message       = 1;
+                        $notification->message              = ucfirst($coins . ' Simba Coins Purchased By ' . $user->name . ' via ' . $medium);
+                        $notification->save();
+
+                        $notification                       = new Notification;
+                        $notification->to_id                = $user->id;
+                        $notification->from_id              = null;
+                        $notification->from_admin           = 0;
+                        $notification->model_id             = null;
+                        $notification->notification_type    = 'coins.purchased';
+                        $notification->system_message       = 1;
+                        $notification->message              = ucfirst($coins . ' Simba Coins Purchase via ' . $medium);
+                        $notification->save();
+
+
+                        if($this->settings->mail_enabled->value){
+
+                            try{
+                                $title = 'MPESA Payment Received from ' . $user->name;
+
+                                \Mail::send('emails.payment-mpesa-admin', ['title' => $title, 'transaction' => $transaction, 'mpesa_transaction' => $mpesa_transaction], function ($message) use($transaction, $title){
+                                    $message->subject($title);
+                                    $message->to(config('app.system_email'));
+                                });
+
+                                
+                                $title = config('app.name') .' | MPESA Payment Received.';
+
+                                \Mail::send('emails.payment-mpesa-user', ['title' => $title, 'transaction' => $transaction, 'mpesa_transaction' => $mpesa_transaction], function ($message) use($transaction, $title){
+                                    $message->subject($title);
+                                    $message->to($transaction->user->email);
+                                });
+
+                            }catch(\Exception $e){
+                                $this->log_error($e);
+
+                                // session()->flash('error', $e->getMessage());
+                            }
+                        }
+                    }   
+
                     
-                    $message = 'MPESA ' . $this->settings->system_currency . ' '. number_format($transaction->amount) .' received from ' . $user->id;
-                    
-                    $notification                       = new Notification;
-                    $notification->to_id                = null;
-                    $notification->from_id              = $user->id;
-                    $notification->model_id             = null;
-                    $notification->notification_type    = 'coins.purchased';
-                    $notification->system_message       = 1;
-                    $notification->message              = ucfirst($coins . ' Simba Coins Purchased By ' . $user->name . ' via ' . $medium);
-                    $notification->save();
+                }else{
+                    $message = 'MPESA Payment not received for Simba Coin Purchase. Reason : ' . $response['ResultDesc'];
 
                     $notification                       = new Notification;
                     $notification->to_id                = $user->id;
                     $notification->from_id              = null;
                     $notification->from_admin           = 0;
                     $notification->model_id             = null;
-                    $notification->notification_type    = 'coins.purchased';
+                    $notification->notification_type    = 'coins.purchase.failed.mpesa';
                     $notification->system_message       = 1;
-                    $notification->message              = ucfirst($coins . ' Simba Coins Purchase via ' . $medium);
+                    $notification->message              = ucfirst($message);
                     $notification->save();
 
+                    $log = new AppLog;
+                    $log->message = $message;
+                    $log->save();
+                }           
+            } catch(\Exception $e) {
+                $this->log_error($e);
+            }
 
-                    if($this->settings->mail_enabled->value){
-
-                        try{
-                            $title = 'MPESA Payment Received from ' . $user->name;
-
-                            \Mail::send('emails.payment-mpesa-admin', ['title' => $title, 'transaction' => $transaction, 'mpesa_transaction' => $mpesa_transaction], function ($message) use($transaction, $title){
-                                $message->subject($title);
-                                $message->to(config('app.system_email'));
-                            });
-
-                            
-                            $title = config('app.name') .' | MPESA Payment Received.';
-
-                            \Mail::send('emails.payment-mpesa-user', ['title' => $title, 'transaction' => $transaction, 'mpesa_transaction' => $mpesa_transaction], function ($message) use($transaction, $title){
-                                $message->subject($title);
-                                $message->to($transaction->user->email);
-                            });
-
-                        }catch(\Exception $e){
-                            $this->log_error($e);
-
-                            // session()->flash('error', $e->getMessage());
-                        }
-                    }
-                }   
-
-                
-            }else{
-                $message = 'MPESA Payment not received for Simba Coin Purchase. Reason : ' . $response['ResultDesc'];
-
-                $notification                       = new Notification;
-                $notification->to_id                = $user->id;
-                $notification->from_id              = null;
-                $notification->from_admin           = 0;
-                $notification->model_id             = null;
-                $notification->notification_type    = 'coins.purchase.failed.mpesa';
-                $notification->system_message       = 1;
-                $notification->message              = ucfirst($message);
-                $notification->save();
-
-                $log = new AppLog;
-                $log->message = $message;
-                $log->save();
-            }           
-        } catch(\Exception $e) {
-            $this->log_error($e);
+            return response()->json(['status' => 200, 'message' => 'OK']);
         }
 
-        return response()->json(['status' => 200]);
+        else{
+            return response()->json(['status' => 403, 'message' => 'Forbidden']);
+        }
+    }
+
+    public function generateToken($user_id){
+        $payment_validation = new PaymentValidation;
+        $payment_validation->user_id = $user_id;
+        $payment_validation->token = generateRandomString(100);
+        $payment_validation->save();
+
+        return $payment_validation->token;
+    }
+
+    public function verifyToken($token, $user_id){
+        $payment_validation = PaymentValidation::where('user_id', $user_id)->where('token', $token)->where('used', 0)->first();
+
+        return $payment_validation;
+    }
+
+    public function expireToken($token, $user_id){
+        $payment_validation = PaymentValidation::where('user_id', $user_id)->where('token', $token)->first();
+        if($payment_validation){
+            $payment_validation->used = 1;
+            $payment_validation->used_at = $this->date;
+            $payment_validation->update();
+        } 
     }
 }

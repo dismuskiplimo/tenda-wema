@@ -302,8 +302,8 @@ Route::group(['prefix' => 'auth'], function(){
 });
 
 Route::group(['prefix' => 'payments'], function(){
-	Route::post('/payment/paypal/{type}/request', 'PaymentsController@makePaypalPayment')->name('paypal.request');
-	Route::get('/payment/paypal/{type}/verify', 'PaymentsController@verifyPaypalPayment')->name('paypal.verify');
+	Route::post('/payment/paypal/request', 'PaymentsController@makePaypalPayment')->name('paypal.request');
+	Route::get('/payment/paypal/verify', 'PaymentsController@verifyPaypalPayment')->name('paypal.verify');
 
 	Route::post('/payment/mpesa/request', 'PaymentsController@makeMpesaPayment')->name('mpesa.request');
 	Route::post('/payment/mpesa/save', 'PaymentsController@saveMpesaRequest')->name('mpesa.save');
