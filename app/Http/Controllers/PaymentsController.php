@@ -437,11 +437,13 @@ class PaymentsController extends Controller
             $shortcode = $this->settings->mpesa_shortcode->value;
             $passkey = $this->settings->mpesa_passkey->value;
             $timestamp = $this->date->format('YmdHis');
+
+            $route_params = ['user_id' => $user->id, 'type' => $type, 'coins' => $coins];
             
             if($this->settings->mpesa_callback_url->value){
-                $callback = $this->settings->mpesa_callback_url->value . route('mpesa.save', ['id' => $user->id, 'type' => $type, 'coins' => $coins], false);
+                $callback = $this->settings->mpesa_callback_url->value . route('mpesa.save', $route_params, false);
             }else{
-                $callback = url(route('mpesa.save', ['id' => $user->id, 'type' => $type, 'coins' => $coins]));
+                $callback = url(route('mpesa.save', $route_params));
             }       
             
             $password = base64_encode($shortcode.$passkey.$timestamp);
@@ -517,11 +519,11 @@ class PaymentsController extends Controller
         $mpesa_response->message = $request;
         $mpesa_response->save();
 
-        $id = $request->id;
+        $user_id = $request->user_id;
         
         $type = $request->type;
         
-        $user   = User::find($id);
+        $user   = User::find($user_id);
 
         try{
             list($h, $b) = explode("\r\n\r\n", $request, 2);
@@ -538,7 +540,7 @@ class PaymentsController extends Controller
             $log->message = $request;
             $log->save();
 
-            return response()->json(['code' => 1]);   
+            return response()->json(['status' => 200]);   
         }
 
         $coins  = $request->coins;
@@ -685,5 +687,7 @@ class PaymentsController extends Controller
         } catch(\Exception $e) {
             $this->log_error($e);
         }
+
+        return response()->json(['status' => 200]);
     }
 }

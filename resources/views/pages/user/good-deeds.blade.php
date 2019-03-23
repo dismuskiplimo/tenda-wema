@@ -32,13 +32,12 @@
 				</div>
 				@if($deeds->total())
 					<div class="row">
-				
+						<div class="col-sm-12"><h4>GALLERY</h4></div>
+
 						@foreach($deeds as $deed)
 							
 							@if(count($deed->images))
-								
-									<div class="col-sm-12"><h4>GALLERY</h4></div>
-									
+																	
 									@foreach($deed->images()->orderBy('created_at', 'DESC')->get() as $image)
 										
 										<div class="col-sm-4 mb-20">

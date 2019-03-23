@@ -28,14 +28,14 @@
     		<td>{{ $contact_us->phone }}</td>
     	</tr>
 
-    	<tr style="margin-bottom:10px">
+    	<tr style="margin-bottom:20px">
     		<th>Subject</th>
-    		<th>{{ $contact_us->subject }}</th>
+    		<td><strong>{{ $contact_us->subject }}</strong></td>
     	</tr>
 
     	<tr>
     		<th></th>
-    		<td>{{ $contact_us->message }}</td>
+    		<td>{!! clean(nl2br($contact_us->message)) !!}</td>
     	</tr>
 
     	
