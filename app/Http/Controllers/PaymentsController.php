@@ -26,7 +26,7 @@ use \PayPal\Types\AA\{AccountIdentifierType, GetVerifiedStatusRequest};
 
 class PaymentsController extends Controller
 {
-	protected $paypal_client_id,
+    protected $paypal_client_id,
               $paypal_secret,
               $paypal_currency,
               $paypal_mode,
@@ -40,46 +40,59 @@ class PaymentsController extends Controller
               $mpesa_access_token;
 
     protected $mpesa_errors = [
-    	'0' => 'Success',
-    	'1' => 'Insufficient Funds',
-    	'2' => 'Less Than Minimum Transaction Value',
-    	'3' => 'More Than Maximum Transaction Value',
-    	'4' => 'Would Exceed Daily Transfer Limit',
-    	'5' => 'Would Exceed Minimum Balance',
-    	'6' => 'Unresolved Primary Party',
-    	'7' => 'Unresolved Receiver Party',
-    	'8' => 'Would Exceed Maxiumum Balance',
-    	'11' => 'Debit Account Invalid',
-    	'12' => 'Credit Account Invalid',
-    	'13' => 'Unresolved Debit Account',
-    	'14' => 'Unresolved Credit Account',
-    	'15' => 'Duplicate Detected',
-    	'17' => 'Internal Failure',
-    	'20' => 'Unresolved Initiator',
-    	'26' => 'Traffic blocking condition in place',
+        '0' => 'Success',
+        '1' => 'Insufficient Funds',
+        '2' => 'Less Than Minimum Transaction Value',
+        '3' => 'More Than Maximum Transaction Value',
+        '4' => 'Would Exceed Daily Transfer Limit',
+        '5' => 'Would Exceed Minimum Balance',
+        '6' => 'Unresolved Primary Party',
+        '7' => 'Unresolved Receiver Party',
+        '8' => 'Would Exceed Maxiumum Balance',
+        '11' => 'Debit Account Invalid',
+        '12' => 'Credit Account Invalid',
+        '13' => 'Unresolved Debit Account',
+        '14' => 'Unresolved Credit Account',
+        '15' => 'Duplicate Detected',
+        '17' => 'Internal Failure',
+        '20' => 'Unresolved Initiator',
+        '26' => 'Traffic blocking condition in place',
+    ];
+
+    protected $mpesa_http_errors = [
+        '400' => 'Bad Request',
+        '401' => 'Unauthorized',
+        '403' => 'Forbidden',
+        '404' => 'Not Found',
+        '405' => 'Method Not Allowed',
+        '406' => 'Not Acceptable – You requested a format that isn’t json',
+        '429' => 'Too Many Requests – You’re requesting too many kittens! Slow down!',
+        '500' => 'Internal Server Error – We had a problem with our server. Try again later.',
+        '503' => 'Service Unavailable – We’re temporarily offline for maintenance. Please try again later.',
+        
     ];
 
     public function __construct(){
-    	
+        
 
-    	$this->initialize();
+        $this->initialize();
 
-    	//paypal
+        //paypal
 
-    	$mode = $this->settings->paypal_mode->value;
+        $mode = $this->settings->paypal_mode->value;
 
         $this->app_name = config('app.name');
         
         $this->paypal_currency = $this->settings->paypal_currency->value;
 
         if($mode == 'sandbox'){
-            $this->paypal_client_id 	= $this->settings->paypal_client_id_sandbox->value;
-            $this->paypal_secret 		= $this->settings->paypal_secret_sandbox->value;
-            $this->paypal_mode 		    = $mode;
+            $this->paypal_client_id     = $this->settings->paypal_client_id_sandbox->value;
+            $this->paypal_secret        = $this->settings->paypal_secret_sandbox->value;
+            $this->paypal_mode          = $mode;
         }elseif($mode == 'live'){
-            $this->paypal_client_id 	= $this->settings->paypal_client_id_live->value;
-            $this->paypal_secret 		= $this->settings->paypal_secret_live->value;
-            $this->paypal_mode 		    = $mode;
+            $this->paypal_client_id     = $this->settings->paypal_client_id_live->value;
+            $this->paypal_secret        = $this->settings->paypal_secret_live->value;
+            $this->paypal_mode          = $mode;
         }else{
             $this->paypal_mode = 'test';
         }
@@ -98,22 +111,22 @@ class PaymentsController extends Controller
         $mode = $this->settings->mpesa_mode->value;
         
         if($mode == 'live'){
-        	$this->mpesa_consumer_key = $this->settings->mpesa_consumer_key_live->value;
-        	$this->mpesa_consumer_secret = $this->settings->mpesa_consumer_secret_live->value;
-        	$this->mpesa_auth_url = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
-        	$this->mpesa_request_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
-        	$this->mpesa_query_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query';
+            $this->mpesa_consumer_key = $this->settings->mpesa_consumer_key_live->value;
+            $this->mpesa_consumer_secret = $this->settings->mpesa_consumer_secret_live->value;
+            $this->mpesa_auth_url = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
+            $this->mpesa_request_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+            $this->mpesa_query_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query';
         }elseif($mode == 'sandbox'){
-        	$this->mpesa_consumer_key = $this->settings->mpesa_consumer_key_sandbox->value;
-        	$this->mpesa_consumer_secret = $this->settings->mpesa_consumer_secret_sandbox->value;
-        	$this->mpesa_auth_url = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
-        	$this->mpesa_request_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
-        	$this->mpesa_query_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query';
+            $this->mpesa_consumer_key = $this->settings->mpesa_consumer_key_sandbox->value;
+            $this->mpesa_consumer_secret = $this->settings->mpesa_consumer_secret_sandbox->value;
+            $this->mpesa_auth_url = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
+            $this->mpesa_request_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+            $this->mpesa_query_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query';
         }
     }
 
-    public function makePaypalPayment(Request $request){
-    	$this->validate($request, [
+    public function requestPaypalPayment(Request $request){
+        $this->validate($request, [
             'amount' => 'required|numeric|min:1',
         ]);
 
@@ -394,6 +407,8 @@ class PaymentsController extends Controller
 
             $response = curl_exec($curl);
 
+            curl_close($curl);
+
             list($header, $body) = explode("\r\n\r\n", $response, 2);
 
             $fields = json_decode($body);
@@ -405,7 +420,7 @@ class PaymentsController extends Controller
         }
     }
 
-    public function makeMpesaPayment(Request $request){
+    public function requestMpesaPayment(Request $request){
 
         $type = $request->type;
 
@@ -417,7 +432,7 @@ class PaymentsController extends Controller
         ]);
 
         if(!$this->settings->mpesa_enabled->value){
-            session()->flash('error', 'Paypal gateway as been disabled');
+            session()->flash('error', 'MPESA gateway as been disabled');
 
             return redirect()->back();
         }
@@ -484,6 +499,10 @@ class PaymentsController extends Controller
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
 
                 $curl_response = curl_exec($curl);
+
+                $info = curl_getinfo($curl);
+
+                curl_close($curl);
             }
 
             catch(\Exception $e){
@@ -508,13 +527,15 @@ class PaymentsController extends Controller
                     session()->flash('error', $response->ResponseDescription);
                     return redirect()->back();
                 }else{
+                    session()->flash('error', 'Invalid Response, Please try again');
+                    
                     return redirect()->back();
                 }
                 
             }
                 
         }else{
-            session()->flash('error', 'Error, Please try again');
+            session()->flash('error', 'Error, Invalid Token, Please try again');
             
             return redirect()->back();
         }     
@@ -550,7 +571,7 @@ class PaymentsController extends Controller
                 $log->message = $request;
                 $log->save();
 
-                return response()->json(['status' => 200, 'message' => 'OK']); 
+                return response("0"); 
             }
 
             $coins  = $request->coins;
@@ -698,11 +719,11 @@ class PaymentsController extends Controller
                 $this->log_error($e);
             }
 
-            return response()->json(['status' => 200, 'message' => 'OK']);
+            return response("0");
         }
 
         else{
-            return response()->json(['status' => 403, 'message' => 'Forbidden']);
+            return response("0");
         }
     }
 
