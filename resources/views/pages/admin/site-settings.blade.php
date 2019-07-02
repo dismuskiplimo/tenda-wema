@@ -168,6 +168,16 @@
 		    		</div>
 
 		    		<div class="form-group">
+		    			<label for="">Settings to be used?</label>
+
+		    			<select name="mpesa_db_preferred" class="form-control">
+		    				<option value="1" {{ $settings->mpesa_db_preferred->value == 1 ? 'selected' : '' }}>LOAD DB SETTINGS</option>
+		    				<option value="0" {{ $settings->mpesa_db_preferred->value == 0 ? 'selected' : '' }}>USE .ENV SETTINGS</option>
+		    			</select>
+		    			
+		    		</div>
+
+		    		{{-- <div class="form-group">
 		    			<label for="">Currency</label>
 		    			<select name="system_currency" id="" class="form-control">
 		    				@foreach($currencies as $currency)
@@ -175,7 +185,7 @@
 		    				@endforeach
 		    			</select>
 		    			
-		    		</div>
+		    		</div> --}}
 
 		    		<div class="form-group">
 		    			<label for="">MPESA Mode</label>
@@ -187,19 +197,16 @@
 		    			
 		    		</div>
 
+		    		<h4>SANDBOX SETTINGS</h4>
+
 		    		<div class="form-group">
 		    			<label for="">MPESA Shortcode</label>
-		    			<input type="text"  name="mpesa_shortcode" class="form-control" value="{{ $settings->mpesa_shortcode->value }}" >
+		    			<input type="text"  name="mpesa_shortcode_sandbox" class="form-control" value="{{ $settings->mpesa_shortcode_sandbox->value }}" >
 		    		</div>
 
 		    		<div class="form-group">
 		    			<label for="">MPESA Passkey</label>
-		    			<input type="text"  name="mpesa_passkey" class="form-control" value="{{ $settings->mpesa_passkey->value }}">
-		    		</div>
-
-		    		<div class="form-group">
-		    			<label for="">MPESA Callback Url (if any)</label>
-		    			<input type="text"  name="mpesa_callback_url" class="form-control" value="{{ $settings->mpesa_callback_url->value }}">
+		    			<input type="text"  name="mpesa_passkey_sandbox" class="form-control" value="{{ $settings->mpesa_passkey_sandbox->value }}">
 		    		</div>
 
 		    		<div class="form-group">
@@ -213,6 +220,23 @@
 		    		</div>
 
 		    		<div class="form-group">
+		    			<label for="">MPESA Callback Url (if any)</label>
+		    			<input type="text"  name="mpesa_callback_url_sandbox" class="form-control" value="{{ $settings->mpesa_callback_url_sandbox->value }}">
+		    		</div>
+
+		    		<h4>LIVE SETTINGS</h4>
+
+		    		<div class="form-group">
+		    			<label for="">MPESA Shortcode</label>
+		    			<input type="text"  name="mpesa_shortcode_live" class="form-control" value="{{ $settings->mpesa_shortcode_live->value }}" >
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">MPESA Passkey</label>
+		    			<input type="text"  name="mpesa_passkey_live" class="form-control" value="{{ $settings->mpesa_passkey_live->value }}">
+		    		</div>
+
+		    		<div class="form-group">
 		    			<label for="">MPESA Consumer Key (Live)</label>
 		    			<input type="text"  name="mpesa_consumer_key_live" class="form-control" value="{{ $settings->mpesa_consumer_key_live->value }}">
 		    		</div>
@@ -220,6 +244,11 @@
 		    		<div class="form-group">
 		    			<label for="">MPESA Consumer Secret (Live)</label>
 		    			<input type="text"  name="mpesa_consumer_secret_live" class="form-control" value="{{ $settings->mpesa_consumer_secret_live->value }}">
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">MPESA Callback Url (if any)</label>
+		    			<input type="text"  name="mpesa_callback_url_live" class="form-control" value="{{ $settings->mpesa_callback_url_live->value }}">
 		    		</div>
 		    		
 
@@ -237,6 +266,16 @@
 		    			<select name="paypal_enabled" class="form-control">
 		    				<option value="1" {{ $settings->paypal_enabled->value == 1 ? 'selected' : '' }}>YES</option>
 		    				<option value="0" {{ $settings->paypal_enabled->value == 0 ? 'selected' : '' }}>NO</option>
+		    			</select>
+		    			
+		    		</div>
+
+		    		<div class="form-group">
+		    			<label for="">Settings to be used?</label>
+
+		    			<select name="paypal_db_preferred" class="form-control">
+		    				<option value="1" {{ $settings->paypal_db_preferred->value == 1 ? 'selected' : '' }}>LOAD DB SETTINGS</option>
+		    				<option value="0" {{ $settings->paypal_db_preferred->value == 0 ? 'selected' : '' }}>USE .ENV SETTINGS</option>
 		    			</select>
 		    			
 		    		</div>

@@ -113,9 +113,9 @@ class PaymentsController extends Controller
         if($mode == 'live'){
             $this->mpesa_consumer_key = $this->settings->mpesa_consumer_key_live->value;
             $this->mpesa_consumer_secret = $this->settings->mpesa_consumer_secret_live->value;
-            $this->mpesa_auth_url = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
-            $this->mpesa_request_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
-            $this->mpesa_query_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query';
+            $this->mpesa_auth_url = 'https://api.safaricom.co.ke/oauth/v1/generate';
+            $this->mpesa_request_url = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+            $this->mpesa_query_url = 'https://api.safaricom.co.ke/mpesa/stkpushquery/v1/query';
         }elseif($mode == 'sandbox'){
             $this->mpesa_consumer_key = $this->settings->mpesa_consumer_key_sandbox->value;
             $this->mpesa_consumer_secret = $this->settings->mpesa_consumer_secret_sandbox->value;
@@ -725,6 +725,11 @@ class PaymentsController extends Controller
         else{
             return response("0");
         }
+    }
+
+    public function mpesaCallback(Request $request){
+        
+        return response()->json(['status' => 200]);
     }
 
     public function generateToken($user_id){

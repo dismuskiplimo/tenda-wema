@@ -36,16 +36,18 @@ class SettingTableSeeder extends Seeder
         		'updated_at'	=> $this->date,
         	],
 
+             //******************* EMAIL SETTINGS *******************************
+
             [
-                'name'          => 'mail_enabled',
-                'value'         => 1,
+                'name'          => 'mail_db_preferred',
+                'value'         => 0,
                 'created_at'    => $this->date,
                 'updated_at'    => $this->date,
             ],
 
             [
-                'name'          => 'mail_db_preferred',
-                'value'         => 0,
+                'name'          => 'mail_enabled',
+                'value'         => 1,
                 'created_at'    => $this->date,
                 'updated_at'    => $this->date,
             ],
@@ -142,20 +144,6 @@ class SettingTableSeeder extends Seeder
             ],
 
 
-            [
-                'name'          => 'paypal_enabled',
-                'value'         => '1',
-                'created_at'    => $this->date,
-                'updated_at'    => $this->date,
-            ],
-
-            [
-                'name'          => 'mpesa_enabled',
-                'value'         => '1',
-                'created_at'    => $this->date,
-                'updated_at'    => $this->date,
-            ],
-
         	[
         		'name'			=> 'coin_value',
         		'value'			=> '10',
@@ -170,9 +158,25 @@ class SettingTableSeeder extends Seeder
         		'updated_at'	=> $this->date,
         	],
 
-
         	//************************PAYPAL******************************
+
         	[
+                'name'          => 'paypal_db_preferred',
+                'value'         => 0,
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+
+            [
+                'name'          => 'paypal_enabled',
+                'value'         => '1',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+
+            [
         		'name'			=> 'paypal_mode',
         		'value'			=> 'sandbox',
         		'created_at'	=> $this->date,
@@ -214,58 +218,91 @@ class SettingTableSeeder extends Seeder
                 'updated_at'    => $this->date,
             ],
 
-            //******************************END OF PAYPAL SETTINGS*************************8
+            //******************************END OF PAYPAL SETTINGS*************************
 
-            //******************************MPESA SETTING *********************************8
+            
 
+            //******************************MPESA SETTINGS ********************************
         	[
+                'name'          => 'mpesa_db_preferred',
+                'value'         => 0,
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mpesa_enabled',
+                'value'         => '1',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
         		'name'			=> 'mpesa_mode',
         		'value'			=> 'sandbox',
         		'created_at'	=> $this->date,
         		'updated_at'	=> $this->date,
         	],
 
+            //LIVE********************************************
+
         	[
-                'name'  		=> 'mpesa_shortcode',
-                'value' 		=> '174379',
+                'name'  		=> 'mpesa_shortcode_live',
+                'value' 		=> '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],      
+
+            [
+                'name'          => 'mpesa_passkey_live',
+                'value'         => '',
                 'created_at'    => $this->date,
                 'updated_at'    => $this->date,
             ],
 
             [
-                'name'  		=> 'mpesa_passkey',
-                'value' 		=> 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919',
+                'name'          => 'mpesa_consumer_key_live',
+                'value'         => '',
                 'created_at'    => $this->date,
                 'updated_at'    => $this->date,
             ],
 
             [
-                'name'  => 'mpesa_callback_url',
-                'value' => '',
+                'name'          => 'mpesa_consumer_secret_live',
+                'value'         => '',
                 'created_at'    => $this->date,
                 'updated_at'    => $this->date,
             ],
 
-        	[
-        		'name'			=> 'mpesa_consumer_key_live',
-        		'value'			=> '',
-        		'created_at'	=> $this->date,
-        		'updated_at'	=> $this->date,
-        	],
+            [
+                'name'          => 'mpesa_callback_url_live',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
 
-        	[
-        		'name'			=> 'mpesa_consumer_secret_live',
-        		'value'			=> '',
-        		'created_at'	=> $this->date,
-        		'updated_at'	=> $this->date,
-        	],
+            //SANDBOX****************************
 
-        	[
-        		'name'			=> 'mpesa_consumer_key_sandbox',
-        		'value'			=> 'dJ8z0skcGONvVa1w1NMbP531pxlGRxZA',
-        		'created_at'	=> $this->date,
-        		'updated_at'	=> $this->date,
-        	],
+            [
+                'name'          => 'mpesa_shortcode_sandbox',
+                'value'         => '174379',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],  
+
+            [
+                'name'          => 'mpesa_passkey_sandbox',
+                'value'         => 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
+
+            [
+                'name'          => 'mpesa_consumer_key_sandbox',
+                'value'         => 'dJ8z0skcGONvVa1w1NMbP531pxlGRxZA',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
 
         	[
         		'name'			=> 'mpesa_consumer_secret_sandbox',
@@ -273,6 +310,13 @@ class SettingTableSeeder extends Seeder
         		'created_at'	=> $this->date,
         		'updated_at'	=> $this->date,
         	],
+
+            [
+                'name'          => 'mpesa_callback_url_sandbox',
+                'value'         => '',
+                'created_at'    => $this->date,
+                'updated_at'    => $this->date,
+            ],
 
         	//*************************************END OF MPESA SETTINGS*****************
 
