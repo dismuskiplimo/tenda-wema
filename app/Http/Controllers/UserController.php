@@ -674,15 +674,6 @@ class UserController extends Controller
 
         $donated_item->update();
 
-        $donor                      = $donated_item->donor;
-
-        
-        $donor->coins               += $donated_item->price;
-        $donor->accumulated_coins   += $donated_item->price;
-        $donor->update();
-    
-        $donor->check_social_level();
-
         $timeline           = new \App\Timeline;
         $timeline->user_id  = $donated_item->buyer->id;
         $timeline->model_id = $donated_item->id;
@@ -691,20 +682,11 @@ class UserController extends Controller
         $timeline->extra    = '';
         $timeline->save();
 
-        $simba_coin_log                        = new SimbaCoinLog;
-        $simba_coin_log->user_id               = $donor->id;
-        $simba_coin_log->message               = 'Payment for Donated item sold. (' . $donated_item->name .')';
-        $simba_coin_log->type                  = 'credit';
-        $simba_coin_log->coins                 = $donated_item->price;
-        $simba_coin_log->previous_balance      = $donor->coins - $donated_item->price ;
-        $simba_coin_log->current_balance       = $donor->coins;
-        $simba_coin_log->save();
-
         $notification                       = new Notification;
         $notification->from_id              = $user->id;
         $notification->to_id                = $donated_item->donor->id;
         $notification->system_message       = 0;
-        $notification->message              = 'The Item Purchased by '. $donated_item->buyer->name .' Was marked as received. The funds have been released to your account.';
+        $notification->message              = 'The Item Purchased by '. $donated_item->buyer->name .' Was marked as received.';
         $notification->notification_type    = 'donated-item.delivery.approved';
         $notification->model_id             = $donated_item->id;
         $notification->save();

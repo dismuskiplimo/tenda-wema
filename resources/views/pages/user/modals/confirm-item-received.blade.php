@@ -13,7 +13,7 @@
           <div class="row">
             <div class="col-sm-12">
               <h3 class="nobottommargin">Confirm that you have received {{ $item->name }}?</h3>
-              <p>The funds will be released to the seller. This action cannot be reversed.</p>
+              <p></p>
             </div>   
           </div>
         </div>
