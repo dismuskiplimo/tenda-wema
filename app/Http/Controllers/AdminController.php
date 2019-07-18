@@ -429,8 +429,10 @@ class AdminController extends Controller
 
         $donor                      = $donated_item->donor;
 
-        $donor->coins               += $donated_item->price;
-        $donor->accumulated_coins   += $donated_item->price;
+        $coins                      = config('coins.donated_item.price');
+
+        $donor->coins               += $coins;
+        $donor->accumulated_coins   += $coins;
         $donor->update();
 
         $donor->check_social_level();
@@ -439,8 +441,8 @@ class AdminController extends Controller
         $simba_coin_log->user_id               = $donor->id;
         $simba_coin_log->message               = 'Simba Coins Received for Donating Item. (' . $donated_item->name . ')';
         $simba_coin_log->type                  = 'credit';
-        $simba_coin_log->coins                 = $donated_item->price;
-        $simba_coin_log->previous_balance      = $donor->coins - $donated_item->price;
+        $simba_coin_log->coins                 = $coins;
+        $simba_coin_log->previous_balance      = $donor->coins - $coins;
         $simba_coin_log->current_balance       = $donor->coins;
         $simba_coin_log->save();
 
@@ -574,6 +576,21 @@ class AdminController extends Controller
     	$donated_item->update();
 
     	$donor 						        = $donated_item->donor;
+
+        $donor->coins                       += $donated_item->price;
+        $donor->accumulated_coins           += $donated_item->price;
+        $donor->update();
+
+        $donor->check_social_level();
+
+        $simba_coin_log                        = new SimbaCoinLog;
+        $simba_coin_log->user_id               = $donor->id;
+        $simba_coin_log->message               = 'Simba Coins Received for (' . $donated_item->name . ') Sold in the Community Shop';
+        $simba_coin_log->type                  = 'credit';
+        $simba_coin_log->coins                 = $donated_item->price;
+        $simba_coin_log->previous_balance      = $donor->coins - $donated_item->price;
+        $simba_coin_log->current_balance       = $donor->coins;
+        $simba_coin_log->save();
 
     	$notification                       = new Notification;
         $notification->from_id              = $user->id;

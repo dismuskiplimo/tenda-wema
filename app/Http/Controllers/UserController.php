@@ -674,6 +674,23 @@ class UserController extends Controller
 
         $donated_item->update();
 
+        $donor                              = $donated_item->donor;
+
+        $donor->coins                       += $donated_item->price;
+        $donor->accumulated_coins           += $donated_item->price;
+        $donor->update();
+
+        $donor->check_social_level();
+
+        $simba_coin_log                        = new SimbaCoinLog;
+        $simba_coin_log->user_id               = $donor->id;
+        $simba_coin_log->message               = 'Simba Coins Received for (' . $donated_item->name . ') Sold in the Community Shop';
+        $simba_coin_log->type                  = 'credit';
+        $simba_coin_log->coins                 = $donated_item->price;
+        $simba_coin_log->previous_balance      = $donor->coins - $donated_item->price;
+        $simba_coin_log->current_balance       = $donor->coins;
+        $simba_coin_log->save();
+
         $timeline           = new \App\Timeline;
         $timeline->user_id  = $donated_item->buyer->id;
         $timeline->model_id = $donated_item->id;
