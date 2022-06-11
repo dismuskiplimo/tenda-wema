@@ -6,8 +6,8 @@ tendawema.com is a social group where members earn Simba Coins for doing good de
 - PHP 7 (best if also added to the env path for direct access with the terminal)
 - MySQL Server
 - Composer
-- Text Editor
-- MPESA Daraja API credentials
+- Text Editor - Visual Studio Code recommended
+- MPESA Daraja API credentials (https://developer.safaricom.co.ke/)
 
 ## How to install
 The project is very easy to set up once you have all the prerequisites
@@ -35,7 +35,7 @@ The project is very easy to set up once you have all the prerequisites
 7. `APP_CONTACT_EMAIL` - The contact email displayed in the website
 8. `APP_SYSTEM_EMAIL` - Email that the system used to send automated emails. e.g no-reply@tendawema.com
 9. `PUBLIC_PATH` - The path that contains public assets (default: public_html)
-10. `HTTPS` - Deceides whether the website is HTTPS or not (acceptable values: true, false)
+10. `HTTPS` - Whether the website is HTTPS or not (acceptable values: true, false)
 11. `LOG_CHANNEL` - The channel where data is logged (acceptable values: stack, single)
 12. `DB_CONNECTION` - The database driver (acceptable values: mysql, postgres, e.t.c).
 13. `DB_HOST` - The ip/hostname of the Database Server 
