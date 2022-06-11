@@ -22,7 +22,7 @@ The project is very easy to set up once you have all the prerequisites
 9. `php artisan migrate` to create the tables in MySQL
 10. `php artisan db:seed` to populate the database with system configuration data
 11. You're done 👍
-12. Run `php artisan serve` to launch a development server.
-13. Navigate to `localhost:8000` to view the website
+12. Now, run `php artisan serve` to launch a development server.
+13. Navigate to `http://localhost:8000` to view the website
 
 ## .env Configuration details
