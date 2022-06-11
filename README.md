@@ -14,7 +14,7 @@ The project is very easy to set up once you have all the prerequisites
 1. Clone the project into your local machine
 2. Navigate into the project folder
 3. Rename `.env.example` to become `.env`
-4. Open the `.env` file using your favourite text editor. This file contains credentials necessary for the application to run
+4. Open the `.env` file using your favourite text editor. This file contains necessary configuration data for the application to run
 5. You need only to edit the `DB` section e.g `DB_DATABASE`,`DB_USERNAME`,`DB_PASSWORD`, for the application to finish installing. You need to make sure the database selected is already created in MySQL server.
 6. Open terminal within the project folder and type in the following commands in order
 7. `php artisan key:generate` to generate application keys
