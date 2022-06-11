@@ -26,80 +26,60 @@ The project is very easy to set up once you have all the prerequisites
 13. Navigate to `http://localhost:8000` to view the website
 
 ## Configuration details (.env file)
-`APP_NAME` - The application name (any string. If the name has spaces, enclose in "double quotes")
-`APP_ENV` - The application environment (acceptable values: local, production)
-`APP_KEY` - The application key. Generated automatically using `php artisan key:generate`
-`APP_DEBUG` - Whether to display debug messages (acceptable values: true, false)
-`APP_URL` - The URL of the application (including http/https) e.g https://tendawema.com (used for sending password reset emails)
-`APP_DOMAIN` - The domain name of the application without http/https (e.g. tendawema.com, abc.com)
-
-`APP_CONTACT_EMAIL` - The contact email displayed in the website
-
-`APP_SYSTEM_EMAIL` - Email that the system used to send automated emails. e.g no-reply@tendawema.com
-
-`PUBLIC_PATH` - The path that contains public assets (default: public_html)
-
-`HTTPS` - Deceides whether the website is HTTPS or not (acceptable values: true, false)
-
-`LOG_CHANNEL` - The channel where data is logged (acceptable values: stack, single)
-
-`DB_CONNECTION` - The database driver (acceptable values: mysql, postgres, e.t.c).
-`DB_HOST` - The ip/hostname of the Database Server 
-`DB_PORT` - Database port
-`DB_DATABASE` - Database name. Must have been created before running `php artisan migrate`
-`DB_USERNAME` - The username of the database user
-`DB_PASSWORD` - Database password
-
-BROADCAST_DRIVER=log
-CACHE_DRIVER=file
-SESSION_DRIVER=file
-SESSION_LIFETIME=525600
-QUEUE_DRIVER=sync
-
-REDIS_HOST=127.0.0.1
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-
-MAIL_DRIVER=smtp
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
-
-MAIL_FROM_ADDRESS=
-MAIL_FROM_NAME=
-
-SPARKPOST_SECRET=
-
-PUSHER_APP_ID=
-PUSHER_APP_KEY=
-PUSHER_APP_SECRET=
-PUSHER_APP_CLUSTER=mt1
-
-MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
-MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
-
-
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_REDIRECT=
-
-FACEBOOK_CLIENT_ID=
-FACEBOOK_CLIENT_SECRET=
-FACEBOOK_REDIRECT=
-
-
-MPESA_MODE=live
-
-MPESA_SHORTCODE_SANDBOX=
-MPESA_PASSKEY_SANDBOX=
-MPESA_CONSUMER_KEY_SANDBOX=
-MPESA_CONSUMER_SECRET_SANDBOX=
-MPESA_CALLBACK_URL_SANDBOX=
-
-MPESA_SHORTCODE_LIVE=
-MPESA_PASSKEY_LIVE=
-MPESA_CONSUMER_KEY_LIVE=
-MPESA_CONSUMER_SECRET_LIVE=
-MPESA_CALLBACK_URL_LIVE=
+1. `APP_NAME` - The application name (any string. If the name has spaces, enclose in "double quotes")
+2. `APP_ENV` - The application environment (acceptable values: local, production)
+3. `APP_KEY` - The application key. Generated automatically using `php artisan key:generate`
+4. `APP_DEBUG` - Whether to display debug messages (acceptable values: true, false)
+5. `APP_URL` - The URL of the application (including http/https) e.g https://tendawema.com (used for sending password reset emails)
+6. `APP_DOMAIN` - The domain name of the application without http/https (e.g. tendawema.com, abc.com)
+7. `APP_CONTACT_EMAIL` - The contact email displayed in the website
+8. `APP_SYSTEM_EMAIL` - Email that the system used to send automated emails. e.g no-reply@tendawema.com
+9. `PUBLIC_PATH` - The path that contains public assets (default: public_html)
+10. `HTTPS` - Deceides whether the website is HTTPS or not (acceptable values: true, false)
+11. `LOG_CHANNEL` - The channel where data is logged (acceptable values: stack, single)
+12. `DB_CONNECTION` - The database driver (acceptable values: mysql, postgres, e.t.c).
+13. `DB_HOST` - The ip/hostname of the Database Server 
+14. `DB_PORT` - Database port
+15. `DB_DATABASE` - Database name. Must have been created before running `php artisan migrate`
+16. `DB_USERNAME` - The username of the database user
+17. `DB_PASSWORD` - Database password
+18. `BROADCAST_DRIVER` - 
+19. `CACHE_DRIVER` - 
+20. `SESSION_DRIVER` - 
+21. `SESSION_LIFETIME` - The duration which the session is valis in minutes
+22. `QUEUE_DRIVER` - 
+23. `REDIS_HOST` - 
+24. `REDIS_PASSWORD` - 
+25. `REDIS_PORT` - 
+26. `MAIL_DRIVER` - The mail driver (acceptable values: smtp, sparkpost, mailgun)
+27. `MAIL_HOST=` - The mail host
+28. `MAIL_PORT` - Mail Port
+29. `MAIL_USERNAME` - Email username
+30. `MAIL_PASSWORD` - Email password
+31. `MAIL_ENCRYPTION` - The type of mail encryption (acceptable values: null, ssl, tls)
+32. `MAIL_FROM_ADDRESS` - The email address from where the system email originates
+33. `MAIL_FROM_NAME` - The name displayed when system email is sent
+34. `SPARKPOST_SECRET` - The secred API code received from sparkpost (https://sparkpost.com)
+35. PUSHER_APP_ID=
+36. PUSHER_APP_KEY=
+37. PUSHER_APP_SECRET=
+38. PUSHER_APP_CLUSTER=mt1
+39. MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+40. MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+41. GOOGLE_CLIENT_ID=
+42. GOOGLE_CLIENT_SECRET=
+43. GOOGLE_REDIRECT=
+44. FACEBOOK_CLIENT_ID=
+45. FACEBOOK_CLIENT_SECRET=
+46. FACEBOOK_REDIRECT=
+47. MPESA_MODE=live
+48. MPESA_SHORTCODE_SANDBOX=
+49. MPESA_PASSKEY_SANDBOX=
+50. MPESA_CONSUMER_KEY_SANDBOX=
+51. MPESA_CONSUMER_SECRET_SANDBOX=
+52. MPESA_CALLBACK_URL_SANDBOX=
+53. MPESA_SHORTCODE_LIVE=
+54. MPESA_PASSKEY_LIVE=
+55. MPESA_CONSUMER_KEY_LIVE=
+56. MPESA_CONSUMER_SECRET_LIVE=
+57. MPESA_CALLBACK_URL_LIVE=
