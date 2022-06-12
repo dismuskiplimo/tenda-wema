@@ -11,6 +11,6 @@ class CountryTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(Storage::disk('local')->get('sql/countries.sql'));
+        DB::unprepared(Storage::disk('local')->get('../sql/countries.sql'));
     }
 }
