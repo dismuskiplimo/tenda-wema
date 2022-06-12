@@ -11,6 +11,6 @@ class CurrencySeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(Storage::disk('local')->get('../sql/currencies.sql'));
+        DB::unprepared(Storage::disk('local')->get('sql/currencies.sql'));
     }
 }
