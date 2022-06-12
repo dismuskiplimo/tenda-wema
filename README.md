@@ -3,7 +3,7 @@
 tendawema.com is a social group where members earn Simba Coins for doing good deeds that positively impact their own local communities. Members can then use the Simba Coins (virtual social currency) earned to buy items donated by members to the Community instead of money. Members advance social levels and maintain their social status in the Community by accumulating Simba Coins earned for performing even more good deeds.
 
 ## Prerequisites
-- PHP 7 (best if also added to the env path for direct access with the terminal)
+- PHP 7.1 or later (best if also added to the env path for direct access with the terminal)
 - MySQL Server
 - Composer
 - Text Editor - Visual Studio Code recommended
