@@ -250,4 +250,4 @@ INSERT INTO countries (code, name) VALUES
     ('EH', 'Western Sahara'),
     ('YE', 'Yemen'),
     ('ZM', 'Zambia'),
-    ('ZW', 'Zimbabwe');`
+    ('ZW', 'Zimbabwe');
