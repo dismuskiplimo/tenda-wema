@@ -1,4 +1,4 @@
-INSERT INTO `countries` (`code`, `name`) VALUES
+INSERT INTO countries (code, name) VALUES
     ("AF", "Afghanistan"),
     ("AX", "Aland Islands"),
     ("AL", "Albania"),
