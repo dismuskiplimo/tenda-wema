@@ -38,7 +38,7 @@ tendawema.com is a social group where members earn Simba Coins for doing good de
     mv .env.example .env
     ```
 * Open the `.env` file using your favourite text editor. This file contains necessary configuration data for the application to run
-* You need only to edit the `DB` section e.g `DB_DATABASE`,`DB_USERNAME`,`DB_PASSWORD`, for the application to finish installing. You need to make sure the database selected is already created in MySQL server.
+* You need only to edit the `DB` section e.g `DB_DATABASE`,`DB_USERNAME`,`DB_PASSWORD`, for the initial installation. Ensure that the database selected is already created in your REBMS server (mysql, postgresql, sqlite e.t.c) or the installation will fail.
 
 ## Installation
 
