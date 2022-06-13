@@ -51,7 +51,7 @@ N/B: The image upload feature does not work in the demo link because Heroku does
     mv .env.example .env
     ```
 * Open the `.env` file using your favourite text editor. This file contains necessary configuration data for the application to run
-* You need only to edit the `DB` section e.g `DB_DATABASE`,`DB_USERNAME`,`DB_PASSWORD`, for the initial installation. Ensure that the database selected is already created in your REBMS server (mysql, postgresql, sqlite e.t.c) or the installation will fail.
+* You need only to edit the `DB` section e.g `DB_DATABASE`,`DB_USERNAME`,`DB_PASSWORD`, for the initial installation. Ensure that the database selected is already created in your RDBMS server (mysql, postgresql, sqlite e.t.c) or the installation will fail.
 
 ## Installation
 
