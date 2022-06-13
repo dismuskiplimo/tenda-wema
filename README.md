@@ -2,6 +2,18 @@
 
 ![tendawema](https://user-images.githubusercontent.com/15145265/173412569-505937cd-e30c-4c97-a68e-371786494313.jpg)
 
+## Table of Contents
+
+* [About the Project](#about-the-project)
+* [Built With](#built-with)
+* [Prerequisites](#prerequisites)
+* [Getting Started](#getting-started)
+* [Installation](#installation)
+* [Contributing](#contributing)
+* [.env file configurations](#configuration-file)
+* [Authors](#authors)
+* [Acknowledgements](#acknowledgements)
+
 ## About the Project
 tendawema.com is a social group where members earn Simba Coins for doing good deeds that positively impact their own local communities. Members can then use the Simba Coins (virtual social currency) earned to buy items donated by members to the Community instead of money. Members advance social levels and maintain their social status in the Community by accumulating Simba Coins earned for performing even more good deeds. <br>
 
