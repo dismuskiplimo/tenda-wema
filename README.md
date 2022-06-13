@@ -1,4 +1,4 @@
-# Tenda Wema Website
+# Tenda Wema Project
 
 ![tendawema](https://user-images.githubusercontent.com/15145265/173412569-505937cd-e30c-4c97-a68e-371786494313.jpg)
 
