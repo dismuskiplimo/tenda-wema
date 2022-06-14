@@ -44,7 +44,7 @@ N/B: The image upload feature does not work in the demo link because Heroku does
 * Navigate to panaqia folder/directory
 
     ```shell
-    cd panaqia
+    cd tenda-wema
     ```
 * Rename `.env.example` to become `.env`
     ```shell
